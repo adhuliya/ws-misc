@@ -1,0 +1,89 @@
+\begin{frame}
+  \frametitle{The Foundation}
+
+  Our work is based on the following observation,
+
+\begin{itemize}
+    \item<2-> Analyses can have mutually beneficial interactions.
+    \item<3-> These interactions can help improve the precision of the results.
+
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{A Simple Example}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+        What is the\\value of variable \Codet{b} at line \Line{3}?
+    \begin{lstlisting}[language=Python, frame=leftline,]
+x = new A; // A is a class
+b = x instanceof A;
+process(b);
+\end{lstlisting}
+        \end{column}
+
+        \begin{column}{0.5\linewidth}
+
+%\begin{pspicture}[showgrid](0,0)(40,40)
+\begin{pspicture}(0,0)(100,100) % without grid
+    \only<2>{
+
+    %\psframe(0,0)(100,100)
+    \putnode{n1}{origin}{50}{70}{\psframebox{\cfgcode{x = new A}}}
+    \putnode{n2}{n1}{0}{-20}{\psframebox{\cfgcode{b = x instanceof A}}}
+    \putnode{n3}{n2}{0}{-20}{\psframebox{\cfgcode{process(b)}}}
+
+    \putnode{n4}{n1}{18}{-7}{\cfgdata{1}}
+    \putnode{n5}{n2}{28}{-7}{\cfgdata{2}}
+    \putnode{n6}{n3}{18}{-7}{\cfgdata{3}}
+
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    }%only
+
+    \only<3->{
+
+    %\psframe(0,0)(100,100)
+    \putnode{n1}{origin}{50}{70}{\psframebox{\cfgcode{x = new A}}}
+    \putnode{n2}{n1}{0}{-20}{\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b = x instanceof A}}}
+    \putnode{n3}{n2}{0}{-20}{\psframebox{\cfgcode{process(b)}}}
+
+    \putnode{n4}{n1}{18}{-7}{\cfgdata{1}}
+    \putnode{n5}{n2}{28}{-7}{\cfgdata{2}}
+    \putnode{n6}{n3}{18}{-7}{\cfgdata{3}}
+
+    \putnode{n6}{n3}{26}{5}{\cfgdata{${(b,\bot)}$}}
+
+    \ncline{->}{n1}{n2}
+    \ncline[linewidth=1.0]{->}{n2}{n3}
+
+    \only<4->{\putnode{73}{n1}{-30}{-70}{\psframebox[fillstyle=solid,fillcolor=lightgray,opacity=0.8]{Help from Class Analysis is required here.}}}
+    }%only
+
+    %\only<3>{\putnode{n4}{n1}{0}{15}{\psframebox[fillstyle=solid,fillcolor=lightgray,opacity=0.8]{write something}}}
+\end{pspicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Existing Techniques}
+    \begin{itemize}
+        \item<1-> Cascading analysis and transformation pairs (Used in Optimizing Compilers).
+        \item<2-> Manually combining analyses into a ``\Term{super-analysis}''
+            \begin{itemize}
+                \item<3-> To keep our focus on automation techniques, we will only marginally cover super-analyses.
+            \end{itemize}
+        \item<4-> Lerner's approach of graph transformations.
+        % \item<5-> Our Method
+    \end{itemize}
+\end{frame}
+
+
+%\begin{frame}
+%  \frametitle{title}
+%\end{frame}
+
+

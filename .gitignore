@@ -1,0 +1,70 @@
+# Ignore these files from the repository
+
+#################################################
+# GENERAL
+#################################################
+log.txt
+*.swp
+build/
+#################################################
+
+
+#################################################
+# C/CPP
+#################################################
+a.out
+#################################################
+
+
+#################################################
+# PYTHON
+#################################################
+__pycache__/
+*.pyc
+#################################################
+
+
+#################################################
+# LATEX related 
+#################################################
+
+# LaTeX temporary files
+*.aux
+*.log
+*.toc
+
+# Human Viewable PDF output - usually a bad idea to keep this in Git
+*.pdf
+*.ps
+*.dvi
+
+# Latexmk
+*.fdb_latexmk
+
+# SyncTeX
+*.synctex.gz
+
+# LaTeX Beamer
+*.snm
+*.vrb
+*.nav
+*.out
+
+# BibTeX
+*.bbl
+*.blg
+
+# Don't add the bundled Zip file
+main-zip.zip
+main-zip.d/
+
+# others
+*.lof
+*.lot
+*.bcf
+*.tgz
+main-blx.bib
+main.run.xml
+#################################################
+
+

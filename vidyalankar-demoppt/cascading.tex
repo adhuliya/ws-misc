@@ -1,0 +1,212 @@
+\begin{frame}
+  \frametitle{Cascading : Analyses with Transformations}
+    % \begin{overlayarea}{\textwidth}{.01cm}
+    This technique is the oldest technique in use. Optimizing Compilers use it to optimize user programs.
+    \begin{itemize}
+        \item<2-> It works as follows,
+
+    \begin{enumerate}
+    \item<3-> Pair each analysis with transformation. (Transformation rules are based on the analysis results)
+
+    \item<4-> Decide a sequence in which to execute the analyses. (Each analysis can be used more than once in the sequence)
+
+    \item<5-> Execute the decided sequence on the given user code.
+
+    \item<6-> If aggressive optimizations are needed, repeat the above three steps untill there is no change in the user code.
+    \end{enumerate}
+
+    %\item<7->{Transformation is the tool for interaction between analyses.}
+    \end{itemize}
+    % \end{overlayarea}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Cascading : Example}
+\begin{figure}[h!]
+    \begin{subfigure}[t]{0.4\textwidth}
+        \begin{lstlisting}[language=Java, captionpos=t, frame=leftline]
+x = new A;
+b = x instanceof A;
+process(b);
+\end{lstlisting}
+
+    \caption{Original}
+    \label{fig:introexample4a}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.3\textwidth}
+        \begin{lstlisting}[language=Java, captionpos=t, frame=leftline]
+x = new A;
+b = true;
+process(b);
+\end{lstlisting}
+
+    \caption{Class}
+    \label{fig:introexample4b}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.3\textwidth}
+        \begin{lstlisting}[language=Java, captionpos=t, frame=leftline]
+x = new A;
+b = true;
+process(true);
+\end{lstlisting}
+
+    \caption{Const-Prop}
+    \label{fig:introexample4c}
+    \end{subfigure}
+    \caption{Sequence of Analyses and Transformations}
+    \label{fig:introexample4}
+\end{figure}
+
+%\begin{pspicture}[showgrid](0,0)(40,40)
+\begin{pspicture}(0,0)(20,20) % without grid
+% if () { b=&x; c=&y; a=&b; } else { b=&w; c=&z; a=&c; } p=*a;
+    %\psframe(0,0)(62,70)
+
+    \only<2->{
+        \putnode{n3}{origin}{75}{100}{}
+        \putnode{n4}{origin}{115}{100}{}
+
+        \ncline[linewidth=1.5]{->}{n3}{n4}
+    }
+
+    \only<3->{
+        \putnode{n1}{origin}{135}{100}{}
+        \putnode{n2}{origin}{175}{100}{}
+
+        \ncline[linewidth=1.5]{->}{n1}{n2}
+    }
+    \only<4-5>{\putnode{n10}{origin}{110}{20}{\psframebox[fillstyle=solid,fillcolor=lightgray,opacity=0.8]{Program is the ``communication medium''}}}
+
+    \only<5>{\putnode{n11}{origin}{110}{0}{\psframebox[fillstyle=solid,fillcolor=lightgray,opacity=0.8]{Transformation is the ``protocol''.}}}
+
+    \only<6>{\putnode{n12}{origin}{110}{15}{\psframebox[fillstyle=solid,fillcolor=lightgray,opacity=0.8]{no transformation = no interaction}}}
+
+    %\ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n2}{n7}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    %\nccurve[angleA=-110,angleB=90]{->}{n2}{n8}
+    %\nccurve[linewidth=1.0,angleA=200,angleB=150, ncurv=1]{->}{n2}{n8}
+\end{pspicture}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Cascading : Counter Example}
+\begin{lstlisting}[language=Java, captionpos=t, frame=leftline, caption={Program with Loop}, label={lst:cascadeex2}]
+x = new A;
+while(...) {
+    b = x instanceof A;
+    if (b) {
+        x = new A;
+    } else {
+        x = new B; // class B is not related to A
+    }
+}\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Cascading : Counter Example}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+\begin{pspicture}(0,0)(124,140) % without grid
+    %\psframe(0,0)(62,70)
+
+    \putnode{n1}{origin}{30}{132}{\psframebox{\cfgcode{x = new A}}}
+    \putnode{n2}{n1}{0}{-20}     {\psframebox{\cfgcode{\ldots}}}
+
+    \only<1>{
+    \putnode{n3}{n2}{20}{-20}    {\psframebox{\cfgcode{b = x instanceof A}}}
+    \putnode{n4}{n3}{0}{-20}     {\psframebox{\cfgcode{b}}}
+    \ncline{->}{n3}{n4}
+    }
+
+    \only<2->{
+    \putnode{n3}{n2}{20}{-20}    {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b = x instanceof A}}}
+    \putnode{n4}{n3}{0}{-20}     {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \ncline[linewidth=1.0]{->}{n3}{n4}
+    }
+
+    \putnode{n6}{n4}{30}{-20}    {\psframebox{\cfgcode{x = new A}}}
+    \putnode{n5}{n4}{-30}{-20}   {\psframebox{\cfgcode{x = new B}}}
+    \putnode{n7}{n4}{0}{-40}     {\psframebox{\cfgcode{\ldots}}}
+    \putnode{n8}{n2}{0}{-100}    {\psframebox{\cfgcode{END}}}
+
+    \putnode{n9}{n1}{20}{-8}{\cfgdata{1}}
+    \putnode{n10}{n2}{-10}{4}{\cfgdata{2}}
+    \putnode{n11}{n3}{30}{-8}{\cfgdata{3}}
+    \putnode{n12}{n4}{6}{-8}{\cfgdata{4}}
+    \putnode{n13}{n6}{18}{-8}{\cfgdata{6}}
+    \putnode{n14}{n5}{18}{-8}{\cfgdata{5}}
+    \putnode{n15}{n7}{8}{-6}{\cfgdata{7}}
+    \putnode{n16}{n8}{11}{-8}{\cfgdata{8}}
+
+    % \putnode{n17}{n1}{40}{8}{\cfgdata{$\phi$}}
+    % \putnode{n18}{n1}{40}{-8}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n19}{n2}{-30}{4}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n20}{n2}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n21}{n3}{42}{10}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n22}{n3}{42}{-14}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n4}{16}{8}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n26}{n8}{-24}{-8}{\cfgdata{$\{(x,A)\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n4}{n6}
+    \naput*{\cfgdata{T}}
+    \ncline{->}{n4}{n5}
+    \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n7}
+    \ncline{->}{n5}{n7}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n2}{n7}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    %\nccurve[angleA=-110,angleB=90]{->}{n2}{n8}
+    \nccurve[angleA=200,angleB=150, ncurv=1]{->}{n2}{n8}
+\end{pspicture}
+    \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{itemize}
+                \item Cascading doesn't work!
+                \item<2-> Node 3 makes constant analysis imprecise by blocking its information.
+                \item<3-> Node 4 makes class analysis imprecise.
+                \item<4-> Both cannot make any transformations, hence no optimization.
+            \end{itemize}
+
+    \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Cascading : Advantages}
+    \begin{itemize}
+        \item<1-> It is simple.
+        \item<2-> The use of this method has allowed modular development of complex optimizing compilers.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Cascading : Drawbacks}
+    \begin{itemize}
+        \item<1-> Fails in the presence of Loops.
+        \item<2-> Introduces the ubiquitous phase ordering problem [\prettyref{bib:touati2006decidability}].
+            \begin{itemize}
+                \item The problem of finding the correct sequence of analyses w.r.t. the given user program.
+            \end{itemize}
+        \item<3-> What if we only want to analyze the code? (without any transformations)
+    \end{itemize}
+\end{frame}
+
+
+%\begin{frame}
+%  \frametitle{title}
+%\end{frame}
+
+

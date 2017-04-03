@@ -1,0 +1,213 @@
+%AD thankful to Pim for this awesome template
+%AD have modified it to liking
+% Copyright 2009 by Pim Vullers
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU Public License.
+%
+% See the file doc/licenses/LICENSE for more details.
+
+\usepackage{graphicx,hyperref,url}
+
+
+%%%
+%%% Inherit definitions from existing themes (DO NOT MODIFY THESE)
+%%%
+
+% Layout scheme for outer elements: split header and footer
+\useoutertheme{split}
+
+% Color scheme for outer elements: use background colors
+\usecolortheme{whale}
+
+% Layout scheme for inner elements: rounded elements
+\useinnertheme{rounded} 
+
+% Color scheme for inner elements: use foreground colors
+\usecolortheme{orchid}
+
+
+%%%
+%%% Tweak definitions of inner theme to match personal preferences (MODIFY THESE)
+%%%
+
+% Itemize items: default (triangle), circle, square, ball
+\setbeamertemplate{itemize items}[circle]
+
+% Enumerate items: default, circle, square, ball
+\setbeamertemplate{enumerate items}[circle]
+
+% Outline: default, sections numbered, subsections numbered, circle, square, ball, ball unnumbered
+\setbeamertemplate{sections/subsections in toc}[default]
+
+% General blocks: 
+\setbeamertemplate{blocks}[rounded]
+
+% Title page:
+\setbeamertemplate{title page}[default][colsep=-4bp,rounded=true]
+
+% Part page:
+\setbeamertemplate{part page}[default][colsep=-4bp,rounded=true]
+
+% Navigation symbols:
+\setbeamertemplate{navigation symbols}{}
+
+
+%%%
+%%% Tweak definitions of outer theme to match Radboud (website) style
+%%%
+
+% Background iitb logo : Uncomment all lines with IITBLOGO
+%IITBLOGO \pgfdeclareimage[width=\paperwidth,height=\paperheight]{bg}{images/iitblogo-bg}
+%IITBLOGO \setbeamertemplate{background}{\pgfuseimage{bg}}
+
+% Colors
+\usecolortheme[RGB={190,49,26}]{structure}
+
+\setbeamercolor{frametitle}{parent=subsection in head/foot}
+\setbeamercolor{frametitle right}{parent=section in head/foot}
+
+
+\pgfdeclarehorizontalshading[frametitle.bg,frametitle right.bg]{beamer@frametitleshade}{\paperheight}{%
+  color(0pt)=(frametitle.bg);
+  color(\paperwidth)=(frametitle right.bg)}
+
+\AtBeginDocument{
+  \pgfdeclareverticalshading{beamer@topshade}{\paperwidth}{%
+    color(0pt)=(bg);
+    color(4pt)=(black!50!bg)}
+}
+
+% Footline: AUTHOR | DATE | TITLE | FRAMENUMBER
+
+\defbeamertemplate*{footline}{ru theme}{%
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortdate
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.416667\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+   \begin{beamercolorbox}[wd=0.083333\paperwidth,ht=2.25ex,dp=1ex,right]{title in head/foot}%
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+\defbeamertemplate*{headline}{ru theme}{%
+  \leavevmode%
+  %\@tempdimb=2.4375ex%
+  %\@tempdimb=2.0ex%
+    \multiply\@tempdimb by\beamer@sectionmax%
+%IITBLOGO  \pgfdeclareimage[height=.9\@tempdimb]{logo}{images/iitblogo-transparent-black}%
+%IITBLOGO  \logo{\pgfuseimage{logo}}%
+  \ifdim\@tempdimb>0pt%
+    \advance\@tempdimb by 1.125ex%
+    \begin{beamercolorbox}[wd=.5\paperwidth,ht=\@tempdimb]{section in head/foot}%
+        \vbox to\@tempdimb{\vfil\insertsectionnavigation{.5\paperwidth}\vfil}%
+    \end{beamercolorbox}%
+    % \begin{beamercolorbox}[wd=.5\paperwidth,ht=\@tempdimb]{section in head/foot}%
+    %     \vbox to\@tempdimb{\vfil\textbf{\footnotesize\insertsectionnavigation{}.5\paperwidth}}\vfil}%
+    % \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.5\paperwidth,ht=\@tempdimb,right]{subsection in head/foot}%
+      \vbox to\@tempdimb{\vfil\vfil\textbf{\footnotesize\insertshortinstitute~~}\vfil}%
+    \end{beamercolorbox}%
+    % \begin{beamercolorbox}[wd=.5\paperwidth,ht=\@tempdimb,right]{subsection in head/foot}%
+    %   \vbox to\@tempdimb{\insertsectionhead\vfil\vfil\textbf{\footnotesize\insertshortinstitute~~}\vfil}%
+    % \end{beamercolorbox}%
+%IIT% BLOGO    \begin{beamercolorbox}[wd=.1\paperwidth,ht=\@tempdimb,left]{subsection in head/foot}%
+%IITBLOGO      \vbox to\@tempdimb{\vfil\insertlogo\vfil\vfil}%
+%IITBLOGO    \end{beamercolorbox}%
+  \fi%
+}
+
+\defbeamertemplate*{frametitle}{ru theme}{%
+  \nointerlineskip%
+  %\vskip-2pt%
+  \hbox{\leavevmode
+    \advance\beamer@leftmargin by -12bp%
+    \advance\beamer@rightmargin by -12bp%
+    \beamer@tempdim=\textwidth%
+    \advance\beamer@tempdim by \beamer@leftmargin%
+    \advance\beamer@tempdim by \beamer@rightmargin%
+    \hskip-\Gm@lmargin\hbox{%
+      \setbox\beamer@tempbox=\hbox{\begin{minipage}[b]{\paperwidth}%
+          \vbox{}\vskip-.75ex%
+          \leftskip0.3cm%
+          \rightskip0.3cm plus1fil\leavevmode
+          \insertframetitle%
+          \ifx\insertframesubtitle\@empty%
+            \strut\par%
+          \else
+            \par{\usebeamerfont*{framesubtitle}{\usebeamercolor[fg]{framesubtitle}\insertframesubtitle}\strut\par}%
+          \fi%
+          \nointerlineskip
+          \vbox{}%
+          \end{minipage}}%
+      \beamer@tempdim=\ht\beamer@tempbox%
+      \advance\beamer@tempdim by 2pt%
+      \begin{pgfpicture}{0.1mm}{0pt}{1.01\paperwidth}{\beamer@tempdim}
+        \usebeamercolor{frametitle right}
+        \pgfpathrectangle{\pgfpointorigin}{\pgfpoint{\paperwidth}{\beamer@tempdim}}
+        \pgfusepath{clip}
+        \pgftext[left,base]{\pgfuseshading{beamer@frametitleshade}}
+      \end{pgfpicture}
+      \hskip-\paperwidth%
+      \box\beamer@tempbox%
+    }%
+    \hskip-\Gm@rmargin%
+  }%
+%  \nointerlineskip
+%    \vskip-0.2pt
+%    \hbox to\textwidth{\hskip-\Gm@lmargin\pgfuseshading{beamer@topshade}\hskip-\Gm@rmargin}
+%    \vskip-2pt
+}
+
+
+% use withoutheadline to create slides without the header but with footer
+% Example:
+% \begin{withoutheadline}
+%     \begin{frame}
+%     \frametitle{Table of Contents} % you can remove this line for no header at all
+%         \tableofcontents
+%     \end{frame}
+% \end{withoutheadline}
+\makeatletter
+    \newenvironment{withoutheadline}{
+        \setbeamertemplate{headline}[default]
+        \def\beamer@entrycode{\vspace*{-\headheight}}
+    }{}
+\makeatother
+
+\makeatletter
+    \newenvironment{withoutfootline}{
+        \setbeamertemplate{footline}[default]
+    }{}
+\makeatother
+
+%\tableofcontents doesnot show \part segregation of the 
+% presentation. The commands below help overcome the 
+% limitation. (thanks to tex.stackexchange.com)
+\makeatletter
+\AtBeginPart{%
+  \addtocontents{toc}{\protect\beamer@partintoc{\the\c@part}{\beamer@partnameshort}{\the\c@page}}%
+}
+%% number, shortname, page.
+\providecommand\beamer@partintoc[3]{%
+  \ifnum\c@tocdepth=-1\relax
+    % requesting onlyparts.
+    \makebox[6em]{PART #1:} #2
+    \par
+  \fi
+}
+\define@key{beamertoc}{onlyparts}[]{%
+  \c@tocdepth=-1\relax
+}
+\makeatother%
+

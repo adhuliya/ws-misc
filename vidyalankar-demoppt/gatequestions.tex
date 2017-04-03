@@ -1,0 +1,120 @@
+\scriptsize
+\begin{frame}
+\frametitle{Question 1 : Gate 2017}
+
+\begin{example}
+Consider the following expression grammar G:
+
+\texttt{E -> E - T | T}\newline
+\texttt{T -> T + F | F}\newline
+\texttt{F -> (E) | id}
+
+    Which of the following grammars is \textbf<2->{not left recursive}, but is \textbf<2->{equivalent to G}?
+
+\begin{tabular}{c c}
+    \specialcell[t]{(A)\\\texttt{E -> E - T | T}\\\texttt{T -> T + F | F}\\\texttt{F -> (E) | id}}
+     & \specialcell[t]{(B)\\\texttt{E -> TE'}\\\texttt{E' -> -TE' |}$\epsilon{}$\\\texttt{T -> T + F | F}\\\texttt{F -> (E) | id}} \\
+    \specialcell[t]{(C)\\\texttt{E -> TX}\\\texttt{X -> -TX |} $\epsilon$\\\texttt{T -> FY}\\\texttt{Y -> +FY | }$\epsilon$\\\texttt{F -> (E) | id} }
+    & 
+    \specialcell[t]{(D)\\\texttt{E -> TX | (TX)}\\\texttt{X -> -TX | +TX |} $\epsilon$\\\texttt{T -> id}}
+\end{tabular}
+
+\end{example}
+\end{frame}
+
+\begin{frame}
+\frametitle{Question 2 : Gate 2005}
+
+\begin{example}
+    The grammar \texttt{A -> AA | (A) | } $\epsilon$ is \textbf<2->{not suitable for predictive-parsing} because the grammar is:
+
+
+   \vspace{3em}
+
+    (A) Ambiguous
+
+    (B) Left-recursive
+
+    (C) Right-recursive
+
+    (D) An operator-grammar
+
+\end{example}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Question 3 : Gate 2009}
+
+\begin{example}
+    Which data structure in a compiler is used for managing information about variables and their attributes?
+
+   \vspace{3em}
+
+
+    (A) Abstract syntax tree
+
+    (B) Symbol table
+
+    (C) Semantic Stack
+
+    (D) Parse table
+
+\end{example}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Question 4 : Gate 2010}
+
+\begin{example}
+    The grammar \texttt{S -> aSa | bSc | c} is,
+
+   \vspace{3em}
+
+
+    (A) LL(1) but not LR(1)
+
+    (B) LR(1) but not LL(1)
+
+    (C) Both LL(1) and LR(2)
+
+    (D) Neither LL(1) nor LR(1)
+
+\end{example}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Question 5 : Gate 2014}
+
+\begin{example}
+    Consider the grammar defined by the following productoin rules, with two operators \texttt{*} and \texttt{+}
+
+    \texttt{S -> T * P}
+
+    \texttt{T -> U | T * U}
+
+    \texttt{P -> Q + P | Q}
+
+    \texttt{Q -> id}
+
+    \texttt{U -> id}
+
+   \vspace{3em}
+
+    (A) + is left associative, while * is right associative
+
+    (B) + is right associative, while * is left associative
+
+    (C) Both + and * are right associative
+
+    (D) Both + and * are left associative
+
+
+\end{example}
+
+
+\end{frame}
+
+\normalsize

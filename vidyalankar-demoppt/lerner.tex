@@ -1,0 +1,956 @@
+\begin{frame}
+  \frametitle{Lerner : Motivation}
+  \begin{itemize}
+      \item<1-> The technique to ``selectively repeat analyses in carefully tuned sequences'' (i.e. cascade), clearly doesn't work in case of loops.
+
+  \item<2-> Lerner observed that in case of loops each participating analysis is forced to make a ``pessimistic'' assumption.
+
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Lerner : ``Pessimistic'' Assumption}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+\begin{pspicture}(0,0)(124,140) % without grid
+    %\psframe(0,0)(62,70)
+
+    \putnode{n1}{origin}{30}{132}{\psframebox{\cfgcode{x = new A}}}
+    \putnode{n2}{n1}{0}{-20}     {\psframebox{\cfgcode{\ldots}}}
+
+    \only<1>{
+    \putnode{n3}{n2}{20}{-20}    {\psframebox{\cfgcode{b = x instanceof A}}}
+    \putnode{n4}{n3}{0}{-20}     {\psframebox{\cfgcode{b}}}
+    \ncline{->}{n3}{n4}
+    }
+
+    \only<2->{
+    \putnode{n3}{n2}{20}{-20}    {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b = x instanceof A}}}
+    \putnode{n4}{n3}{0}{-20}     {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \ncline[linewidth=1.0]{->}{n3}{n4}
+    }
+
+    \putnode{n6}{n4}{30}{-20}    {\psframebox{\cfgcode{x = new A}}}
+    \putnode{n5}{n4}{-30}{-20}   {\psframebox{\cfgcode{x = new B}}}
+    \putnode{n7}{n4}{0}{-40}     {\psframebox{\cfgcode{\ldots}}}
+    \putnode{n8}{n2}{0}{-100}    {\psframebox{\cfgcode{END}}}
+
+    \putnode{n9}{n1}{20}{-8}{\cfgdata{1}}
+    \putnode{n10}{n2}{-10}{4}{\cfgdata{2}}
+    \putnode{n11}{n3}{30}{-8}{\cfgdata{3}}
+    \putnode{n12}{n4}{6}{-8}{\cfgdata{4}}
+    \putnode{n13}{n6}{18}{-8}{\cfgdata{6}}
+    \putnode{n14}{n5}{18}{-8}{\cfgdata{5}}
+    \putnode{n15}{n7}{8}{-6}{\cfgdata{7}}
+    \putnode{n16}{n8}{11}{-8}{\cfgdata{8}}
+
+    % \putnode{n17}{n1}{40}{8}{\cfgdata{$\phi$}}
+    % \putnode{n18}{n1}{40}{-8}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n19}{n2}{-30}{4}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n20}{n2}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n21}{n3}{42}{10}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n22}{n3}{42}{-14}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n4}{16}{8}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n26}{n8}{-24}{-8}{\cfgdata{$\{(x,A)\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n4}{n6}
+    \naput*{\cfgdata{T}}
+    \ncline{->}{n4}{n5}
+    \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n7}
+    \ncline{->}{n5}{n7}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n2}{n7}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    %\nccurve[angleA=-110,angleB=90]{->}{n2}{n8}
+    \nccurve[angleA=200,angleB=150, ncurv=1]{->}{n2}{n8}
+\end{pspicture}
+    \end{column}
+        \begin{column}{0.5\linewidth}
+            \begin{itemize}
+                \item<2-> Class Analysis and Constant Propagation make ``pessimistic'' assumptions at Node 3 and 4.
+
+                \item<3-> But, \Codetb{x instanceof A} remains \Codet{true} throughout!
+
+                \item<4-> This happens due to the lack of relevant information.
+            \end{itemize}
+
+    \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Lerner : Approach}
+    \begin{block}{The key to the approach is}
+        ``a novel method of implicit communication between the individual components of a super-analysis based on graph transformations''
+    \end{block}
+
+    \begin{itemize}
+        \item The basic ``protocol'' of communication is the same as in cascading. (i.e. transformation)
+
+        \item Only now, the transformations done are immediately made available to other analyses.
+
+        \item That is, the interaction becomes \textbf{fine-grained}.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Lerner : Demonstrating Example}
+    \begin{columns}
+        \begin{column}{0.5\linewidth}
+\begin{pspicture}(0,0)(124,140) % without grid
+    %\psframe(0,0)(62,70)
+
+    \only<1-5>{
+    \putnode{n1}{origin}{30}{132}{\psframebox{\cfgcode{x = new A}}}
+    \putnode{n2}{n1}{0}{-20}     {\psframebox{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{20}{-20}    {\psframebox{\cfgcode{b = x instanceof A}}}
+    \putnode{n4}{n3}{0}{-20}     {\psframebox{\cfgcode{b}}}
+    \ncline{->}{n3}{n4}
+
+    % \only<2->{
+    % \putnode{n3}{n2}{20}{-20}    {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b = x instanceof A}}}
+    % \putnode{n4}{n3}{0}{-20}     {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    % \ncline[linewidth=1.0]{->}{n3}{n4}
+    % }
+
+    \putnode{n6}{n4}{30}{-20}    {\psframebox{\cfgcode{x = new A}}}
+    \putnode{n5}{n4}{-30}{-20}   {\psframebox{\cfgcode{x = new B}}}
+    \putnode{n7}{n4}{0}{-40}     {\psframebox{\cfgcode{\ldots}}}
+    \putnode{n8}{n2}{0}{-100}    {\psframebox{\cfgcode{END}}}
+
+    \putnode{n9}{n1}{20}{-8}{\cfgdata{1}}
+    \putnode{n10}{n2}{-10}{4}{\cfgdata{2}}
+    \putnode{n11}{n3}{30}{-8}{\cfgdata{3}}
+    \putnode{n12}{n4}{6}{-8}{\cfgdata{4}}
+    \putnode{n13}{n6}{18}{-8}{\cfgdata{6}}
+    \putnode{n14}{n5}{18}{-8}{\cfgdata{5}}
+    \putnode{n15}{n7}{8}{-6}{\cfgdata{7}}
+    \putnode{n16}{n8}{11}{-8}{\cfgdata{8}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n4}{n6}
+    \naput*{\cfgdata{T}}
+    \ncline{->}{n4}{n5}
+    \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n7}
+    \ncline{->}{n5}{n7}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n2}{n7}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    %\nccurve[angleA=-110,angleB=90]{->}{n2}{n8}
+    \nccurve[angleA=200,angleB=150, ncurv=1]{->}{n2}{n8}
+    }
+
+    \only<6,7>{
+    \putnode{n1}{origin}{30}{132}{\psframebox{\cfgcode{x = new A}}}
+    \putnode{n2}{n1}{0}{-20}     {\psframebox{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{20}{-20}    {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b = x instanceof A}}}
+    \putnode{n4}{n3}{0}{-20}     {\psframebox{\cfgcode{b}}}
+    \ncline{->}{n3}{n4}
+
+    % \only<2->{
+    % \putnode{n3}{n2}{20}{-20}    {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b = x instanceof A}}}
+    % \putnode{n4}{n3}{0}{-20}     {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    % \ncline[linewidth=1.0]{->}{n3}{n4}
+    % }
+
+    \putnode{n6}{n4}{30}{-20}    {\psframebox{\cfgcode{x = new A}}}
+    \putnode{n5}{n4}{-30}{-20}   {\psframebox{\cfgcode{x = new B}}}
+    \putnode{n7}{n4}{0}{-40}     {\psframebox{\cfgcode{\ldots}}}
+    \putnode{n8}{n2}{0}{-100}    {\psframebox{\cfgcode{END}}}
+
+    \putnode{n9}{n1}{20}{-8}{\cfgdata{1}}
+    \putnode{n10}{n2}{-10}{4}{\cfgdata{2}}
+    \putnode{n11}{n3}{30}{-8}{\cfgdata{3}}
+    \putnode{n12}{n4}{6}{-8}{\cfgdata{4}}
+    \putnode{n13}{n6}{18}{-8}{\cfgdata{6}}
+    \putnode{n14}{n5}{18}{-8}{\cfgdata{5}}
+    \putnode{n15}{n7}{8}{-6}{\cfgdata{7}}
+    \putnode{n16}{n8}{11}{-8}{\cfgdata{8}}
+
+    \putnode{n17}{n1}{45}{8}{\cfgdata{$(\{(b,\top)\},\{(x,\phi)\})$}}
+    \putnode{n18}{n1}{45}{-8}{\cfgdata{$(\{(b,\top)\},\{(x,A)\})$}}
+    % \putnode{n19}{n2}{-30}{4}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n20}{n2}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n21}{n3}{35}{10}{\cfgdata{$(\{(b,\top)\},\{(x,A)\})$}}
+    % \putnode{n22}{n3}{42}{-14}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n4}{16}{8}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n26}{n8}{-22}{-10}{\cfgdata{$(\{(b,\top)\},\{(x,A)\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n4}{n6}
+    \naput*{\cfgdata{T}}
+    \ncline{->}{n4}{n5}
+    \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n7}
+    \ncline{->}{n5}{n7}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n2}{n7}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    %\nccurve[angleA=-110,angleB=90]{->}{n2}{n8}
+    \nccurve[angleA=200,angleB=150, ncurv=1]{->}{n2}{n8}
+    }
+
+    \only<8>{
+    \putnode{n1}{origin}{30}{132}{\psframebox{\cfgcode{x = new A}}}
+    \putnode{n2}{n1}{0}{-20}     {\psframebox{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{20}{-20}    {\psframebox{\cfgcode{b = true}}}
+    \putnode{n4}{n3}{0}{-20}     {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \ncline{->}{n3}{n4}
+
+    % \only<2->{
+    % \putnode{n3}{n2}{20}{-20}    {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b = x instanceof A}}}
+    % \putnode{n4}{n3}{0}{-20}     {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    % \ncline[linewidth=1.0]{->}{n3}{n4}
+    % }
+
+    \putnode{n6}{n4}{30}{-20}    {\psframebox{\cfgcode{x = new A}}}
+    \putnode{n5}{n4}{-30}{-20}   {\psframebox{\cfgcode{x = new B}}}
+    \putnode{n7}{n4}{0}{-40}     {\psframebox{\cfgcode{\ldots}}}
+    \putnode{n8}{n2}{0}{-100}    {\psframebox{\cfgcode{END}}}
+
+    \putnode{n9}{n1}{20}{-8}{\cfgdata{1}}
+    \putnode{n10}{n2}{-10}{4}{\cfgdata{2}}
+    \putnode{n11}{n3}{17}{-8}{\cfgdata{3}}
+    \putnode{n12}{n4}{6}{-8}{\cfgdata{4}}
+    \putnode{n13}{n6}{18}{-8}{\cfgdata{6}}
+    \putnode{n14}{n5}{18}{-8}{\cfgdata{5}}
+    \putnode{n15}{n7}{8}{-6}{\cfgdata{7}}
+    \putnode{n16}{n8}{11}{-8}{\cfgdata{8}}
+
+    \putnode{n17}{n1}{45}{8}{\cfgdata{$(\{(b,\top)\},\{(x,\phi)\})$}}
+    \putnode{n18}{n1}{45}{-8}{\cfgdata{$(\{(b,\top)\},\{(x,A)\})$}}
+    % \putnode{n19}{n2}{-30}{4}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n20}{n2}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n21}{n3}{35}{10}{\cfgdata{$(\{(b,\top)\},\{(x,A)\})$}}
+    % \putnode{n22}{n3}{42}{-14}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n23}{n4}{30}{6}{\cfgdata{$(\{(b,true)\},\{(x,A)\})$}}
+    \putnode{n26}{n8}{-22}{-10}{\cfgdata{$(\{(b,\top)\},\{(x,A)\})$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n4}{n6}
+    \naput*{\cfgdata{T}}
+    \ncline{->}{n4}{n5}
+    \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n7}
+    \ncline{->}{n5}{n7}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n2}{n7}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    %\nccurve[angleA=-110,angleB=90]{->}{n2}{n8}
+    \nccurve[angleA=200,angleB=150, ncurv=1]{->}{n2}{n8}
+    }
+
+    \only<9>{
+    \putnode{n1}{origin}{30}{132}{\psframebox{\cfgcode{x = new A}}}
+    \putnode{n2}{n1}{0}{-20}     {\psframebox{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{20}{-20}    {\psframebox{\cfgcode{b = true}}}
+    \putnode{n4}{n3}{0}{-20}     {\psframebox{\cfgcode{goto 6}}}
+    \ncline{->}{n3}{n4}
+
+    % \only<2->{
+    % \putnode{n3}{n2}{20}{-20}    {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b = x instanceof A}}}
+    % \putnode{n4}{n3}{0}{-20}     {\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    % \ncline[linewidth=1.0]{->}{n3}{n4}
+    % }
+
+    \putnode{n6}{n4}{30}{-20}    {\psframebox{\cfgcode{x = new A}}}
+    % \putnode{n5}{n4}{-30}{-20}   {\psframebox{\cfgcode{x = new B}}}
+    \putnode{n7}{n4}{0}{-40}     {\psframebox{\cfgcode{\ldots}}}
+    \putnode{n8}{n2}{0}{-100}    {\psframebox{\cfgcode{END}}}
+
+    \putnode{n9}{n1}{20}{-8}{\cfgdata{1}}
+    \putnode{n10}{n2}{-10}{4}{\cfgdata{2}}
+    \putnode{n11}{n3}{17}{-8}{\cfgdata{3}}
+    \putnode{n12}{n4}{6}{-8}{\cfgdata{4}}
+    \putnode{n13}{n6}{18}{-8}{\cfgdata{6}}
+    % \putnode{n14}{n5}{18}{-8}{\cfgdata{5}}
+    \putnode{n15}{n7}{8}{-6}{\cfgdata{7}}
+    \putnode{n16}{n8}{11}{-8}{\cfgdata{8}}
+
+    \putnode{n17}{n1}{45}{8}{\cfgdata{$(\{(b,\top)\},\{(x,\phi)\})$}}
+    \putnode{n18}{n1}{45}{-8}{\cfgdata{$(\{(b,\top)\},\{(x,A)\})$}}
+    % \putnode{n19}{n2}{-30}{4}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n20}{n2}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n21}{n3}{31}{10}{\cfgdata{$(\{(b,true)\},\{(x,A)\})$}}
+    % \putnode{n22}{n3}{42}{-14}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n23}{n4}{35}{7}{\cfgdata{$(\{(b,true)\},\{(x,A)\})$}}
+    \putnode{n26}{n8}{-19}{-10}{\cfgdata{$(\{(b,true)\},\{(x,A)\})$}}
+    \putnode{n27}{n7}{32}{-9}{\cfgdata{$(\{(b,true)\},\{(x,A)\})$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n4}{n6}
+    % \naput*{\cfgdata{T}}
+    % \ncline{->}{n4}{n5}
+    % \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n7}
+    \ncline{->}{n5}{n7}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n2}{n7}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    %\nccurve[angleA=-110,angleB=90]{->}{n2}{n8}
+    \nccurve[angleA=200,angleB=150, ncurv=1]{->}{n2}{n8}
+    }
+\end{pspicture}
+    \end{column}
+        \begin{column}{0.5\linewidth}
+            \only<1-4>{
+            \begin{itemize}
+                \item<1-4> Goal is to optimize the given code.
+
+                \item<2-4> We need a combination of class and constant analysis.
+
+                \item<3-4> Data-flow information is combined into a tuple.
+
+                \item<4> Flow functions of each analysis work on the relevant part of this tuple.
+            \end{itemize}
+        }
+            \only<5->{
+                \begin{itemize}
+                    \item<5-> Forward analysis starts.
+                    \item<6-> Analysis reaches $In_3$
+                    \item<7-> Class Analysis chooses to transform at Node 3.
+                    \item<8-> Constant Analysis chooses to transform at Node 4.
+                    \item<9-> A fixed point is reached and the optimization is done.
+                \end{itemize}
+            }
+
+    \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Lerner : Some more points}
+    \begin{itemize}
+        \item<1-> The flow functions of every participating analysis can choose to return the data-flow information to be propagated, or the sub-graph that replaces the current graph node.
+
+        \item<2-> In case the data-flow information, on the basis of which the transformations were made, changes, then the transformations are undone.
+
+        \item<3-> The transfomations made are all temporary, until made permanent.
+
+        \item<4-> Forward and Backward analyses cannot be combined.
+
+        \item<5-> \textbf{The dependence on transformations reduces its power.}
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Lerner : Counter Example}
+\begin{lstlisting}[language=Java, captionpos=t, frame=leftline, caption={Constant, Class, Pointer Analysis}, label={lst:example4}]
+y = new A;
+x = &y;
+while(...) {
+    if (*x instanceof A) {
+        z = new A;
+        x = &z;
+    } else {
+        z = new B; // class A and B are not related
+    }
+}\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Lerner : Counter Example}
+    \begin{columns}
+\begin{column}{0.5\linewidth}
+%\begin{pspicture}[showgrid](0,0)(124,140)
+    \psset{unit=.5mm}
+\begin{pspicture}(0,0)(124,180)
+    %\psframe(0,0)(124,180)
+    \only<1,9>{
+
+    \putnode{n1}{origin}{44}{172}{\psframebox{\cfgcode{y = new A}}}
+    \putnode{n2}{n1}{0}{-20}{\psframebox{\cfgcode{x = \&y}}}
+    % \putnode{n3}{n1}{0}{-40}{\psframebox[linewidth=1.2]{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{0}{-15}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n4}{n3}{25}{-15}{\psframebox{\cfgcode{tmp = *x}}}
+    \putnode{n5}{n4}{0}{-20}{\psframebox{\cfgcode{b = tmp instanceof A}}}
+    % \putnode{n6}{n5}{0}{-20}{\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \putnode{n6}{n5}{0}{-20}{\psframebox{\cfgcode{b}}}
+    \putnode{n7}{n6}{-30}{-25}{\psframebox{\cfgcode{z = new B}}}
+    \putnode{n8}{n6}{30}{-15}{\psframebox{\cfgcode{z = new A}}}
+    \putnode{n9}{n8}{0}{-15}{\psframebox{\cfgcode{x = \&z}}}
+    \putnode{n10}{n6}{0}{-50}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n11}{n3}{-20}{-105}{\psframebox{\cfgcode{END}}}
+
+    \putnode{n12}{n1}{20}{-9}{\cfgdata{1}}
+    \putnode{n13}{n2}{15}{-8}{\cfgdata{2}}
+    \putnode{n14}{n3}{-10}{4}{\cfgdata{3}}
+    \putnode{n15}{n4}{20}{-8}{\cfgdata{4}}
+    \putnode{n16}{n5}{35}{-9}{\cfgdata{5}}
+    \putnode{n17}{n6}{5}{-9}{\cfgdata{6}}
+    \putnode{n18}{n7}{19}{-8}{\cfgdata{7}}
+    \putnode{n19}{n8}{19}{-8}{\cfgdata{8}}
+    \putnode{n20}{n9}{14}{-8}{\cfgdata{9}}
+    \putnode{n21}{n10}{11}{-7}{\cfgdata{10}}
+    \putnode{n22}{n11}{12}{-8}{\cfgdata{11}}
+
+    % \putnode{n20}{n1}{40}{6}{\cfgdata{$\phi$}}
+    % \putnode{n21}{n1}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n22}{n2}{40}{6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n2}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n24}{n3}{-30}{0}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n26}{n4}{16}{8}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n29}{n8}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+    % \ncline[linewidth=1.0]{->}{n1}{n2}
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n3}{n4}
+    \ncline{->}{n4}{n5}
+    \ncline{->}{n5}{n6}
+    \ncline{->}{n6}{n7}
+    \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n8}
+    \naput*{\cfgdata{T}}
+    \ncline{->}{n8}{n9}
+    \ncline{->}{n9}{n10}
+    \ncline{->}{n7}{n10}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n3}{n10}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    \nccurve[angleA=200,angleB=120, ncurv=0.5]{->}{n3}{n11}
+    %\ncline[linestyle=dotted]{->}{n4}{n5}
+    %\putnode{n5}{n4}{-15}{-10}{\psframebox[linestyle=dotted,dotsep=0.3]{\cfgcode{x = new A}}}
+    }
+
+    \only<2>{
+
+    \putnode{n1}{origin}{44}{172}{\psframebox{\cfgcode{y = new A}}}
+    \putnode{n2}{n1}{0}{-20}{\psframebox[linewidth=1.2]{\cfgcode{x = \&y}}}
+    % \putnode{n3}{n1}{0}{-40}{\psframebox[linewidth=1.2]{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{0}{-15}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n4}{n3}{25}{-15}{\psframebox[linewidth=1.0,linestyle=dashed]{\cfgcode{tmp = *x}}}
+    \putnode{n5}{n4}{0}{-20}{\psframebox{\cfgcode{b = tmp instantceof A}}}
+    % \putnode{n6}{n5}{0}{-20}{\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \putnode{n6}{n5}{0}{-20}{\psframebox{\cfgcode{b}}}
+    \putnode{n7}{n6}{-30}{-25}{\psframebox{\cfgcode{z = new B}}}
+    \putnode{n8}{n6}{30}{-15}{\psframebox{\cfgcode{z = new A}}}
+    \putnode{n9}{n8}{0}{-15}{\psframebox{\cfgcode{x = \&z}}}
+    \putnode{n10}{n6}{0}{-50}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n11}{n3}{-20}{-105}{\psframebox{\cfgcode{END}}}
+
+    \putnode{n12}{n1}{20}{-9}{\cfgdata{1}}
+    \putnode{n13}{n2}{15}{-8}{\cfgdata{2}}
+    \putnode{n14}{n3}{-10}{4}{\cfgdata{3}}
+    \putnode{n15}{n4}{20}{-8}{\cfgdata{4}}
+    \putnode{n16}{n5}{35}{-9}{\cfgdata{5}}
+    \putnode{n17}{n6}{5}{-9}{\cfgdata{6}}
+    \putnode{n18}{n7}{19}{-8}{\cfgdata{7}}
+    \putnode{n19}{n8}{19}{-8}{\cfgdata{8}}
+    \putnode{n20}{n9}{14}{-8}{\cfgdata{9}}
+    \putnode{n21}{n10}{11}{-7}{\cfgdata{10}}
+    \putnode{n22}{n11}{12}{-8}{\cfgdata{11}}
+
+    % \putnode{n20}{n1}{40}{6}{\cfgdata{$\phi$}}
+    % \putnode{n21}{n1}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n22}{n2}{40}{6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n2}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n24}{n3}{-30}{0}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n26}{n4}{16}{8}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n29}{n8}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n26}{n4}{13}{9}{\cfgdata{$\{(x,y)\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+    % \ncline[linewidth=1.0]{->}{n1}{n2}
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n3}{n4}
+    \ncline{->}{n4}{n5}
+    \ncline{->}{n5}{n6}
+    \ncline{->}{n6}{n7}
+    \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n8}
+    \naput*{\cfgdata{T}}
+    \ncline{->}{n8}{n9}
+    \ncline{->}{n9}{n10}
+    \ncline{->}{n7}{n10}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n3}{n10}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    \nccurve[angleA=200,angleB=120, ncurv=0.5]{->}{n3}{n11}
+    %\ncline[linestyle=dotted]{->}{n4}{n5}
+    %\putnode{n5}{n4}{-15}{-10}{\psframebox[linestyle=dotted,dotsep=0.3]{\cfgcode{x = new A}}}
+    }
+
+    \only<3>{
+
+    \putnode{n1}{origin}{44}{172}{\psframebox{\cfgcode{y = new A}}}
+    \putnode{n2}{n1}{0}{-20}{\psframebox[linewidth=1.2]{\cfgcode{x = \&y}}}
+    % \putnode{n3}{n1}{0}{-40}{\psframebox[linewidth=1.2]{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{0}{-15}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n4}{n3}{25}{-15}{\psframebox{\cfgcode{tmp = y}}}
+    \putnode{n5}{n4}{0}{-20}{\psframebox[linewidth=1.0,linestyle=dashed]{\cfgcode{b = tmp instantceof A}}}
+    % \putnode{n6}{n5}{0}{-20}{\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \putnode{n6}{n5}{0}{-20}{\psframebox{\cfgcode{b}}}
+    \putnode{n7}{n6}{-30}{-25}{\psframebox{\cfgcode{z = new B}}}
+    \putnode{n8}{n6}{30}{-15}{\psframebox{\cfgcode{z = new A}}}
+    \putnode{n9}{n8}{0}{-15}{\psframebox{\cfgcode{x = \&z}}}
+    \putnode{n10}{n6}{0}{-50}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n11}{n3}{-20}{-105}{\psframebox{\cfgcode{END}}}
+
+    \putnode{n12}{n1}{20}{-9}{\cfgdata{1}}
+    \putnode{n13}{n2}{15}{-8}{\cfgdata{2}}
+    \putnode{n14}{n3}{-10}{4}{\cfgdata{3}}
+    \putnode{n15}{n4}{18}{-5}{\cfgdata{4}}
+    \putnode{n16}{n5}{35}{-9}{\cfgdata{5}}
+    \putnode{n17}{n6}{5}{-9}{\cfgdata{6}}
+    \putnode{n18}{n7}{19}{-8}{\cfgdata{7}}
+    \putnode{n19}{n8}{19}{-8}{\cfgdata{8}}
+    \putnode{n20}{n9}{14}{-8}{\cfgdata{9}}
+    \putnode{n21}{n10}{11}{-7}{\cfgdata{10}}
+    \putnode{n22}{n11}{12}{-8}{\cfgdata{11}}
+
+    % \putnode{n20}{n1}{40}{6}{\cfgdata{$\phi$}}
+    % \putnode{n21}{n1}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n22}{n2}{40}{6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n2}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n24}{n3}{-30}{0}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n26}{n4}{16}{8}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n29}{n8}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n26}{n4}{13}{9}{\cfgdata{$\{(x,y)\}$}}
+    \putnode{n28}{n5}{14}{9}{\cfgdata{$\{(tmp,{A})\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+    % \ncline[linewidth=1.0]{->}{n1}{n2}
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n3}{n4}
+    \ncline{->}{n4}{n5}
+    \ncline{->}{n5}{n6}
+    \ncline{->}{n6}{n7}
+    \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n8}
+    \naput*{\cfgdata{T}}
+    \ncline{->}{n8}{n9}
+    \ncline{->}{n9}{n10}
+    \ncline{->}{n7}{n10}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n3}{n10}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    \nccurve[angleA=200,angleB=120, ncurv=0.5]{->}{n3}{n11}
+    %\ncline[linestyle=dotted]{->}{n4}{n5}
+    %\putnode{n5}{n4}{-15}{-10}{\psframebox[linestyle=dotted,dotsep=0.3]{\cfgcode{x = new A}}}
+    }
+
+    \only<4>{
+
+    \putnode{n1}{origin}{44}{172}{\psframebox{\cfgcode{y = new A}}}
+    \putnode{n2}{n1}{0}{-20}{\psframebox[linewidth=1.2]{\cfgcode{x = \&y}}}
+    % \putnode{n3}{n1}{0}{-40}{\psframebox[linewidth=1.2]{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{0}{-15}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n4}{n3}{25}{-15}{\psframebox{\cfgcode{tmp = y}}}
+    \putnode{n5}{n4}{0}{-20}{\psframebox{\cfgcode{b = true}}}
+    % \putnode{n6}{n5}{0}{-20}{\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \putnode{n6}{n5}{0}{-20}{\psframebox[linewidth=1.0,linestyle=dashed]{\cfgcode{b}}}
+    \putnode{n7}{n6}{-30}{-25}{\psframebox{\cfgcode{z = new B}}}
+    \putnode{n8}{n6}{30}{-15}{\psframebox{\cfgcode{z = new A}}}
+    \putnode{n9}{n8}{0}{-15}{\psframebox{\cfgcode{x = \&z}}}
+    \putnode{n10}{n6}{0}{-50}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n11}{n3}{-20}{-105}{\psframebox{\cfgcode{END}}}
+
+    \putnode{n12}{n1}{20}{-9}{\cfgdata{1}}
+    \putnode{n13}{n2}{15}{-8}{\cfgdata{2}}
+    \putnode{n14}{n3}{-10}{4}{\cfgdata{3}}
+    \putnode{n15}{n4}{18}{-8}{\cfgdata{4}}
+    \putnode{n16}{n5}{18}{-6}{\cfgdata{5}}
+    \putnode{n17}{n6}{5}{-9}{\cfgdata{6}}
+    \putnode{n18}{n7}{19}{-8}{\cfgdata{7}}
+    \putnode{n19}{n8}{19}{-8}{\cfgdata{8}}
+    \putnode{n20}{n9}{14}{-8}{\cfgdata{9}}
+    \putnode{n21}{n10}{11}{-7}{\cfgdata{10}}
+    \putnode{n22}{n11}{12}{-8}{\cfgdata{11}}
+
+    % \putnode{n20}{n1}{40}{6}{\cfgdata{$\phi$}}
+    % \putnode{n21}{n1}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n22}{n2}{40}{6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n2}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n24}{n3}{-30}{0}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n26}{n4}{16}{8}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n29}{n8}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n26}{n4}{13}{9}{\cfgdata{$\{(x,y)\}$}}
+    \putnode{n27}{n6}{15}{9}{\cfgdata{$\{(b,true)\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+    % \ncline[linewidth=1.0]{->}{n1}{n2}
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n3}{n4}
+    \ncline{->}{n4}{n5}
+    \ncline{->}{n5}{n6}
+    \ncline{->}{n6}{n7}
+    \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n8}
+    \naput*{\cfgdata{T}}
+    \ncline{->}{n8}{n9}
+    \ncline{->}{n9}{n10}
+    \ncline{->}{n7}{n10}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n3}{n10}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    \nccurve[angleA=200,angleB=120, ncurv=0.5]{->}{n3}{n11}
+    %\ncline[linestyle=dotted]{->}{n4}{n5}
+    %\putnode{n5}{n4}{-15}{-10}{\psframebox[linestyle=dotted,dotsep=0.3]{\cfgcode{x = new A}}}
+    }
+
+    \only<5>{
+
+    \putnode{n1}{origin}{44}{172}{\psframebox{\cfgcode{y = new A}}}
+    \putnode{n2}{n1}{0}{-20}{\psframebox[linewidth=1.2]{\cfgcode{x = \&y}}}
+    % \putnode{n3}{n1}{0}{-40}{\psframebox[linewidth=1.2]{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{0}{-15}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n4}{n3}{25}{-15}{\psframebox[linewidth=1.0,linestyle=dashed]{\cfgcode{tmp = y}}}
+    \putnode{n5}{n4}{0}{-20}{\psframebox{\cfgcode{b = true}}}
+    % \putnode{n6}{n5}{0}{-20}{\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \putnode{n6}{n5}{0}{-20}{\psframebox{\cfgcode{goto 8}}}
+    % \putnode{n7}{n6}{-30}{-25}{\psframebox{\cfgcode{z = new B}}}
+    \putnode{n8}{n6}{30}{-15}{\psframebox{\cfgcode{z = new A}}}
+    \putnode{n9}{n8}{0}{-15}{\psframebox[linewidth=1.2]{\cfgcode{x = \&z}}}
+    \putnode{n10}{n6}{0}{-50}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n11}{n3}{-20}{-105}{\psframebox{\cfgcode{END}}}
+
+    \putnode{n12}{n1}{20}{-9}{\cfgdata{1}}
+    \putnode{n13}{n2}{15}{-8}{\cfgdata{2}}
+    \putnode{n14}{n3}{-10}{4}{\cfgdata{3}}
+    \putnode{n15}{n4}{20}{-8}{\cfgdata{4}}
+    \putnode{n16}{n5}{18}{-9}{\cfgdata{5}}
+    \putnode{n17}{n6}{5}{-9}{\cfgdata{6}}
+    % \putnode{n18}{n7}{19}{-8}{\cfgdata{7}}
+    \putnode{n19}{n8}{19}{-8}{\cfgdata{8}}
+    \putnode{n20}{n9}{14}{-8}{\cfgdata{9}}
+    \putnode{n21}{n10}{11}{-7}{\cfgdata{10}}
+    \putnode{n22}{n11}{12}{-8}{\cfgdata{11}}
+
+    % \putnode{n20}{n1}{40}{6}{\cfgdata{$\phi$}}
+    % \putnode{n21}{n1}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n22}{n2}{40}{6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n2}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n24}{n3}{-30}{0}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n26}{n4}{13}{9}{\cfgdata{$\{(x,y),(x,z)\}$}}
+    % \putnode{n29}{n8}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+    % \ncline[linewidth=1.0]{->}{n1}{n2}
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n3}{n4}
+    \ncline{->}{n4}{n5}
+    \ncline{->}{n5}{n6}
+    % \ncline{->}{n6}{n7}
+    % \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n8}
+    % \naput*{\cfgdata{T}}
+    \ncline{->}{n8}{n9}
+    \ncline{->}{n9}{n10}
+    % \ncline{->}{n7}{n10}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n3}{n10}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    \nccurve[angleA=200,angleB=120, ncurv=0.5]{->}{n3}{n11}
+    %\ncline[linestyle=dotted]{->}{n4}{n5}
+    %\putnode{n5}{n4}{-15}{-10}{\psframebox[linestyle=dotted,dotsep=0.3]{\cfgcode{x = new A}}}
+    }
+
+    \only<6>{
+
+    \putnode{n1}{origin}{44}{172}{\psframebox{\cfgcode{y = new A}}}
+    \putnode{n2}{n1}{0}{-20}{\psframebox[linewidth=1.2]{\cfgcode{x = \&y}}}
+    % \putnode{n3}{n1}{0}{-40}{\psframebox[linewidth=1.2]{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{0}{-15}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n4}{n3}{25}{-15}{\psframebox[linewidth=1.0,linestyle=dashed]{\cfgcode{tmp = y}}}
+    \putnode{n41}{n3}{63}{-15}{\psframebox[linewidth=1.0,linestyle=dashed]{\cfgcode{tmp = z}}}
+    \putnode{n5}{n4}{0}{-20}{\psframebox{\cfgcode{b = true}}}
+    % \putnode{n6}{n5}{0}{-20}{\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \putnode{n6}{n5}{0}{-20}{\psframebox{\cfgcode{goto 8}}}
+    % \putnode{n7}{n6}{-30}{-25}{\psframebox{\cfgcode{z = new B}}}
+    \putnode{n8}{n6}{30}{-15}{\psframebox{\cfgcode{z = new A}}}
+    \putnode{n9}{n8}{0}{-15}{\psframebox[linewidth=1.2]{\cfgcode{x = \&z}}}
+    \putnode{n10}{n6}{0}{-50}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n11}{n3}{-20}{-105}{\psframebox{\cfgcode{END}}}
+
+    \putnode{n12}{n1}{20}{-9}{\cfgdata{1}}
+    \putnode{n13}{n2}{15}{-8}{\cfgdata{2}}
+    \putnode{n14}{n3}{-10}{4}{\cfgdata{3}}
+    \putnode{n15}{n4}{13}{-9}{\cfgdata{4.1}}
+    \putnode{n23}{n41}{13}{-9}{\cfgdata{4.2}}
+    \putnode{n16}{n5}{18}{-8}{\cfgdata{5}}
+    \putnode{n17}{n6}{5}{-9}{\cfgdata{6}}
+    % \putnode{n18}{n7}{19}{-8}{\cfgdata{7}}
+    \putnode{n19}{n8}{19}{-8}{\cfgdata{8}}
+    \putnode{n20}{n9}{14}{-8}{\cfgdata{9}}
+    \putnode{n21}{n10}{11}{-7}{\cfgdata{10}}
+    \putnode{n22}{n11}{12}{-8}{\cfgdata{11}}
+
+    % \putnode{n20}{n1}{40}{6}{\cfgdata{$\phi$}}
+    % \putnode{n21}{n1}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n22}{n2}{40}{6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n2}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n24}{n3}{-30}{0}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n26}{n4}{13}{9}{\cfgdata{$\{(x,y),(x,z)\}$}}
+    % \putnode{n29}{n8}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+    % \ncline[linewidth=1.0]{->}{n1}{n2}
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n3}{n4}
+    \ncline{->}{n3}{n41}
+    \ncline{->}{n41}{n5}
+    \ncline{->}{n4}{n5}
+    \ncline{->}{n5}{n6}
+    % \ncline{->}{n6}{n7}
+    % \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n8}
+    % \naput*{\cfgdata{T}}
+    \ncline{->}{n8}{n9}
+    \ncline{->}{n9}{n10}
+    % \ncline{->}{n7}{n10}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n3}{n10}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    \nccurve[angleA=200,angleB=120, ncurv=0.5]{->}{n3}{n11}
+    %\ncline[linestyle=dotted]{->}{n4}{n5}
+    %\putnode{n5}{n4}{-15}{-10}{\psframebox[linestyle=dotted,dotsep=0.3]{\cfgcode{x = new A}}}
+    }
+
+    \only<7>{
+
+    \putnode{n1}{origin}{44}{172}{\psframebox{\cfgcode{y = new A}}}
+    \putnode{n2}{n1}{0}{-20}{\psframebox{\cfgcode{x = \&y}}}
+    % \putnode{n3}{n1}{0}{-40}{\psframebox[linewidth=1.2]{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{0}{-15}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n4}{n3}{25}{-15}{\psframebox{\cfgcode{tmp = *x}}}
+    \putnode{n5}{n4}{0}{-20}{\psframebox[linewidth=1.0,linestyle=dashed]{\cfgcode{b = true}}}
+    % \putnode{n6}{n5}{0}{-20}{\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \putnode{n6}{n5}{0}{-20}{\psframebox{\cfgcode{goto 8}}}
+    % \putnode{n7}{n6}{-30}{-25}{\psframebox{\cfgcode{z = new B}}}
+    \putnode{n8}{n6}{30}{-15}{\psframebox{\cfgcode{z = new A}}}
+    \putnode{n9}{n8}{0}{-15}{\psframebox{\cfgcode{x = \&z}}}
+    \putnode{n10}{n6}{0}{-50}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n11}{n3}{-20}{-105}{\psframebox{\cfgcode{END}}}
+
+    \putnode{n12}{n1}{20}{-9}{\cfgdata{1}}
+    \putnode{n13}{n2}{15}{-8}{\cfgdata{2}}
+    \putnode{n14}{n3}{-10}{4}{\cfgdata{3}}
+    \putnode{n15}{n4}{17}{-7}{\cfgdata{4}}
+    \putnode{n16}{n5}{18}{-9}{\cfgdata{5}}
+    \putnode{n17}{n6}{5}{-9}{\cfgdata{6}}
+    % \putnode{n18}{n7}{19}{-8}{\cfgdata{7}}
+    \putnode{n19}{n8}{19}{-8}{\cfgdata{8}}
+    \putnode{n20}{n9}{14}{-8}{\cfgdata{9}}
+    \putnode{n21}{n10}{11}{-7}{\cfgdata{10}}
+    \putnode{n22}{n11}{12}{-8}{\cfgdata{11}}
+
+    % \putnode{n20}{n1}{40}{6}{\cfgdata{$\phi$}}
+    % \putnode{n21}{n1}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n22}{n2}{40}{6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n2}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n24}{n3}{-30}{0}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n26}{n4}{13}{9}{\cfgdata{$\{(x,y),(x,z)\}$}}
+    \putnode{n27}{n5}{13}{9}{\cfgdata{$\{(tmp,\bot)\}$}}
+    % \putnode{n29}{n8}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+    % \ncline[linewidth=1.0]{->}{n1}{n2}
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n3}{n4}
+    \ncline{->}{n4}{n5}
+    \ncline{->}{n5}{n6}
+    % \ncline{->}{n6}{n7}
+    % \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n8}
+    % \naput*{\cfgdata{T}}
+    \ncline{->}{n8}{n9}
+    \ncline{->}{n9}{n10}
+    % \ncline{->}{n7}{n10}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n3}{n10}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    \nccurve[angleA=200,angleB=120, ncurv=0.5]{->}{n3}{n11}
+    %\ncline[linestyle=dotted]{->}{n4}{n5}
+    }
+
+    \only<8>{
+
+    \putnode{n1}{origin}{44}{172}{\psframebox{\cfgcode{y = new A}}}
+    \putnode{n2}{n1}{0}{-20}{\psframebox{\cfgcode{x = \&y}}}
+    % \putnode{n3}{n1}{0}{-40}{\psframebox[linewidth=1.2]{\cfgcode{\ldots}}}
+    \putnode{n3}{n2}{0}{-15}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n4}{n3}{25}{-15}{\psframebox{\cfgcode{tmp = *x}}}
+    \putnode{n5}{n4}{0}{-20}{\psframebox{\cfgcode{b = tmp instanceof A}}}
+    % \putnode{n6}{n5}{0}{-20}{\psframebox[linewidth=1.2,linestyle=dashed]{\cfgcode{b}}}
+    \putnode{n6}{n5}{0}{-20}{\psframebox[linewidth=1.0,linestyle=dashed]{\cfgcode{goto 8}}}
+    % \putnode{n7}{n6}{-30}{-25}{\psframebox{\cfgcode{z = new B}}}
+    \putnode{n8}{n6}{30}{-15}{\psframebox{\cfgcode{z = new A}}}
+    \putnode{n9}{n8}{0}{-15}{\psframebox{\cfgcode{x = \&z}}}
+    \putnode{n10}{n6}{0}{-50}{\psframebox{\cfgcode{\ldots}}}
+    \putnode{n11}{n3}{-20}{-105}{\psframebox{\cfgcode{END}}}
+
+    \putnode{n12}{n1}{20}{-9}{\cfgdata{1}}
+    \putnode{n13}{n2}{15}{-8}{\cfgdata{2}}
+    \putnode{n14}{n3}{-10}{4}{\cfgdata{3}}
+    \putnode{n15}{n4}{18}{-5}{\cfgdata{4}}
+    \putnode{n16}{n5}{35}{-9}{\cfgdata{5}}
+    \putnode{n17}{n6}{5}{-9}{\cfgdata{6}}
+    % \putnode{n18}{n7}{19}{-8}{\cfgdata{7}}
+    \putnode{n19}{n8}{19}{-8}{\cfgdata{8}}
+    \putnode{n20}{n9}{14}{-8}{\cfgdata{9}}
+    \putnode{n21}{n10}{11}{-7}{\cfgdata{10}}
+    \putnode{n22}{n11}{12}{-8}{\cfgdata{11}}
+
+    % \putnode{n20}{n1}{40}{6}{\cfgdata{$\phi$}}
+    % \putnode{n21}{n1}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n22}{n2}{40}{6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n23}{n2}{40}{-6}{\cfgdata{$\{(x,A)\}$}}
+    % \putnode{n24}{n3}{-30}{0}{\cfgdata{$\{(x,A)\}$}}
+    \putnode{n26}{n4}{13}{9}{\cfgdata{$\{(x,y),(x,z)\}$}}
+    \putnode{n27}{n6}{12}{9}{\cfgdata{$\{(b,\bot)\}$}}
+    \putnode{n28}{n5}{14}{9}{\cfgdata{$\{(tmp,\bot)\}$}}
+    % \putnode{n29}{n8}{-30}{-4}{\cfgdata{$\{(x,A)\}$}}
+
+    %Some reference statements for connections
+    %\ncangle[angleB=90]{->}{n2}{n3}
+    %\ncangle[angleA=180,angleB=90]{->}{n1}{n3}
+    % \ncline[linewidth=1.0]{->}{n1}{n2}
+    \ncline{->}{n1}{n2}
+    \ncline{->}{n2}{n3}
+    \ncline{->}{n3}{n4}
+    \ncline{->}{n4}{n5}
+    \ncline{->}{n5}{n6}
+    % \ncline{->}{n6}{n7}
+    % \nbput*{\cfgdata{F}}
+    \ncline{->}{n6}{n8}
+    % \naput*{\cfgdata{T}}
+    \ncline{->}{n8}{n9}
+    \ncline{->}{n9}{n10}
+    % \ncline{->}{n7}{n10}
+
+    \ncloop[arm=40,angleA=0,angleB=0,loopsize=0,armA=10,armB=50] {<-}{n3}{n10}
+    %\ncangles[angleA=-90, angleB=60, armA=5, armB=5, linearc=2]{->}{n7}{n2}
+    \nccurve[angleA=200,angleB=120, ncurv=0.5]{->}{n3}{n11}
+    %\ncline[linestyle=dotted]{->}{n4}{n5}
+    }
+
+\end{pspicture}
+\end{column}
+\begin{column}{0.5\linewidth}
+    \only<1>{
+    \begin{itemize}
+        \item Class, Constant and Pointer Analysis combine together.
+        \item However, they fail to optimize.
+    \end{itemize}
+}
+
+    \only<2>{
+    \begin{itemize}
+        \item The reason for failure is node 4.
+        \item Initially the pointer information from node 2 propagates to $In_4$ 
+        \item Pointer analysis decides to transform the code.
+    \end{itemize}
+}
+
+    \only<3-5>{
+    \begin{itemize}
+        \item<3,4> Series of transformations take place.
+        \item<5> Due to node 9, the data-flow information at $In_4$ changes.
+    \end{itemize}
+}
+
+    \only<6>{
+    \begin{itemize}
+        \item Not a valid transformation.
+    \end{itemize}
+}
+
+    \only<7,8,9>{
+    \begin{itemize}
+        \item Hence, all transformations are undone one by one.
+    \end{itemize}
+}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Lerner : Advantages}
+    \begin{itemize}
+        \item It provides better precision than cascading analyses.
+
+        \item It can also be used solely for analysis. (if transformation are discarded)
+
+        \item It has been proven to be sound and terminates if individual analyses terminate.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Lerner : Disadvantages}
+    \begin{itemize}
+        \item Forward and Backward analyses cannot be combined.
+
+        \item The dependence on transformations reduces its power.
+
+        \item It can only use precomposed set of analyses. (i.e. it cannot add or remove analyses as per the requirement)
+
+        \item A pair of analyses making conflicting transformations halts the system.
+    \end{itemize}
+\end{frame}
+
+
+
+%\begin{frame}
+%  \frametitle{title}
+%\end{frame}
+
+

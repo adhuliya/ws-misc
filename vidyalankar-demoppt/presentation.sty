@@ -1,0 +1,314 @@
+
+\usepackage{theme} % theme settings copied from web
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Absolute Basics
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[british]{babel}
+\usepackage[utf8]{inputenc} % sets text encoding to utf8
+\usepackage{graphicx} % to include images into the document
+\usepackage{caption} % for subfigures
+%\captionsetup{position=top} %\captionsetup{position=bottom}
+\usepackage{subcaption} % for subfigures
+%\usepackage{fullpage} % reduces the margins to 1 inch
+%\thispagestyle{style} %style=plain, headings, empty
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define new colors here.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \usepackage[dvipsnames]{xcolor} % gives option clash error
+\usepackage{color}
+
+\definecolor{royalblue}{rgb}{0.0, 0.14, 0.4}
+\definecolor{burntorange}{rgb}{0.8, 0.33, 0.0}
+\definecolor{darkmagenta}{rgb}{0.55, 0.0, 0.55}
+\definecolor{cyanprocess}{rgb}{0.0, 0.72, 0.92}
+\definecolor{cyan}{rgb}{0.0, 1.0, 1.0}
+\definecolor{magenta}{rgb}{1.0, 0.0, 1.0}
+\definecolor{verylightgray}{HTML}{EEEEEE}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Makes references, and table of contents clickable
+%% Sets basic color settings for hyperlinks
+%% NOTE: Does't work with beamer.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[pdfpagelabels,bookmarks,hyperindex,hyperfigures]{hyperref}
+% \usepackage{hyperref}
+% \hypersetup{
+%     bookmarks=true,
+%     colorlinks=true,        % false: boxed links; true: colored links
+%     linkcolor=royalblue,    % color of internal links (change box color with linkbordercolor)
+%     citecolor=burntorange,  % color of links to bibliography
+%     filecolor=darkmagenta,      % color of file links
+%     urlcolor=cyanprocess % color of external links
+% }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% To add program snippets to the beamer slides
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{listings}
+
+%\usepackage{color} %statements below need package color
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\small\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize\ttfamily,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=8pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=leftline,
+    framextopmargin=50pt,
+    rulecolor=\color{codegreen},
+    framerule=3pt
+}
+
+\lstset{style=mystyle}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Adds command \prettyref{prefix:name}
+%% To use it the labels should be <prefix>:<name>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{prettyref}
+\newrefformat{topic}{Topic~\ref{#1}}
+\newrefformat{subsec}{SubSection~\ref{#1}} % for sub or subsubsection
+\newrefformat{sec}{Section~\ref{#1}}
+\newrefformat{fig}{Figure~\ref{#1}}
+\newrefformat{table}{Table~\ref{#1}}
+\newrefformat{eq}{Equation~\ref{#1}}
+\newrefformat{lst}{Listing~\ref{#1}}
+\newrefformat{appdx}{Appendix~\ref{#1}}
+\newrefformat{chap}{Chapter~\ref{#1}}
+\newrefformat{bib}{\cite{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bibliography:
+%% use: \cite{<key>}
+%%      TEXT\parencite[see][p10]{latexcompanion} % = [see 1, p10]
+%%      TEXT\parencite[compare][]{knuthwebsite}
+%%      TEXT\parencite[e.g.][page 300]{einstein} % = [e.g. 1, page 300]
+%%
+%% TO PRINT bibliography use (at appropriate place in document):
+%% \printbibliography
+%% Package biblatex needs 'biber' instead of 'bibtex' for compilation
+%% the setting backend=bibtex makes it use bibtex8 (not bibtex!)
+%% (letting me use the same Makefile across projects)
+%% NOTE: Use bibtex8 always instead of deprecated bibtex   !!!!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[style=ieee,sorting=none,backend=bibtex]{biblatex}
+\usepackage[backend=bibtex,style=authoryear]{biblatex}
+\addbibresource{references.bib}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% pstricks
+%% http://www.latex-community.org/forum/viewtopic.php?f=45&t=5886
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps}
+\usepackage{pstricks}
+\usepackage{pstricks-add}
+%\usepackage{auto-pst-pdf} %enables pstricsk with 'pdflatex' command
+\usepackage{pst-rel-points}
+\psset{unit=.5mm} %default setting - fits most purpose
+%\fontsize{9pt}{9.1pt}\selectfont
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Settings for custom text color box with appropriate height
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{calc}
+
+%Define a reference depth. 
+%You can choose either relative or absolute.
+%--------------------------
+\newlength{\DepthReference}
+%\settodepth{\DepthReference}{g}%relative to a depth of a letter.
+\setlength{\DepthReference}{4pt}%absolute value.
+
+%Define a reference Height. 
+%You can choose either relative or absolute.
+%--------------------------
+\newlength{\HeightReference}
+%\settoheight{\HeightReference}{T}
+\setlength{\HeightReference}{4pt}
+
+
+%--------------------------
+\newlength{\Width}%
+
+\newcommand{\CodeBox}[2][verylightgray]%
+{%
+    \settowidth{\Width}{#2}%
+    %\setlength{\fboxsep}{0pt}%
+    \colorbox{#1}%
+    {%      
+        %\raisebox{\DepthReference}%
+        \raisebox{-1pt}%
+        {%
+            \parbox[b][\HeightReference+\DepthReference][c]{\Width}{\centering#2}%
+        }%
+    }%
+}
+
+\newcommand{\CodeBoxb}[2][verylightgray]%
+{%
+    \settowidth{\Width}{#2}%
+    %\setlength{\fboxsep}{0pt}%
+    \colorbox{#1}%
+    {%      
+        %\raisebox{\DepthReference}%
+        \raisebox{0pt}%
+        {%
+            \parbox[b][\HeightReference+\DepthReference][b]{\Width}{\centering#2}%
+        }%
+    }%
+}
+
+\newcommand{\CodeBoxt}[2][verylightgray]%
+{%
+    \settowidth{\Width}{#2}%
+    %\setlength{\fboxsep}{0pt}%
+    \colorbox{#1}%
+    {%      
+        %\raisebox{\DepthReference}%
+        \raisebox{-1pt}%
+        {%
+            \parbox[b][\HeightReference+\DepthReference][t]{\Width}{\centering#2}%
+        }%
+    }%
+}
+
+\newcommand{\CodeBoxtb}[2][verylightgray]%
+{%
+    \settowidth{\Width}{#2}%
+    %\setlength{\fboxsep}{0pt}%
+    \colorbox{#1}%
+    {%      
+        %\raisebox{\DepthReference}%
+        \raisebox{0pt}%
+        {%
+            \parbox[b][\HeightReference+\DepthReference][c]{\Width}{\centering#2}%
+        }%
+    }%
+}
+
+\newcommand{\DCodeBox}[2][lightgray]%
+{%
+    \settowidth{\Width}{#2}%
+    %\setlength{\fboxsep}{0pt}%
+    \colorbox{#1}%
+    {%      
+        %\raisebox{\DepthReference}%
+        \raisebox{-1pt}%
+        {%
+            \parbox[b][\HeightReference+\DepthReference][c]{\Width}{\centering#2}%
+        }%
+    }%
+}
+
+\newcommand{\DCodeBoxb}[2][lightgray]%
+{%
+    \settowidth{\Width}{#2}%
+    %\setlength{\fboxsep}{0pt}%
+    \colorbox{#1}%
+    {%      
+        %\raisebox{\DepthReference}%
+        \raisebox{0pt}%
+        {%
+            \parbox[b][\HeightReference+\DepthReference][b]{\Width}{\centering#2}%
+        }%
+    }%
+}
+
+\newcommand{\DCodeBoxt}[2][lightgray]%
+{%
+    \settowidth{\Width}{#2}%
+    %\setlength{\fboxsep}{0pt}%
+    \colorbox{#1}%
+    {%      
+        %\raisebox{\DepthReference}%
+        \raisebox{-1pt}%
+        {%
+            \parbox[b][\HeightReference+\DepthReference][t]{\Width}{\centering#2}%
+        }%
+    }%
+}
+
+\newcommand{\DCodeBoxtb}[2][lightgray]%
+{%
+    \settowidth{\Width}{#2}%
+    %\setlength{\fboxsep}{0pt}%
+    \colorbox{#1}%
+    {%      
+        %\raisebox{\DepthReference}%
+        \raisebox{0pt}%
+        {%
+            \parbox[b][\HeightReference+\DepthReference][c]{\Width}{\centering#2}%
+        }%
+    }%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% New commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\cfgcode}[1]{\scriptsize{#1}}
+\newcommand{\cfgcodefade}[1]{\scriptsize{\color{lightgray}#1}}
+\newcommand{\cfgcodewhite}[1]{\scriptsize{\color{lightgray}#1}}
+\newcommand{\cfgdata}[1]{\tiny{#1}}
+\newcommand{\cfgdatafade}[1]{\tiny{\color{lightgray}#1}}
+\newcommand{\cfgdatawhite}[1]{\tiny{#1}}
+\newcommand{\cfgtitle}[1]{\normalsize{#1}}
+
+\usepackage{xspace}
+\newcommand{\typeof}{\textit{typeof}\xspace} %for inside math environment
+\newcommand{\Value}{\textit{Value}\xspace} %for inside math environment
+%\newcommand{\Code}[1]{\textcolor{codeblue}{\texttt{#1}}} % when writing code snippents inline
+\newcommand{\Line}[1]{\texttt{#1}} % when writing code snippents inline
+\newcommand{\Code}[1]{\CodeBox{\texttt{#1}}} % when writing code snippents inline
+\newcommand{\Codeb}[1]{\CodeBoxb{\texttt{#1}}} % when writing code snippents inline
+\newcommand{\Codet}[1]{\CodeBoxt{\texttt{#1}}} % when writing code snippents inline
+\newcommand{\Codetb}[1]{\CodeBoxtb{\texttt{#1}}} % when writing code snippents inline
+
+\newcommand{\DCode}[1]{\DCodeBox{\texttt{#1}}} % when writing code snippents inline
+\newcommand{\DCodeb}[1]{\DCodeBoxb{\texttt{#1}}} % when writing code snippents inline
+\newcommand{\DCodet}[1]{\DCodeBoxt{\texttt{#1}}} % when writing code snippents inline
+\newcommand{\DCodetb}[1]{\DCodeBoxtb{\texttt{#1}}} % when writing code snippents inline
+\newcommand{\Term}[1]{\textit{#1}} % when writing a term for the first time -- useful for creating a list of terms
+\usepackage{array}
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+

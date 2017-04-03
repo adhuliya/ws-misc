@@ -1,0 +1,100 @@
+\documentclass{beamer}
+
+\usepackage{presentation}
+
+% The title of the presentation:
+%  - first a short version which is visible at the bottom of each slide;
+%  - second the full title shown on the title slide;
+\title[Compilers]{Topics in Compilers for GATE}
+
+% Optional: a subtitle to be dispalyed on the title slide
+\subtitle{Demo Presentation at Vidyalankar}
+
+% The author(s) of the presentation:
+%  - again first a short version to be displayed at the bottom;
+%  - next the full list of authors, which may include contact information;
+\author[Anshuman Dhuliya]{
+    Anshuman Dhuliya \\
+  {\small \url{anshumandhuliya@gmail.com}} }
+
+% The institute:
+%  - to start the name of the university as displayed on the top of each slide
+%    this can be adjusted such that you can also create a Dutch version
+%  - next the institute information as displayed on the title slide
+\institute[Vidyalankar]{
+    PhD Scholar At \\
+  Indian Institute of Technology Bombay}
+
+% Add a date and possibly the name of the event to the slides
+%  - again first a short version to be shown at the bottom of each slide
+%  - second the full date and event name for the title slide
+\date[Demo PPT Mar 2017]{
+  Mar 2017}
+
+
+\begin{document}
+\begin{frame}
+    \titlepage
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{Outline}
+    \tableofcontents[onlyparts]
+\end{frame}
+
+
+\begin{frame}
+    \frametitle{About the Presentation}
+    \begin{itemize}
+        \item The content of the presenation are inspired from [\prettyref{bib:aho1986compilers}].
+        \item Many other resources have been used.
+        \item Personal material has been added appropriately.
+    \end{itemize}
+
+    \onslide<2->{
+    \begin{block}{Student Friendly}
+        The idea is to create summary slides which the students can quickly refer for revision. These slides can easily be converted to printable handouts.
+     \end{block}
+}
+\end{frame}
+
+\part{Introduction to Compilers}
+\frame[plain]{
+    \partpage
+}
+\include{introduction} % introduction.tex
+
+
+\part{Predictive Parsing Grammars}
+\frame[plain]{
+    \partpage
+}
+\include{predictiveparsing} % predictiveparsing.tex
+
+
+\part{Gate Questions}
+\frame[plain]{
+    \partpage
+}
+\include{gatequestions} % gatequestions.tex
+
+
+\begin{frame}[plain]
+    \begin{center}
+        \textbf{\Huge{}Thank You}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}[t,allowframebreaks]
+        \frametitle{References}
+        \printbibliography
+        % \bibliographystyle{ieee}
+        % \bibliography{references}
+\end{frame}
+
+
+\end{document}
+
+

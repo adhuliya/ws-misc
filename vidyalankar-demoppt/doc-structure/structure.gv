@@ -1,0 +1,30 @@
+//  1. Save the file as structure.gv
+//  2. Convert to jpg
+//      dot -Tjpg structure.gv -o structure.jpg
+
+digraph G {
+    "theme.sty" [style=filled,color=".7 .3 1.0"];
+    "pst-rel-points.sty" [style=filled,color=".7 .3 1.0"];
+    "presentation.sty" [style=filled,color=".7 .3 1.0"];
+    "Part 1" [shape=box];
+    "Part 2" [shape=box];
+    "Part 3" [shape=box];
+    "Part 4" [shape=box];
+    "Part 5" [shape=box];
+    "Part 6" [shape=box];
+
+    "theme.sty" -> "presentation.sty";
+    "pst-rel-points.sty" -> "presentation.sty";
+    "presentation.sty" -> "main.tex";
+    "overview.tex" -> "Part 1" -> "main.tex";
+    "cascading.tex" -> "Part 2" -> "main.tex";
+    "superanalysis.tex" -> "Part 3" -> "main.tex";
+    "lerner.tex" -> "Part 4" -> "main.tex";
+    "spa.tex" -> "Part 5" -> "main.tex";
+    "conclusion.tex" -> "Part 6" -> "main.tex";
+    "references.bib" -> "main.tex";
+
+    "main.tex" -> "Makefile" [style=dotted];
+    "Makefile" -> "main.pdf" [style=dotted, label="make"];
+    "Makefile" -> "make && evince main.pdf &" [style=dotted, label="make show"];
+}

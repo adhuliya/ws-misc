@@ -4,7 +4,7 @@
 using namespace std;
 
 unsigned mem=0;
-unsigned mx=0;
+unsigned max=0;
 
 unsigned dollars(unsigned num, unsigned div, unsigned depth);
 
@@ -15,14 +15,14 @@ int main(int argc, char **argv) {
         cout << dollars(num,1,1) << endl;
     }
 
-    cout << "MaxDepth : " << mx << endl;
+    cout << "MaxDepth : " << ::max << endl;
 
     return 0;
 }
 
 unsigned dollars(unsigned num, unsigned div, unsigned depth) {
-    if (depth > mx) {
-        mx++;
+    if (depth > ::max) {
+        ::max++;
     }
 
     num /= div;

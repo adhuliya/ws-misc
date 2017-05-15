@@ -1,0 +1,105 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Theme settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mode<presentation>
+{
+  \usetheme{Warsaw}      % or try Darmstadt, Madrid, Warsaw, ...
+} 
+
+
+
+% \usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{etoolbox} % this is new
+\usepackage[absolute,overlay]{textpos} % package for the positioning
+%\usepackage[texcoord,grid,gridunit=mm,gridcolor=red!10,subgridcolor=green!10]{eso-pic}
+
+    \definecolor{myblue1}{RGB}{50,50,50}
+    %\definecolor{myblue1}{RGB}{35,119,189}
+    \definecolor{myblue2}{RGB}{90,90,90}
+    %\definecolor{myblue2}{RGB}{95,179,238}
+    \definecolor{myblue3}{RGB}{129,168,207}
+    \definecolor{myblue4}{RGB}{26,89,142}
+
+    \setbeamercolor*{structure}{fg=myblue1,bg=blue}
+    \setbeamercolor*{palette primary}{use=structure,fg=white,bg=structure.fg}
+    \setbeamercolor*{palette secondary}{use=structure,fg=white,bg=structure.fg!75!black}
+    \setbeamercolor*{palette tertiary}{use=structure,fg=white,bg=structure.fg!50!black}
+    \setbeamercolor*{palette quaternary}{fg=black,bg=white}
+
+    \setbeamercolor*{item projected}{fg=white,bg=myblue1!80}
+    \setbeamercolor*{block title example}{fg=white,bg=myblue4}
+    \setbeamercolor*{frametitle}{fg=black}
+  
+    \setbeamertemplate{blocks}[rounded][shadow=true]
+
+    \makeatletter
+    \pgfdeclarehorizontalshading[frametitle.bg,frametitle right.bg]{beamer@frametitleshade}{\paperheight}{%
+      color(0pt)=(myblue2);
+      color(\paperwidth)=(white)}
+
+    \defbeamertemplate*{footline}{mysplit theme}
+    {%
+      \leavevmode%
+      \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm plus1fill,rightskip=.3cm]{author in head/foot}%
+        \usebeamerfont{author in head/foot}\insertshortauthor
+      \end{beamercolorbox}%
+      \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{title in head/foot}%
+        \usebeamerfont{title in head/foot}\insertshorttitle\hfill
+        \insertframenumber/\inserttotalframenumber\hspace*{0.5em}
+      \end{beamercolorbox}}%
+      \vskip0pt%
+    }
+   
+	\let\slideno\beamer@slideinframe
+
+    \makeatother
+    
+% %Uncomment the following block to include a logo at the right end
+% % position the logo
+% \addtobeamertemplate{frametitle}{}{%
+% \begin{textblock*}{150mm}(11.6cm,0.25cm)
+% \includegraphics[height=1.235cm,width=1.235cm,keepaspectratio]{logoarea}
+% %\includegraphics[scale=0.15]{logoarea}
+% \end{textblock*}}
+% %End of block
+
+
+\setbeamertemplate{headline}{%
+\leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.125ex]{palette quaternary}%
+    \insertsectionnavigationhorizontal{\paperwidth}{}{\hskip0pt plus1filll}
+    \end{beamercolorbox}%
+  }
+% \hbox{%
+%     \begin{beamercolorbox}[wd=\paperwidth,ht=2.5ex,dp=1.125ex]{palette quaternary}%
+%     \insertsubsectionnavigationhorizontal{\paperwidth}{}{\hskip0pt plus1filll}
+%     \end{beamercolorbox}%
+%   }  
+}
+%\setbeamercovered{transparent}
+%\setbeamercovered{%
+%  again covered={\opaqueness<1->{15}}}
+\setbeamercovered{still covered={\opaqueness<1->{5}},again covered={\opaqueness<1->{60}}}
+
+% begining of the new definition
+\makeatletter
+\newcommand*\fix@beamer@close{%
+  \ifnum\beamer@trivlistdepth>0
+    \beamer@closeitem
+  \fi
+}
+\newcommand*\fix@beamer@open{%
+  \ifnum\beamer@trivlistdepth>0
+    \gdef\beamer@closeitem{}%
+  \fi
+}
+\BeforeBeginEnvironment{itemize}{\fix@beamer@close}
+\AfterEndEnvironment{itemize}{\fix@beamer@open}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{graphicx,url}
+
+

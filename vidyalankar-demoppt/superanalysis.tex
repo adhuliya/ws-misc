@@ -1,0 +1,45 @@
+\begin{frame}
+  \frametitle{Super-Analyses}
+
+  \begin{block}{Principle}
+      Analyses can be combined together by designing special flow functions, over their product domains [\prettyref{bib:cousot1979systematic}].
+  \end{block}
+
+  Some super-analyses are,
+    \begin{itemize}
+        \item Conditional Constant Propagation [\prettyref{bib:wegman1991constant}]
+        \item Constant Propagation and Pointer Analysis [\prettyref{bib:pioli1999combining}]
+        \item LFCPA [\prettyref{bib:khedker2012liveness}]
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Super-Analyses : Advantages}
+
+    \begin{itemize}
+        \item They can exploit the best possible interactions between analyses.
+        \item They provide the most precise results.
+        \item They solve the ubitquitous phase ordering problem (discussed separately).
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Super-Analyses : Disadvantages}
+
+    \begin{itemize}
+        \item They have to be manually designed.
+        \item They combine few analyses (generally two or three).
+        \item It is very hard, if not impossible, to manually design a super analysis that comprises of all known analyses.
+    \end{itemize}
+
+\end{frame}
+
+
+%\begin{frame}
+%  \frametitle{title}
+%\end{frame}
+
+

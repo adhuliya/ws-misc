@@ -1,0 +1,75 @@
+\begin{frame}
+\frametitle{Properties of Predictive Parsing Grammars}
+
+\begin{enumerate}
+\item They are not ambiguous.
+\item They are not left recursive (direct or indirect).
+\item The FIRST set of each body of a terminal should be disjoint.
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Ambiguity}
+
+\begin{block}{Discovering and Removing Ambiguity}
+When more than one parse tree can derive the same string of the language, then the grammar is ambiguous.
+
+Proving a grammar ambiguous is an undecidable problem. And there is no algorithm to remove ambiguity from a grammar.
+
+\end{block}
+
+\begin{example}{Ambiguous Grammar}
+
+\texttt{S -> S + S | S - S | 0 | 1 | 2 | 3 | ... | 9}
+
+\vspace{1em}
+
+\texttt{Stmt -> if Expr then Stmt}
+
+\texttt{Stmt -> if Expr then Stmt else Stmt}
+
+\texttt{Stmt -> other}
+
+\end{example}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Eliminating Left Recursion}
+
+\begin{example}{Left Recursion Grammars}
+\texttt{E -> E + T}
+
+\texttt{E -> T}
+
+\vspace{1em}
+
+\texttt{A -> Cd}
+
+\texttt{B -> Ce}
+
+\texttt{C -> A | B | f}
+
+
+\texttt{Stmt -> other}
+\end{example}
+
+\begin{block}{Left Recursion can be removed}
+Every left-recursive grammar can be converted to a right-recursive grammar.
+
+\vspace{1em}
+
+\texttt{A -> A$\alpha$ | $\beta$}
+
+\vspace{1em}
+
+\texttt{A -> $\beta$A'}
+
+\texttt{A' -> $\alpha$A' | $\epsilon$}
+
+\end{block}
+
+\end{frame}

@@ -1,0 +1,52 @@
+//graph G {
+//    subgraph {
+//    label="hello";
+//    a -- b[label="occurs together"]; //,weight="0.1"];
+//    a -- c;
+//    b -- d;
+//    c -- d;
+//    b -- b;
+//    c -- c;
+//    }
+//};
+//
+
+digraph G2 {
+        splines=line;
+    subgraph cluster_S1 {
+        label="Solution 1";
+        node [shape=box];
+        aa [label=""];
+        bb [label="a * b"];
+        cc [label=""];
+        dd [label="a = b"];
+        aa -> bb[color=red,penwidth=2];
+        bb -> cc;
+        cc -> dd;
+        dd -> dd[dir=back,color=green,penwidth=2];
+    }
+    subgraph cluster_S2 {
+        label="Solution 2";
+        node [shape=box];
+        aa1 [label=""];
+        bb1 [label="a * b"];
+        cc1 [label=""];
+        dd1 [label="a = b"];
+        aa1 -> bb1[color=red,penwidth=2];
+        bb1 -> cc1;
+        cc1 -> dd1;
+        dd1 -> dd1[dir=back,color=green,penwidth=2];
+    }
+    subgraph cluster_S3 {
+        label="Solution 3";
+        node [shape=box];
+        aa2 [label=""];
+        bb2 [label="a * b"];
+        cc2 [label=""];
+        dd2 [label="a = b"];
+        aa2 -> bb2;//[color=red,penwidth=2];
+        bb2 -> cc2;
+        bb2 -> dd2;
+        dd2 -> dd2[dir=back];//,color=green,penwidth=2];
+    }
+}

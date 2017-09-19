@@ -47,6 +47,14 @@ const (
   FAILURE     byte = 3 // key not present in CAS and CAD
 )
 
+func (self *Value) GetDelTime() int64 {
+  return self.delTime
+}
+
+func (self *Value) GetValue() uint64 {
+  return self.value
+}
+
 // Returns the next key to be used for the given value.
 // MUST BE CALLED ATOMICALLY UNDER MUTEX
 func (kv *TimedKv) nextKey() uint64 {

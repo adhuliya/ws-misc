@@ -15,7 +15,7 @@ func CheckError(err error) {
 
 // func createConn(
 
-func main() {
+func abcmain() {
     ServerAddr,err := net.ResolveUDPAddr("udp","127.0.0.1:10001")
     CheckError(err)
 

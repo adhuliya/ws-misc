@@ -22,9 +22,13 @@ type KvServer struct {
   // to the replyIp and replyPort.
   replies   chan Reply
 
-  // ip and port of this server which is sent to clients.
+  // ip and port of this server, that clients send query to. 
   ip        uint32
   port      uint16
+
+  // Socket used to send replyies to clients
+  senderIp    uint32
+  senderPort  uint16
 
   // It caches Connection with clients for speed.
   // Key = uint64(reply.replyIp)<<16 | reply.replyPort
@@ -54,6 +58,8 @@ func MakeKvServer(serverId uint32, address string) KvServer {
     replies     : make(chan Reply, 1024),
     ip          : ip,
     port        : port,
+    senderIp    : ip,
+    senderPort  : port+1,
     // Maps ip:port of client to its Connection struct
     // ip:port is converted to uint64 by using lower 6 bytes
     // upper 2 bytes are zero
@@ -98,12 +104,12 @@ func (self *KvServer) run(ch chan int32) {
   ch <- 1
 
   // Start receivers
-  for i := 0; i < self.receivers; i++ {
+  for i := uint8(0); i < self.receivers; i++ {
     go self.processQueries()
   }
 
   // Start senders
-  for i := 0; i < self.senders; i++ {
+  for i := uint8(0); i < self.senders; i++ {
     go self.sendReplies()
   }
 
@@ -120,7 +126,7 @@ func (self *KvServer) run(ch chan int32) {
 
       self.incMsgCount()
       query := DeSerializeQuery(buf)
-      fmt.Printf("Received %#v\n", query)
+      // fmt.Printf("Received %#v\n", query)
 
       // send it for processing
       self.queries <- query
@@ -137,19 +143,25 @@ func (self *KvServer) processQueries() {
     }
 
     if query.action == ACTION_GET {
-      value, _ := self.tkv.Get(query.key)
+      value, isPresent := self.tkv.Get(query.key)
 
       // Calculate time to live in seconds.
       now := time.Now().UnixNano()
       ttl := uint32(0)
       if value.GetDelTime() > now {
+        // Take difference and convert to seconds.
         ttl = uint32((value.GetDelTime() - now)/1000000000)
+      }
+
+      status := STATUS_OK
+      if !isPresent {
+        status = STATUS_NOKEY
       }
 
       if shouldReply {
         self.replies <- Reply {
           action      : query.action,
-          status      : STATUS_OK,
+          status      : status,
           key         : query.key,
           value       : value.GetValue(),
           timeToLive  : ttl,    // approximate value (obviously)
@@ -158,12 +170,36 @@ func (self *KvServer) processQueries() {
           serverPort  : self.port,
           replyIp     : query.replyIp,
           replyPort   : query.replyPort,
-          // newIp, newPort are set when finally sending reply
-          newIp       : 0,
-          newPort     : 0,
+          // newIp, newPort maybe changed when finally sending reply
+          newIp       : self.ip,
+          newPort     : self.port,
         }
       }
     }
+
+    if query.action == ACTION_ADD {
+      key := self.tkv.Add(query.value,
+          int64(query.timeToLive) * 1000000000)
+
+      if shouldReply {
+        self.replies <- Reply {
+          action      : query.action,
+          status      : STATUS_OK,
+          key         : key,
+          value       : query.value,
+          timeToLive  : query.timeToLive,  // approximate value (obviously)
+          requestId   : query.requestId,
+          serverIp    : self.ip,
+          serverPort  : self.port,
+          replyIp     : query.replyIp,
+          replyPort   : query.replyPort,
+          // newIp, newPort maybe changed when finally sending reply
+          newIp       : self.ip,
+          newPort     : self.port,
+        }
+      }
+    }
+
     // if query.action == ACTION_DELETE {
     // }
     // if query.action == ACTION_MODIFY_VD {
@@ -171,8 +207,6 @@ func (self *KvServer) processQueries() {
     // if query.action == ACTION_MODIFY_V {
     // }
     // if query.action == ACTION_MODIFY_D {
-    // }
-    // if query.action == ACTION_ADD {
     // }
   }
 }
@@ -186,14 +220,18 @@ func (self *KvServer) sendReplies() {
     conn := self.createConnection(reply.replyIp,
         reply.replyPort, false)
 
+    // fmt.Printf("Replying %#v\n", reply)
     replyBytes := reply.Serialize()
+    // fmt.Printf("Replying %#v\n", replyBytes)
+
+    // fmt.Printf("Replying %#v\n", conn.conn)
+
 
     _, err := conn.conn.Write(replyBytes)
     for err != nil {
       conn = self.createConnection(reply.replyIp,
           reply.replyPort, true)
       _, err = conn.conn.Write(replyBytes)
-
     }
   }
 }
@@ -210,7 +248,8 @@ func (self *KvServer) getConnection(key uint64) (Connection, bool) {
   self.connMapMutex.Lock()
   defer self.connMapMutex.Unlock()
 
-  return self.connMap[key]
+  conn, isPresent := self.connMap[key]
+  return conn, isPresent
 }
 
 // Generates a Connection object if none exists.
@@ -218,14 +257,14 @@ func (self *KvServer) getConnection(key uint64) (Connection, bool) {
 func (self *KvServer) createConnection(replyIp uint32, replyPort uint16, force bool) Connection {
 
   // Generate the key to the connMap.
-  replySocket := uint64(reply.replyIp)<<16 | uint64(reply.replyPort)
+  replySocket := uint64(replyIp)<<16 | uint64(replyPort)
 
   connection, isPresent := self.getConnection(replySocket)
 
   if !isPresent {
     // Set up a brand new connection object.
     localAddr, err := net.ResolveUDPAddr("udp",
-        getSocketString(self.ip, self.port))
+        getSocketString(self.senderIp, self.senderPort))
     checkError(err)
 
     // When replying, remote client is the server.
@@ -236,22 +275,26 @@ func (self *KvServer) createConnection(replyIp uint32, replyPort uint16, force b
     conn, err := net.DialUDP("udp", localAddr, remoteAddr)
     checkError(err)
 
-    connection := Connection {
+    connection = Connection {
       localAddr   : localAddr,
       remoteAddr  : remoteAddr,
       conn        : conn,
     }
 
+    // fmt.Printf("Connection %#v\n", connection)
+
     self.addConnection(replySocket, connection)
   } else {
     if force {
       // Reestablish the old connection.
-      connection.conn, err := net.DialUDP("udp",
+      conn, err := net.DialUDP("udp",
           connection.localAddr,
           connection.remoteAddr)
       checkError(err)
 
-      self.addConnection(connection)
+      connection.conn = conn
+
+      self.addConnection(replySocket, connection)
     }
   }
 

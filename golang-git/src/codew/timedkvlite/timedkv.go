@@ -57,11 +57,11 @@ func (kv *TimedKv) Destroy() {
 /* Add() sets a new kv pair in the kv store. It overwrites the value
 if the key already exists.
 */
-func (kv *TimedKv) Add(value uint64, duration int64) uint64 {
+func (kv *TimedKv) Add(value uint64, timeToLive int64) uint64 {
 
-  duration = kv.limitDuration(duration)
-  if duration > kv.maxDurationYet {
-    kv.maxDurationYet = duration
+  timeToLive = kv.limitDuration(timeToLive)
+  if timeToLive > kv.maxDurationYet {
+    kv.maxDurationYet = timeToLive
   }
 
   now := time.Now().UnixNano()
@@ -69,7 +69,7 @@ func (kv *TimedKv) Add(value uint64, duration int64) uint64 {
     key     : 0,
     value   : value,
     addTime : now,
-    delTime : now + int64(duration),
+    delTime : now + int64(timeToLive),
   }
 
 
@@ -93,16 +93,16 @@ func (kv *TimedKv) Add(value uint64, duration int64) uint64 {
   return val.key
 }
 
-// Set duration between max and min
-func (kv *TimedKv) limitDuration(duration int64) int64 {
-  if duration < kv.minDuration {
-    duration = kv.minDuration
+// Set timeToLive between max and min
+func (kv *TimedKv) limitDuration(timeToLive int64) int64 {
+  if timeToLive < kv.minDuration {
+    timeToLive = kv.minDuration
   }
-  if duration > kv.maxDuration {
-    duration = kv.maxDuration
+  if timeToLive > kv.maxDuration {
+    timeToLive = kv.maxDuration
   }
 
-  return duration
+  return timeToLive
 }
 
 // Get() returns the value if present, and true/false if the value
@@ -146,11 +146,11 @@ func (kv *TimedKv) Delete(key uint64) bool {
 /* Modify sets a new value to an already present kv pair, if the pair is
 present and its version is same as given during the function call.
 */
-func (kv *TimedKv) Modify(key uint64, value uint64, duration int64,
+func (kv *TimedKv) Modify(key uint64, value uint64, timeToLive int64,
     modifyVal bool, modifyDuration bool) byte {
   var status byte = FAILURE
 
-  duration = kv.limitDuration(duration)
+  timeToLive = kv.limitDuration(timeToLive)
   now     := time.Now().UnixNano()
 
   kv.kvMutex.Lock()
@@ -158,7 +158,7 @@ func (kv *TimedKv) Modify(key uint64, value uint64, duration int64,
     val, isPresent := kv.kv[key] // READ
     if isPresent {
       if modifyDuration {
-        val.delTime  = now + int64(duration)
+        val.delTime  = now + int64(timeToLive)
       }
       if modifyVal {
         val.value    = value

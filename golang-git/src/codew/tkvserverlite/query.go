@@ -11,7 +11,7 @@ import (
 type Query struct {
   key         uint64  // byte 8:16
   value       uint64  // byte 16:24
-  duration    uint32  // byte 24:28 (seconds)
+  timeToLive  uint32  // byte 24:28 (seconds)
   requestId   uint32  // byte 28:32
   replyIp     uint32  // byte 2:6
   replyPort   uint16  // byte 6:8
@@ -41,7 +41,7 @@ func (query *Query) Serialize() []byte {
   binary.BigEndian.PutUint16(bytes[6:8], query.replyPort)
   binary.BigEndian.PutUint64(bytes[8:16], query.key)
   binary.BigEndian.PutUint64(bytes[16:24], query.value)
-  binary.BigEndian.PutUint32(bytes[24:28], query.duration)
+  binary.BigEndian.PutUint32(bytes[24:28], query.timeToLive)
   binary.BigEndian.PutUint32(bytes[28:32], query.requestId)
 
   return bytes
@@ -61,7 +61,7 @@ func DeSerializeQuery(bytes []byte) Query {
     replyPort : binary.BigEndian.Uint16(bytes[6:8]),
     key       : binary.BigEndian.Uint64(bytes[8:16]),
     value     : binary.BigEndian.Uint64(bytes[16:24]),
-    duration  : binary.BigEndian.Uint32(bytes[24:28]),
+    timeToLive: binary.BigEndian.Uint32(bytes[24:28]),
     requestId : binary.BigEndian.Uint32(bytes[28:32]),
   }
 }

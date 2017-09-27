@@ -25,11 +25,18 @@ A simple debian package can be created using the following steps
         $ mkdir DEBIAN
         $ mkdir -p usr/bin
 
+    **NOTE** that any directory path not present in the host system and is in the deb pacakge, will be automatically created in the host.
+
 4. Now copy the `helloworld` executable as follows, 
 
         $ cp ../helloworld usr/bin
         # /usr/bin/helloworld will be the final location
         # after package installation.
+
+5. Optinally (recommended) add a man page say `helloworld.1` (a text file with `troff` formatting commands (`groff` in GNU universe)). Since it is a command it will be added to section `1`. Creat a copy it in the directory given below:
+
+        $ mkdir usr/local/share/man/man1
+        $ cp ../helloworld.1 usr/local/share/man/man1
 
 5. Create a file `control` inside `DEBIAN` directory created earlier with the following content,
 
@@ -61,5 +68,18 @@ A simple debian package can be created using the following steps
         $ helloworld
         Hello, World!
 
+Further notes:
+
+1. The `DEBIAN` directory can contain other (pre-defined) files and directories as well.
+
+        DEBIAN/
+            control (required)
+            templates (optional)
+            preinst (optional, chmod 0755)
+            postinst (optional, chmod 0755)
+            prerm (optional, chmod 0755)
+            postrm (optional, chmod 0755)
+
+    The `preinst` `postinst` `prerm` `postrm` are scripts that can run. `templates` is a directory that can house question files used to ask from the user during installation.
 
 [source1]:https://linuxconfig.org/easy-way-to-create-a-debian-package-and-local-package-repository

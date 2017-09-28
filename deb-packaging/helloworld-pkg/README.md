@@ -1,7 +1,7 @@
 A Simple Debian Package
 ============================
 
-Source is [here][source1].
+Source is [here][source1] and another is [here][source2].
 
 A simple debian package can be created using the following steps
 
@@ -83,3 +83,6 @@ Further notes:
     The `preinst` `postinst` `prerm` `postrm` are scripts that can run. `templates` is a directory that can house question files used to ask from the user during installation.
 
 [source1]:https://linuxconfig.org/easy-way-to-create-a-debian-package-and-local-package-repository
+[source2]:https://www.leaseweb.com/labs/2013/06/creating-custom-debian-packages/
+
+

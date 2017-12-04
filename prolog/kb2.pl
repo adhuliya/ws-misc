@@ -10,4 +10,5 @@ listens2Music(mia).
 listens2Music(yolanda):-
     happy(yolanda).
 
-
+good(man).
+fine(man).

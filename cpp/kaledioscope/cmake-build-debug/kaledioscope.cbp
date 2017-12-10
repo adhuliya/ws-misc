@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="kaledioscope"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="clang"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="kaledioscope">
+				<Option output="/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/kaledioscope" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/home/codeman/mydata/local/packages-live/clang-llvm6/llvm/include"/>
+					<Add directory="/home/codeman/mydata/local/packages-live/clang-llvm6/build/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5.4.1/../../../../include/c++/5.4.1"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5.4.1/../../../../include/x86_64-linux-gnu/c++/5.4.1"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5.4.1/../../../../include/c++/5.4.1/backward"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/home/codeman/mydata/local/packages-live/clang-llvm6/build/lib/clang/6.0.0/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 kaledioscope"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="kaledioscope/fast">
+				<Option output="/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/kaledioscope" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/home/codeman/mydata/local/packages-live/clang-llvm6/llvm/include"/>
+					<Add directory="/home/codeman/mydata/local/packages-live/clang-llvm6/build/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5.4.1/../../../../include/c++/5.4.1"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5.4.1/../../../../include/x86_64-linux-gnu/c++/5.4.1"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5.4.1/../../../../include/c++/5.4.1/backward"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/home/codeman/mydata/local/packages-live/clang-llvm6/build/lib/clang/6.0.0/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 kaledioscope/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/toy.cc">
+			<Option target="kaledioscope"/>
+		</Unit>
+		<Unit filename="/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

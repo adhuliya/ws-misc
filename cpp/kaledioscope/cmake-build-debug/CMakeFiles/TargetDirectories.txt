@@ -1,0 +1,3 @@
+/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/CMakeFiles/kaledioscope.dir

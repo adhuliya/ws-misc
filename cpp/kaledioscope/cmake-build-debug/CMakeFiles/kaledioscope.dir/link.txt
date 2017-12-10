@@ -1,0 +1,1 @@
+/home/codeman/mydata/local/packages-live/clang-llvm6/build/bin/clang++  -g   CMakeFiles/kaledioscope.dir/toy.cc.o  -o kaledioscope 

@@ -1,0 +1,4 @@
+/home/codeman/mydata/local/packages-live/clion-2017.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=/home/codeman/mydata/local/packages-live/clang-llvm6/build/bin/clang -DCMAKE_CXX_COMPILER=/home/codeman/mydata/local/packages-live/clang-llvm6/build/bin/clang++ -G "CodeBlocks - Unix Makefiles" /home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug

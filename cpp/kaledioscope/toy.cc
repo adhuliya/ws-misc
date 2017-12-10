@@ -382,6 +382,7 @@ static void HandleDefinition() {
     }
 }
 
+
 static void HandleExtern() {
     if (ParseExtern()) {
         fprintf(stderr, "Parsed an extern\n");
@@ -445,3 +446,5 @@ int main() {
 
     return 0;
 }
+
+

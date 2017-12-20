@@ -53,6 +53,7 @@
 					<Add directory="/home/codeman/mydata/local/packages-live/clang-llvm6/build/lib/clang/6.0.0/include"/>
 					<Add directory="/usr/include/x86_64-linux-gnu"/>
 					<Add directory="/usr/include"/>
+					<Add directory="/home/codeman/mydata/local/packages-live/clang-llvm5/build/lib/clang/5.0.0/include"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 kaledioscope"/>
@@ -77,6 +78,7 @@
 					<Add directory="/home/codeman/mydata/local/packages-live/clang-llvm6/build/lib/clang/6.0.0/include"/>
 					<Add directory="/usr/include/x86_64-linux-gnu"/>
 					<Add directory="/usr/include"/>
+					<Add directory="/home/codeman/mydata/local/packages-live/clang-llvm5/build/lib/clang/5.0.0/include"/>
 				</Compiler>
 				<MakeCommands>
 					<Build command="/usr/bin/make -j4 -f &quot;/home/codeman/mydata/git/ws/ws-misc-git/cpp/kaledioscope/cmake-build-debug/Makefile&quot;  VERBOSE=1 kaledioscope/fast"/>

@@ -17,7 +17,7 @@ func Make() *TimedKv {
     heapMutex : &sync.Mutex{},
     key       : 0,
     maxKey    : 1<<64 - 1,
-    maxDuration : int64(time.Hour * 24 * 365 * 10), // ~ 10 years
+    maxDuration : int64(time.Hour * 24 * 365 * 2), // ~ 2 years
     minDuration : int64(time.Second * 5),
     maxDurationYet  : 0,
   }

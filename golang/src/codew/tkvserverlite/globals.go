@@ -11,8 +11,8 @@ const (
   ACTION_ADD       byte = 1
   ACTION_DELETE    byte = 2
   ACTION_MODIFY_VD byte = 3 // modify value and duration
-  ACTION_MODIFY_V  byte = 4 // modiry value
-  ACTION_MODIFY_D  byte = 5 // modiry duration
+  ACTION_MODIFY_V  byte = 4 // modify value
+  ACTION_MODIFY_D  byte = 5 // modify duration
   ACTION_GET       byte = 6
 
   STATUS_OK        byte = 0

@@ -46,7 +46,7 @@ func (kv *TimedKv) runTimeGc(stop <-chan int) {
   var item heapItem
   var tmpDelTime int64
   var sleepDuration int64 = 0
-  var maxSleep int64  = int64(200 * time.Millisecond)
+  var maxSleep int64  = int64(400 * time.Millisecond)
 
   for {
     select {

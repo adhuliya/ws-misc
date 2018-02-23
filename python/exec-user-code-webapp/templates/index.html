@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+{{ super() }}
+
+<style>
+    .codeview {
+        width:200px;
+        height:200px;
+        border:1px solid #ccc;
+        background:#f5f5f5;
+        position:relative;
+    }
+</style>
+
+{% endblock head %}
+
+{% block content %}
+
+Custom wrapper:
+  <div class="codeview" id="my-code-wrapper"></div>
+
+
+{% endblock content %}
+
+{% block footer %}
+  {{ super() }}
+
+
+  <script>
+    window.onload = function() {
+        alert("hello");
+    var flask = new CodeFlask;
+    flask.run('#my-code-wrapper', {language:'js'});
+    };
+  </script>
+
+{% endblock footer %}

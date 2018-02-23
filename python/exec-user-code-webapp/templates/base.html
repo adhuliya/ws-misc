@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  {% block head %}
+
+  {% set title1 = "Code Walker" if title is not defined else title %}
+
+  <meta charset="utf-8">
+  <meta name="description" content="{{ title1 }} - codewalker">
+  <meta name="author" content="code walker">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+
+  <title>{{ title1 }}</title>
+
+<!--
+  <link rel="stylesheet" href="/static/css/purecss-mod/base.css">
+  <link rel="stylesheet" href="/static/css/purecss-mod/pure.css">
+  <link rel="stylesheet" href="/static/css/purecss-mod/forms.css">
+  <link rel="stylesheet" href="/static/css/purecss-mod/menus.css">
+-->
+
+  <link rel="stylesheet" href="/static/js/codeflask-mod/src/codeflask.css">
+  <!--<link rel="stylesheet" href="/static/js/codeflask-mod/test/lib/prism.min.css">-->
+  <link rel="stylesheet" href="/static/js/prism-mod/style.css">
+  <link rel="stylesheet" href="/static/js/prism-mod/plugins/line-numbers/prism-line-numbers.css">
+
+  <script src="/static/js/prism-mod/prism.js"></script>
+  <script src="/static/js/prism-mod/plugins/line-numbers/prism-line-numbers.js"></script>
+  <!--<script src="/static/js/codeflask-mod/test/lib/prism.min.js"></script>-->
+ <script src="/static/js/codeflask-mod/src/codeflask.js"></script>
+
+
+  <!-- for sake of reference: includes a file at this point
+      { % include 'file.html' % }
+  -->
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+  {% endblock head %}
+</head>
+
+<body>
+    {% block content %} Base content. {% endblock content %}
+
+    {% block footer %}
+    <p>&copy; community. Facilitated by <em>codewalker.in</em></p>
+    {% endblock footer %}
+    
+</body>
+</html>
+
+

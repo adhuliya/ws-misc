@@ -1,0 +1,27 @@
+<UserScriptConfig>
+	<Script filename="s_sbi_net_banking_.user.js" name="S_SBI NET BANKING_" namespace="travels@ymail.com" description="Rapid State Bank Of India Gateway." version="" enabled="true" runAt="document-end" basedir="s_sbi_net_banking_" modified="1308420076460" dependhash="da39a3ee5e6b4b0d3255bfef95601890afd80709">
+		<Include>https://www.onlinesbi.com/merchant/merchantprelogin.htm*</Include>
+	</Script>
+	<Script filename="kill_right_click_blockin.user.js" name="Kill Right Click Blocking Copyright Monkeys!" namespace="*" description="" version="" enabled="true" runAt="document-end" basedir="kill_right_click_blockin" modified="1308488090711" dependhash="da39a3ee5e6b4b0d3255bfef95601890afd80709">
+		<Include>*</Include>
+	</Script>
+	<Script filename="ticket.user.js" name="TICKET" namespace="stravels@ymail.com" description="Rapid data entry for Plan My Travel." version="" enabled="true" runAt="document-end" basedir="ticket" modified="1313498742978" dependhash="da39a3ee5e6b4b0d3255bfef95601890afd80709">
+		<Include>https://www.irctc.co.in/cgi-bin/bv60.dll/irctc/booking/bookticket.do*</Include>
+		<Include>http://www.irctc.co.in/cgi-bin/bv60.dll/irctc/booking/bookticket.do*</Include>
+		<Include>https://irctc.co.in/cgi-bin/bv60.dll/irctc/booking/bookticket.do*</Include>
+	</Script>
+	<Script filename="click_confirm_to_pay.user.js" name="onlineSBI clicks Confirm to pay automatically" namespace="neo@gmail.com" description="clicks confirm automatically to pay" version="" enabled="true" runAt="document-end" basedir="click_confirm_to_pay" modified="1308470108062" dependhash="da39a3ee5e6b4b0d3255bfef95601890afd80709">
+		<Include>https://www.onlinesbi.com/merchant/merchantdisplay.htm*</Include>
+	</Script>
+	<Script filename="onlinesbi_final_confirma.user.js" name="onlineSBi final confirmation" namespace="neo@gmail.com" description="finally confirm the payment" version="" enabled="false" runAt="document-end" basedir="onlinesbi_final_confirma" modified="1308470534888" dependhash="da39a3ee5e6b4b0d3255bfef95601890afd80709">
+		<Include>https://www.onlinesbi.com/merchant/merchantinter.htm*</Include>
+	</Script>
+	<Script filename="select_onlinesbi_option_.user.js" name="select onlineSBI option automatically" namespace="neo@gmail.com" description="selects onlinesbi radiobutton automatically from various options" version="" enabled="true" runAt="document-end" basedir="select_onlinesbi_option_" modified="1308495014390" dependhash="da39a3ee5e6b4b0d3255bfef95601890afd80709">
+		<Include>https://www.irctc.co.in/cgi-bin/bv60.dll/irctc/booking/bookticket.do*</Include>
+		<Include>http://localhost/selectonlineSBI.html*</Include>
+	</Script>
+	<Script filename="login_to_irctc.user.js" name="login to irctc" namespace="neo@gmail.com" description="login to irctc automatically" version="" enabled="true" runAt="document-end" basedir="login_to_irctc" modified="1313498230899" dependhash="da39a3ee5e6b4b0d3255bfef95601890afd80709">
+		<Include>https://www.irctc.co.in/*</Include>
+		<Include>http://www.irctc.co.in/*</Include>
+	</Script>
+</UserScriptConfig>

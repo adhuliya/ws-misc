@@ -7,64 +7,106 @@ import (
     "time"
 )
 
+type User struct {
+    id          int
+    username    string
+    password    string
+    nickname    string
+    fullname    string
+    mobile      string
+    email       string
+    role        string
+    status      string
+    createdOn   time.Time
+    modifiedOn  time.Time
+}
+
 const (
+    DB_HOST     = "127.0.0.1"
+    DB_PORT     = 5432
     DB_USER     = "hop"
     DB_PASSWORD = "anshuisneo"
     DB_NAME     = "hop"
 )
 
-func main() {
-    dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",
-    DB_USER, DB_PASSWORD, DB_NAME)
+func ConnPostgres(host string, port int, usr string, password string, dbname string, sslmode bool) (*sql.DB, error) {
+    ssl := "disable"
+    if sslmode {
+        ssl = "enable"
+    }
+    dbinfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s", host, port, usr, password, dbname, ssl)
+
     db, err := sql.Open("postgres", dbinfo)
+
+    return db, err
+}
+
+func ClosePostgres(db *sql.DB) error {
+    return db.Close()
+}
+
+func scanInsertId(res *sql.Rows) int {
+    res.Next()
+    var id int
+    res.Scan(&id)
+    return id
+}
+
+func scanBool(res *sql.Rows) bool {
+    res.Next()
+    var b bool
+    res.Scan(&b)
+    return b
+}
+
+func main() {
+    db, err := ConnPostgres(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, false)
     checkErr(err)
-    defer db.Close()
+    defer ClosePostgres(db)
 
     fmt.Println("# Inserting values")
 
-    var lastInsertId int
-    err = db.QueryRow("INSERT INTO public.user(username, password, role, createdOn) VALUES($1,$2,$3,$4) returning id;", "astaxie", "anshu", "user2", "2012-12-09T10:10:20").Scan(&lastInsertId)
+    //var lastInsertId int
+
+    res, err := db.Query("select insertUser(username := $1, mobile := $2, email := $3)", "hero1", "+917645263720", "hero1@mail.com")
     checkErr(err)
-    fmt.Println("last inserted id =", lastInsertId)
+    id := scanInsertId(res);
+    fmt.Println("Insert ID:", id)
 
-    fmt.Println("# Updating")
-    stmt, err := db.Prepare("update public.user set username=$1 where id=$2")
+    res, err = db.Query("select updateUser(id := $1, username := $2)", id, "hero2")
     checkErr(err)
+    b := scanBool(res)
+    fmt.Println("Updated:", b)
 
-    res, err := stmt.Exec("astaxieupdate", lastInsertId)
+    time.Sleep(1 * time.Second)
+
+    res, err = db.Query("select * from selectUser()")
     checkErr(err)
-
-    affect, err := res.RowsAffected()
-    checkErr(err)
-
-    fmt.Println(affect, "rows changed")
-
-    fmt.Println("# Querying")
-    rows, err := db.Query("SELECT id, username, password, createdOn FROM public.user")
-    checkErr(err)
-
-    for rows.Next() {
-        var id int
-        var username string
-        var password string
-        var created time.Time
-        err = rows.Scan(&id, &username, &password, &created)
+    var user = User{}
+    for res.Next() {
+        err = res.Scan(
+            &user.id,
+            &user.username,
+            &user.password,
+            &user.nickname,
+            &user.fullname,
+            &user.mobile,
+            &user.email,
+            &user.role,
+            &user.status,
+            &user.createdOn,
+            &user.modifiedOn,
+        )
         checkErr(err)
-        fmt.Println("id | username | password | createdOn ")
-        fmt.Printf("%3v | %8v | %6v | %6v\n", id, username, department, created)
+        fmt.Println(user)
     }
 
-    fmt.Println("# Deleting")
-    stmt, err = db.Prepare("delete from public.user where id=$1")
+    res, err = db.Query("select deleteUser(id := $1)", id)
     checkErr(err)
+    b = scanBool(res)
+    fmt.Println("Deleted:", b)
 
-    res, err = stmt.Exec(lastInsertId)
-    checkErr(err)
-
-    affect, err = res.RowsAffected()
-    checkErr(err)
-
-    fmt.Println(affect, "rows changed")
+    fmt.Println("Success.")
 }
 
 func checkErr(err error) {
@@ -72,3 +114,5 @@ func checkErr(err error) {
         panic(err)
     }
 }
+
+

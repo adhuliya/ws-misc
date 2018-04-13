@@ -1,5 +1,6 @@
 -- example usage
--- select updateUser(id := 1, username := 'adhuliya');
+
+-- select insertUser(username := 'rimi', mobile := '+918756268826', email := 'rimi@gmail.com');
 
 CREATE OR REPLACE FUNCTION insertUser (
     username    TEXT,
@@ -11,9 +12,11 @@ CREATE OR REPLACE FUNCTION insertUser (
     role        TEXT DEFAULT NULL,
     status      TEXT DEFAULT NULL,
     createdOn   TIMESTAMPTZ DEFAULT NULL,
-    modifiedOn  TIMESTAMPTZ DEFAULT NULL
-) RETURNS BOOLEAN LANGUAGE plpgsql SECURITY DEFINER AS $$
+    modifiedOn  TIMESTAMPTZ DEFAULT NULL,
+    OUT insertId INTEGER
+) LANGUAGE plpgsql SECURITY DEFINER
 
+AS $$
 BEGIN
     insert into public.user (
         -- id,
@@ -28,6 +31,7 @@ BEGIN
         createdOn,
         modifiedOn
     )
+
     VALUES
     (
         insertuser.username,
@@ -40,8 +44,9 @@ BEGIN
         COALESCE(insertUser.status, 'disabled'),
         COALESCE(insertUser.createdOn, CURRENT_TIMESTAMP),
         NULL
-    );
-    RETURN FOUND;
+    )
+    RETURNING id INTO insertUser.insertId;
+    --RETURN FOUND;
 END;
 $$;
 

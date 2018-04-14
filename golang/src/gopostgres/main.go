@@ -27,8 +27,10 @@ const (
     DB_USER     = "hop"
     DB_PASSWORD = "anshuisneo"
     DB_NAME     = "hop"
+    DB_SSLMODE  = false;
 )
 
+// Connect to Postgres with the given arguments.
 func ConnPostgres(host string, port int, usr string, password string, dbname string, sslmode bool) (*sql.DB, error) {
     ssl := "disable"
     if sslmode {
@@ -41,10 +43,14 @@ func ConnPostgres(host string, port int, usr string, password string, dbname str
     return db, err
 }
 
+// Close connection to Postgres.
+// Needed only when server is brought down. Hence rarely needed.
+// use: defer ClosePostgres(db)
 func ClosePostgres(db *sql.DB) error {
     return db.Close()
 }
 
+// Returns the last indert id returned by the insert function.
 func scanInsertId(res *sql.Rows) int {
     res.Next()
     var id int
@@ -52,6 +58,7 @@ func scanInsertId(res *sql.Rows) int {
     return id
 }
 
+// Returns the boolean returned by the update/delete function.
 func scanBool(res *sql.Rows) bool {
     res.Next()
     var b bool
@@ -60,7 +67,7 @@ func scanBool(res *sql.Rows) bool {
 }
 
 func main() {
-    db, err := ConnPostgres(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, false)
+    db, err := ConnPostgres(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, DB_SSLMODE)
     checkErr(err)
     defer ClosePostgres(db)
 
@@ -83,7 +90,9 @@ func main() {
     res, err = db.Query("select * from selectUser()")
     checkErr(err)
     var user = User{}
+    count := 0
     for res.Next() {
+        count++
         err = res.Scan(
             &user.id,
             &user.username,
@@ -100,6 +109,7 @@ func main() {
         checkErr(err)
         fmt.Println(user)
     }
+    fmt.Println("Row Count:", count)
 
     res, err = db.Query("select deleteUser(id := $1)", id)
     checkErr(err)

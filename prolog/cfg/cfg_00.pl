@@ -37,7 +37,7 @@ def(s2, 'x').
 type(s2, lhs, ptr(scalar('Int'))).
 type(s2, 'x', ptr(scalar('Int'))).
 
-addrOf(s2, 'a').
+addrof(s2, 'a').
 type(s2, rhs, ptr(scalar('Int'))).
 type(s2, 'a', scalar('Int')).
 
@@ -48,6 +48,7 @@ succ(s2, s3).
 
 pred(s3, s2).
 
+nondef(s3).
 dref(s3, 'x').
 use(s3, 'x').
 type(s3, 'x', ptr(scalar('Int'))).
@@ -68,6 +69,8 @@ weakdef(end).
 succ(end, end).
 
 
+
+%%% START inpointee definition
 inpointee(start, X, nil).
 
 inpointee(S, X, Y) :-
@@ -78,16 +81,37 @@ inpointee(S, X, Y) :-
 inpointee(S, X, Y) :-
   pred(S, P),
   def(P, X),
-  addrOf(P, Y).
+  addrof(P, Y).
+
+inpointee(S, X, Y) :-
+  pred(S, P),
+  nondef(P),
+  inpointee(P, X, Y).
+
+inpointee(S, X, Y) :-
+  pred(S, P),
+  def(P, Z),
+  inpointee(P, X, Y),
+  X \= Z.
 
 inpointee(S, X, Y) :-
   pred(S, P),
   weakdef(P),
   inpointee(P, X, Y).
 
+%%% END   inpointee definition
+
+
+%%% START outlive definition
+
 outlive(S, X) :-
     succ(S, SS),
     use(SS, X).
+
+outlive(S, X) :-
+    succ(S, SS),
+    nondef(SS),
+    outlive(SS, X).
 
 outlive(S, X) :-
     succ(S, SS),
@@ -100,5 +124,42 @@ outlive(S, X) :-
     def(SS, Y),
     outlive(SS, X),
     X \= Y.
+
+%%% END   outlive definition
+
+
+%inpointee(start, X, nil).
+%
+%inpointee(S, X, Y) :-
+%  pred(S, P),
+%  type(P, lhs, scalar(_)),
+%  inpointee(P, X, Y).
+%
+%inpointee(S, X, Y) :-
+%  pred(S, P),
+%  def(P, X),
+%  addrOf(P, Y).
+%
+%inpointee(S, X, Y) :-
+%  pred(S, P),
+%  weakdef(P),
+%  inpointee(P, X, Y).
+%
+%outlive(S, X) :-
+%    succ(S, SS),
+%    use(SS, X).
+%
+%outlive(S, X) :-
+%    succ(S, SS),
+%    weakdef(SS),
+%    def(SS, X),
+%    outlive(SS, X).
+%    
+%outlive(S, X) :-
+%    succ(S, SS),
+%    def(SS, Y),
+%    outlive(SS, X),
+%    X \= Y.
+%
 
 

@@ -55,9 +55,18 @@ type(s3, 'x', ptr(scalar('Int'))).
 
 use(s3, Y) :-
   dref(s3, X),
-  pointee(s3, X, Y).
+  inpointee(s3, X, Y).
 
 succ(s3, end).
+
+%%% end
+
+pred(end, s3).
+
+weakdef(end).
+
+succ(end, end).
+
 
 inpointee(start, X, nil).
 
@@ -75,5 +84,21 @@ inpointee(S, X, Y) :-
   pred(S, P),
   weakdef(P),
   inpointee(P, X, Y).
+
+outlive(S, X) :-
+    succ(S, SS),
+    use(SS, X).
+
+outlive(S, X) :-
+    succ(S, SS),
+    weakdef(SS),
+    def(SS, X),
+    outlive(SS, X).
+    
+outlive(S, X) :-
+    succ(S, SS),
+    def(SS, Y),
+    outlive(SS, X),
+    X \= Y.
 
 

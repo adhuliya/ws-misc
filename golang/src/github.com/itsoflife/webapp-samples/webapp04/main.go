@@ -3,45 +3,69 @@
 package main
 
 import (
-    "fmt"           //to print to the client response
     "net/http"      //library for http based interaction
 
     "app/logs"
+    "app/tmpl"
+    "app/util"
 )
 
-// function to handel the top level request
-func index(w http.ResponseWriter, r *http.Request) {
-    logs.Logger.Trace("Received request: ", r) // logging
-    fmt.Fprintf(w, "Hello Gopher!")
+type UserData struct {
+	Name        string
+	City        string
+	Nationality string
 }
 
+type SkillSet struct {
+	Language string
+	Level    string
+}
+
+type SkillSets []*SkillSet
+
+func index(w http.ResponseWriter, r *http.Request) {
+  logs.Logger.Trace("Received request: ", r) // logging
+	tmpl.RenderTemplate(w, "index.tmpl", nil)
+}
+
+func aboutMe(w http.ResponseWriter, r *http.Request) {
+	userData := &UserData{Name: "Asit Dhal", City: "Bhubaneswar", Nationality: "Indian"}
+	tmpl.RenderTemplate(w, "aboutme.tmpl", userData)
+}
+
+func skillSet(w http.ResponseWriter, r *http.Request) {
+	skillSets := SkillSets{&SkillSet{Language: "Golang", Level: "Beginner"},
+		&SkillSet{Language: "C++", Level: "Advanced"},
+		&SkillSet{Language: "Python", Level: "Advanced"}}
+	tmpl.RenderTemplate(w, "skillset.tmpl", skillSets)
+}
 
 func main() {
-    // defined in ./vendor/app/logs/logconfig.go
-    // GOOD FOR DEBUGGING
-    logs.InitLogger("configs/seelog.xml")
-    defer logs.Logger.Flush()
+  // defined in ./vendor/app/logs/logconfig.go
+  // GOOD FOR DEBUGGING
+  logs.InitLogger("configs/seelog.xml")
+  defer logs.Logger.Flush()
+  tmpl.InitTemplates("template/layout/", "template/")
 
-    // route top level request to `index` function.
-    http.HandleFunc("/", index)
+  //handler for static files
+  fs := http.FileServer(http.Dir("static"))
 
-    // configure server
-    server := http.Server {
-        Addr: "0.0.0.0:9090",
-    }
+  // route top level request to `index` function.
+	http.HandleFunc("/", index)
+	http.HandleFunc("/aboutme", aboutMe)
+  http.HandleFunc("/skillset", skillSet)
+  http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-    logs.Logger.Info("AD: Starting Server at address: ", server)
+  // configure server
+  server := http.Server {
+      Addr: "0.0.0.0:9090",
+  }
 
-    // run the server and start listening
-    err := server.ListenAndServe()
-    checkError(err)
-}
+  logs.Logger.Info("Starting Server with config: ", server)
 
-
-func checkError(err error) {
-    if err != nil {
-        logs.Logger.Error("Server Error: ", err)
-    }
+  // run the server to start listening
+  err := server.ListenAndServe()
+  util.CheckError(err)
 }
 
 

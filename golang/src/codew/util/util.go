@@ -1,4 +1,5 @@
 package util
+// utlity functions that makes programming convenient.
 
 import (
 	"bufio"
@@ -53,7 +54,7 @@ func GetInputClosure(reader io.Reader) (func() ([]byte, error),
 	func([]byte) error) {
 
 	buffread := bufio.NewReaderSize(reader, 1024)
-	mutex := sync.Mutex{}
+	mutex := &sync.Mutex{}
 	SIZE := 256
 	localbuff := make([]byte, SIZE)
 
@@ -101,3 +102,5 @@ func GetInputClosure(reader io.Reader) (func() ([]byte, error),
 
 	return getLine, getBytes
 }
+
+

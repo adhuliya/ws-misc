@@ -6,4 +6,4 @@ A basic hello world code, with handler for static files in the `./static/` folde
 How to run?
 -----------------
 
-    go run main.go
+    go run main.go logconfigv1.go

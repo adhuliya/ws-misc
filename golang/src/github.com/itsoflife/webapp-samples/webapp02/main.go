@@ -3,47 +3,49 @@
 package main
 
 import (
-    "fmt"           //to print to the client response
-    "net/http"      //library for http based interaction
-
-    "io/ioutil"
-    "os"
+	"fmt"      //to print to the client response
+	"net/http" //library for http based interaction
+	//"io/ioutil"
+	//"os"
 )
-
 
 // function to handel the top level request
 func index(w http.ResponseWriter, r *http.Request) {
-    Info.Println("Received request: ", r) // logging
-    fmt.Fprintf(w, "Hello Gopher!")
-}
+	Info.Println("Received request: ", r) // logging
 
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	fmt.Fprintf(w, "Hello Gopher! <a href='static/static.html'>Static Page</a> <a href='static/'>Static Content</a>")
+}
 
 func main() {
-    // defined in ./logconfig.go
-    // GOOD FOR DEBUGGING
-    InitLogger(ioutil.Discard,   // conveniently discard Trace
-               os.Stdout,        // Info to os.Stdout
-               os.Stdout,        // Warn to os.Stdout
-               os.Stderr,        // Error to os.Stderr
-               os.Stderr)        // Fatal to os.Stderr
+	// defined in ./logconfig.go
+	// GOOD FOR DEBUGGING
+	StartLogger()
 
-    server := http.Server {
-        Addr: "0.0.0.0:9090",
-    }
+	// To disable logging,
+	//StopLogger()
 
-    Info.Println("AD: Starting Server at address: ", server)
+	server := http.Server{
+		Addr: "0.0.0.0:9090",
+	}
 
-    // route top level request to `index` function.
-    http.HandleFunc("/", index)
+	Info.Println("AD: Starting Server at address: ", server)
 
-    // run the server and start listening
-    err := server.ListenAndServe()
-    checkError(err)
+	//handler for static files
+	fs := http.FileServer(http.Dir("static"))
+
+	// route top level request to `index` function.
+	http.HandleFunc("/", index)
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	// run the server and start listening
+	err := server.ListenAndServe()
+	checkError(err)
 }
 
-
 func checkError(err error) {
-    if err != nil {
-        Fatal.Println("Server Error: ", err)
-    }
+	if err != nil {
+		Fatal.Println("Server Error: ", err)
+	}
 }

@@ -12,22 +12,26 @@ func index(w http.ResponseWriter, r *http.Request) {
 	// Content-Type needs to be set because net/http package
 	// tries to determine the content type using file extension,
 	// and we are directly writing to the ResponseWriter using fmt.
+	Log.Println("Received request: ", r)
+
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
 	fmt.Fprintf(w, "Hello Gopher! <a href='static/static.html'>A Static Page</a>")
 }
 
 func main() {
 	// always initialize logger global variable as early as possible
-	StartLogger()
+	//EnableLogger() // log to os.Stderr
+	EnableFileLogger() // log to a file ./logs/main.log
 
 	// to disable logging, uncomment the line below
-	//StopLogger()
+	//DisableLogger()
 
 	server := http.Server{
 		Addr: "0.0.0.0:9090",
 	}
 
-	Log.Println("AD: Starting Server at address: ", server)
+	Log.Println("STARTING SERVER : ", server)
 
 	//handler for static files
 	fs := http.FileServer(http.Dir("static"))

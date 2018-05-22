@@ -1,5 +1,5 @@
 // A basic hello world webapp.
-// Run by: go run main.go logconfig.go
+// Run by: go run main.go
 package main
 
 import (

@@ -21,10 +21,12 @@ func index(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// defined in ./logconfig.go
 	// GOOD FOR DEBUGGING
-	StartLogger()
+	//EnableLogger()
+	EnableFileLogger()
+	SetLogLevel(FATAL) // see logconfigv2.go file
 
 	// To disable logging,
-	//StopLogger()
+	//DisableLogger()
 
 	server := http.Server{
 		Addr: "0.0.0.0:9090",

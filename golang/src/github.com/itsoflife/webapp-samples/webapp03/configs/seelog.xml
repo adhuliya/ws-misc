@@ -1,9 +1,10 @@
 <!--
 Levels: trace, debug, info, warn, error, critical, off
+10MiB = 10485760 bytes (10*1024*1024)
 -->
 <seelog minlevel="info">
     <outputs formatid="common">
-        <rollingfile type="size" filename="logs/roll.log" maxsize="100000" maxrolls="5"/>
+        <rollingfile type="size" filename="logs/roll.log" maxsize="10485760" maxrolls="5"/>
         <filter levels="critical">
             <file path="logs/critical.log" formatid="critical"/>
             <smtp formatid="criticalemail" senderaddress="astaxie@gmail.com" sendername="ShortUrl API" hostname="smtp.gmail.com" hostport="587" username="mailusername" password="mailpassword">

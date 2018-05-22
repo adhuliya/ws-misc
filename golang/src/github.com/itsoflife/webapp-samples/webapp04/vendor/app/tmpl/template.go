@@ -1,12 +1,12 @@
 package tmpl
 
 import (
+	"app/logs" // of this project in `vendor/app/logs` folder
 	"fmt"
 	"github.com/oxtoacart/bpool"
 	"html/template"
 	"net/http"
 	"path/filepath"
-  "app/logs" // of this project in `vendor/app/logs` folder
 )
 
 // Example usage.
@@ -28,6 +28,7 @@ var mainTmpl = `{{define "main" }} {{ template "base" . }} {{ end }}`
 
 var templates map[string]*template.Template
 var bufpool *bpool.BufferPool
+
 const BUFF_POOL_SIZE = 1 << 6
 
 type TemplateConfig struct {
@@ -44,7 +45,7 @@ func InitTemplates(layoutPath, includePath string) {
 }
 
 func loadConfiguration(layoutPath, includePath string) {
-	templateConfig.TemplateLayoutPath  = layoutPath
+	templateConfig.TemplateLayoutPath = layoutPath
 	templateConfig.TemplateIncludePath = includePath
 }
 
@@ -75,7 +76,7 @@ func loadTemplates() {
 		files := append(layoutFiles, file)
 		templates[fileName], err = mainTemplate.Clone()
 		if err != nil {
-		  logs.Logger.Error(err)
+			logs.Logger.Error(err)
 		}
 		templates[fileName] = template.Must(templates[fileName].ParseFiles(files...))
 	}
@@ -83,16 +84,15 @@ func loadTemplates() {
 	logs.Logger.Info("Templates Loading Successful")
 
 	bufpool = bpool.NewBufferPool(BUFF_POOL_SIZE)
-  logs.Logger.Info("Buffer Allocation Successful. Size: ", BUFF_POOL_SIZE)
+	logs.Logger.Info("Buffer Allocation Successful. Size: ", BUFF_POOL_SIZE)
 }
-
 
 // InitTemplates() must be called for initialization
 // before calling this function.
 func RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
 	tmpl, ok := templates[name]
 	if !ok {
-    logs.Logger.Error("Template `", name, "` doesn't exist")
+		logs.Logger.Error("Template `", name, "` doesn't exist")
 		http.Error(w, fmt.Sprintf("The template %s does not exist.", name),
 			http.StatusInternalServerError)
 	}
@@ -102,13 +102,11 @@ func RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
 
 	err := tmpl.Execute(buf, data)
 	if err != nil {
-    logs.Logger.Error("Rendering template `", name,
-        "` failed. With data: ", data)
+		logs.Logger.Error("Rendering template `", name,
+			"` failed. With data: ", data)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	buf.WriteTo(w)
 }
-
-

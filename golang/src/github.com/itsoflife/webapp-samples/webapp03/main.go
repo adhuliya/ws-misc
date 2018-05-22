@@ -3,45 +3,48 @@
 package main
 
 import (
-    "fmt"           //to print to the client response
-    "net/http"      //library for http based interaction
+	"fmt"      //to print to the client response
+	"net/http" //library for http based interaction
 
-    "app/logs"
+	"app/logs"
 )
 
 // function to handel the top level request
 func index(w http.ResponseWriter, r *http.Request) {
-    logs.Logger.Trace("Received request: ", r) // logging
-    fmt.Fprintf(w, "Hello Gopher!")
-}
+	logs.Logger.Trace("Received request: ", r) // logging
 
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	fmt.Fprintf(w, "Hello Gopher! <a href='static/static.html'>A Static Page</a>")
+}
 
 func main() {
-    // defined in ./vendor/app/logs/logconfig.go
-    // GOOD FOR DEBUGGING
-    logs.InitLogger("configs/seelog.xml")
-    defer logs.Logger.Flush()
+	// defined in ./vendor/app/logs/logconfig.go
+	// GOOD FOR DEBUGGING
+	logs.InitLogger("configs/seelog.xml")
+	defer logs.Logger.Flush()
 
-    // route top level request to `index` function.
-    http.HandleFunc("/", index)
+	//handler for static files
+	fs := http.FileServer(http.Dir("static"))
 
-    // configure server
-    server := http.Server {
-        Addr: "0.0.0.0:9090",
-    }
+	// route top level request to `index` function.
+	http.HandleFunc("/", index)
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-    logs.Logger.Info("AD: Starting Server at address: ", server)
+	// configure server
+	server := http.Server{
+		Addr: "0.0.0.0:9090",
+	}
 
-    // run the server and start listening
-    err := server.ListenAndServe()
-    checkError(err)
+	logs.Logger.Info("STARTING SERVER : ", server)
+
+	// run the server and start listening
+	err := server.ListenAndServe()
+	checkError(err)
 }
-
 
 func checkError(err error) {
-    if err != nil {
-        logs.Logger.Error("Server Error: ", err)
-    }
+	if err != nil {
+		logs.Logger.Error("Server Error: ", err)
+	}
 }
-
-

@@ -61,9 +61,9 @@ func main() {
 		Addr: "0.0.0.0:9090",
 	}
 
-	logs.Logger.Info("Starting Server with config: ", server)
+	logs.Logger.Info("STARTING SERVER : ", server)
 
 	// run the server to start listening
 	err := server.ListenAndServe()
-	util.CheckError(err)
+	util.FatalError(err)
 }

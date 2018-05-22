@@ -1,25 +1,24 @@
 // A file containing the log initializtion elements. All logger configuration is self contained in this file.
 
-// Debug -> Fatal -> Error -> Warn -> Info -> Trace
+// Off -> Trace -> Debug -> Info -> Warn -> Error -> Fatal
 
-// Set level to Fatal will disable Debug and enable all the rest.
-// Set level to Error will disable Fatal and Debug and enable all the rest.
+// Set level to Fatal will enable all levels.
+// Set level to Info will disable Warn, Error, and Fatal only.
+// Set level to Off will disable all.
 
 // The InitLogger has to be called from main() function,
 // to initialize the logger.
 // e.g. it can be initialized as,
-// InitLogger(ioutil.Discard,   // conveniently discard Trace
-//            os.Stdout,        // Info to os.Stdout
-//            os.Stdout,        // Warn to os.Stdout
-//            os.Stderr,        // Error to os.Stderr
-//            os.Stderr)        // Fatal to os.Stderr
 // DISABLE Logging:
+// DisableLogger()
+// or
 // InitLogger(ioutil.Discard,   // conveniently discard Trace
+//            ioutil.Discard,   // Debug
 //            ioutil.Discard,   // Info
 //            ioutil.Discard,   // Warn
 //            ioutil.Discard,   // Error
 //            ioutil.Discard)   // Fatal
-//            ioutil.Discard)   // Debug
+
 package main
 
 import (
@@ -37,31 +36,31 @@ const (
 	dirName  = "logs"
 	fileName = "main.log"
 
-	DEBUG = iota
-	FATAL
-	ERROR
-	WARN
-	INFO
+	OFF = iota
 	TRACE
-	DISABLE
+	DEBUG
+	INFO
+	WARN
+	ERROR
+	FATAL
 )
 
 var (
-	Debug *log.Logger
-	Fatal *log.Logger
-	Error *log.Logger
-	Warn  *log.Logger
-	Info  *log.Logger
 	Trace *log.Logger
+	Debug *log.Logger
+	Info  *log.Logger
+	Warn  *log.Logger
+	Error *log.Logger
+	Fatal *log.Logger
 )
 
 func InitLogger(
+	traceHandle io.Writer,
 	debugHandle io.Writer,
-	fatalHandle io.Writer,
-	errorHandle io.Writer,
-	warningHandle io.Writer,
 	infoHandle io.Writer,
-	traceHandle io.Writer) {
+	warningHandle io.Writer,
+	errorHandle io.Writer,
+	fatalHandle io.Writer) {
 
 	if traceHandle == ioutil.Discard {
 		Trace = log.New(ioutil.Discard, "", 0)
@@ -113,7 +112,7 @@ func InitLogger(
 }
 
 func EnableLogger() {
-	SetLogLevel(DEBUG) // enable all by default
+	SetLogLevel(FATAL) // enable all by default
 }
 
 // Log to a preset log file
@@ -131,11 +130,11 @@ func EnableFileLogger() {
 		file = f // set to the global var to avoid recreating
 	}
 
-	SetLogLevel(DEBUG) // enable all by default
+	SetLogLevel(FATAL) // enable all by default
 }
 
 func DisableLogger() {
-	SetLogLevel(DISABLE)
+	SetLogLevel(OFF)
 }
 
 func SetLogLevel(level int) {
@@ -150,19 +149,19 @@ func SetLogLevel(level int) {
 	}
 
 	switch level {
-	case DEBUG:
-		InitLogger(output, output, output, output, output, output)
-	case FATAL:
-		InitLogger(discard, output, output, output, output, output)
-	case ERROR:
-		InitLogger(discard, discard, output, output, output, output)
-	case WARN:
-		InitLogger(discard, discard, discard, output, output, output)
-	case INFO:
-		InitLogger(discard, discard, discard, discard, output, output)
-	case TRACE:
-		InitLogger(discard, discard, discard, discard, discard, output)
-	case DISABLE:
+	case OFF:
 		InitLogger(discard, discard, discard, discard, discard, discard)
+	case TRACE:
+		InitLogger(output, discard, discard, discard, discard, discard)
+	case DEBUG:
+		InitLogger(output, output, discard, discard, discard, discard)
+	case INFO:
+		InitLogger(output, output, output, discard, discard, discard)
+	case WARN:
+		InitLogger(output, output, output, output, discard, discard)
+	case ERROR:
+		InitLogger(output, output, output, output, output, discard)
+	case FATAL:
+		InitLogger(output, output, output, output, output, output)
 	}
 }

@@ -48,6 +48,6 @@ func main() {
 
 func checkError(err error) {
 	if err != nil {
-		Fatal.Println("Server Error: ", err)
+		Error.Println("Server Error: ", err)
 	}
 }

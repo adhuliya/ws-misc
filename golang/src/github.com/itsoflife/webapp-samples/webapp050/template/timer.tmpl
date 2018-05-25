@@ -1,0 +1,20 @@
+{{ define "title" }}Server Timer{{ end }}
+
+{{ define "content" -}}
+
+Timer: <span id="timer"></span>
+<br>
+Current Interval: <span id="interval"></span>
+
+{{- end -}}
+
+{{- define "pagejs" -}}
+
+<script src="/static/js/app/async.js"></script>
+
+<script>
+updateObj01.start();
+console.log("STARTED POLLING");
+</script>
+
+{{- end }}

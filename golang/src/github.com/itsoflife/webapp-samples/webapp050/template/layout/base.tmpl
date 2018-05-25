@@ -1,0 +1,51 @@
+{{/*
+The base template giving structure to all the pages
+in the app.
+NOTE: NO space between {{ and /* for comments.
+*/}}
+{{ define "base" -}}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/static/image/myfavicon.ico" type="image/x-icon" />
+  <meta name="description" content="Go templates">
+  <meta name="keywords" content="golang, html, template, html5">
+  <meta name="author" content="Deven Ray">
+
+  <title>{{ block "title" . -}} Web Page {{- end }}</title>
+
+  {{/* app specific style settings */}}
+  {{ block "appstyle" . -}} {{- end }}
+  {{/* page specific style settings */}}
+  {{ block "pagestyle" . -}} {{- end }}
+</head>
+
+<body>
+  <div class="main">
+
+  {{ block "content" . -}}
+    Default content if content not defined.
+  {{- end }}
+
+  <footer>
+    {{ block "footer" . -}}
+      Default footer if footer not defined.
+    {{- end }}
+
+  </footer>
+
+  {{/* Use `template` action if there is no default content */}}
+  {{/* app level js declarations */}}
+  {{ template "appjs" . }}
+  {{/* page specific javascript */}}
+  {{ block "pagejs" . -}} {{- end }}
+
+  </div>
+</body>
+
+</html>
+{{- end }}

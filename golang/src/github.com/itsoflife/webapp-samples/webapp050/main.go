@@ -66,6 +66,7 @@ func main() {
 	// GOOD FOR DEBUGGING
 	logs.InitLogger("configs/seelog.xml")
 	defer logs.Logger.Flush()
+
 	tmpl.InitTemplates("template/layout/", "template/")
 
 	timeMap = make(map[string]string)
@@ -86,6 +87,9 @@ func main() {
 	}
 
 	logs.Logger.Info("STARTING SERVER : ", server)
+
+	// some meaningful output at command line
+	fmt.Println("SERVING AT: ", server.Addr)
 
 	// run the server to start listening
 	err := server.ListenAndServe()

@@ -1,3 +1,4 @@
+-- an example stored procedure
 CREATE OR REPLACE FUNCTION hiLo(
     a NUMERIC, 
     b NUMERIC,

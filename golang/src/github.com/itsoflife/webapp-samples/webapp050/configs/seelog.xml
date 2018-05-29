@@ -1,7 +1,7 @@
 <!--
 Levels: trace, debug, info, warn, error, critical, off
 -->
-<seelog minlevel="info">
+<seelog minlevel="trace">
     <outputs formatid="common">
         <rollingfile type="size" filename="logs/roll.log" maxsize="100000" maxrolls="5"/>
         <filter levels="critical">

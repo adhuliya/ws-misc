@@ -23,16 +23,16 @@ LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
     RETURN QUERY SELECT
     tt.id,
-    COALESCE(tt.username, ''),
-    COALESCE(tt.password, ''),
+    COALESCE(tt.username, ''), -- avoiding NULL
+    COALESCE(tt.password, ''), -- avoiding NULL
     COALESCE(tt.nickname, ''), -- avoiding NULL
-    COALESCE(tt.fullname, ''),
-    COALESCE(tt.mobile, ''),
-    COALESCE(tt.email, ''),
-    COALESCE(tt.role, ''),
-    COALESCE(tt.status, ''),
-    COALESCE(tt.createdOn, to_timestamp(0)),
-    COALESCE(tt.modifiedOn, to_timestamp(0))
+    COALESCE(tt.fullname, ''), -- avoiding NULL
+    COALESCE(tt.mobile, ''),   -- avoiding NULL
+    COALESCE(tt.email, ''),    -- avoiding NULL
+    COALESCE(tt.role, ''),     -- avoiding NULL
+    COALESCE(tt.status, ''),   -- avoiding NULL
+    COALESCE(tt.createdOn, to_timestamp(0)), -- avoiding NULL
+    COALESCE(tt.modifiedOn, to_timestamp(0)) -- avoiding NULL
     FROM
     public.user tt
     ORDER BY tt.id

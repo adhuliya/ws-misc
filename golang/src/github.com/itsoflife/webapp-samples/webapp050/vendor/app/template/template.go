@@ -1,4 +1,4 @@
-package tmpl
+package template
 
 import (
 	"app/logs" // of this project in `vendor/app/logs` folder
@@ -38,8 +38,8 @@ type TemplateConfig struct {
 
 var templateConfig TemplateConfig
 
-// usage: tmpl.InitTemplates("template/layout/", "template/")
-func InitTemplates(layoutPath, includePath string) {
+// usage: tmpl.Init("template/layout/", "template/")
+func Init(layoutPath, includePath string) {
 	loadConfiguration(layoutPath, includePath)
 	loadTemplates()
 }
@@ -87,7 +87,7 @@ func loadTemplates() {
 	logs.Logger.Info("Buffer Allocation Successful. Size: ", BUFF_POOL_SIZE)
 }
 
-// InitTemplates() must be called for initialization
+// Init() must be called for initialization
 // before calling this function.
 func RenderTemplate(w http.ResponseWriter, name string, data interface{}) {
 	tmpl, ok := templates[name]

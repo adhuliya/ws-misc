@@ -3,6 +3,7 @@ package util
 
 import (
 	"app/logs" // logger must be initialized at program startup
+	"os"
 )
 
 func CheckError(err error) {
@@ -14,6 +15,7 @@ func CheckError(err error) {
 // will force the program to exit
 func FatalError(err error) {
 	if err != nil {
-		logs.Logger.Critical(err)
+		logs.Logger.Error(err)
+		os.Exit(1)
 	}
 }

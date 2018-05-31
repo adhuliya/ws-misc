@@ -22,7 +22,7 @@ func main() {
 	// defined in ./vendor/app/logs/logconfig.go
 	// GOOD FOR DEBUGGING
 	logs.Init("configs/seelog.xml")
-	logs.Logger.Trace("PROCESS STARTED.")
+	logs.Logger.Info("PROCESS STARTED.")
 	logs.Logger.Flush()
 
 	var wait time.Duration

@@ -1,0 +1,32 @@
+{{- define "title" -}}Users: ViewEdit{{- end -}}
+
+{{- define "content" -}}
+  <table class="w3-table-all">
+
+    <thead>
+      <tr class="w3-green">
+        <th> Username </th>
+        <th> Password </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {{- range . -}}
+        <tr>
+          <td> {{- .UserName -}} </td>
+
+          <td> {{- .Password -}} </td>
+
+        </tr>
+      {{- end -}}
+    </tbody>
+
+  </table>
+{{- end -}}
+
+{{- define "footer" -}}
+  <div class="w3-center w3-padding-16">
+    &copy; itsoflife
+  </div>
+{{- end -}}
+

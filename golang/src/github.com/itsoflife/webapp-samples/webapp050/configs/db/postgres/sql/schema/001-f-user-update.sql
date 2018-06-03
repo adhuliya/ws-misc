@@ -1,5 +1,6 @@
 -- example usage
 -- select user_Update(id := 1, username := 'adhuliya');
+\c hop;
 
 CREATE OR REPLACE FUNCTION user_Update (
     id          INTEGER,
@@ -18,16 +19,16 @@ CREATE OR REPLACE FUNCTION user_Update (
 BEGIN
     UPDATE public.user tt
     SET 
-    username        = COALESCE(updateUser.username, tt.username),
-    password        = COALESCE(updateUser.password, tt.password),
-    nickname        = COALESCE(updateUser.nickname, tt.nickname),
-    fullname        = COALESCE(updateUser.fullname, tt.fullname),
-    mobile          = COALESCE(updateUser.mobile,   tt.mobile),
-    email           = COALESCE(updateUser.email,    tt.email),
-    role            = COALESCE(updateUser.role,     tt.role),
-    status          = COALESCE(updateUser.status,   tt.status),
+    username        = COALESCE(user_Update.username, tt.username),
+    password        = COALESCE(user_Update.password, tt.password),
+    nickname        = COALESCE(user_Update.nickname, tt.nickname),
+    fullname        = COALESCE(user_Update.fullname, tt.fullname),
+    mobile          = COALESCE(user_Update.mobile,   tt.mobile),
+    email           = COALESCE(user_Update.email,    tt.email),
+    role            = COALESCE(user_Update.role,     tt.role),
+    status          = COALESCE(user_Update.status,   tt.status),
     modifiedOn      = NOW()
-    WHERE tt.id = updateUser.id;
+    WHERE tt.id = user_Update.id;
     RETURN FOUND;
 END;
 $$;

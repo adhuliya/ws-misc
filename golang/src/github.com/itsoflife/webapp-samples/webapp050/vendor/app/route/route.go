@@ -19,6 +19,7 @@ func Init() *http.ServeMux {
 	r.HandleFunc("/skillset", controller.SkillSetH)
 	r.HandleFunc("/time", controller.TimeApi)
 	r.HandleFunc("/timer", controller.Timer)
+	r.HandleFunc("/users", controller.Users)
 	r.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	return r

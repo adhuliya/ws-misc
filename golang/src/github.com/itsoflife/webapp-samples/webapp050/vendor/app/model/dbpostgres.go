@@ -6,26 +6,43 @@ package model
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	_ "github.com/lib/pq"
-	"time"
+	//	"time"
 
 	"app/logs"
 )
 
 type DbPostgres struct {
-	dbConf DbConf
-	conn   *sql.DB
+	conf *DbConf
+	conn *sql.DB
 }
 
-func (db *DbPostgres) Open(conf DbConf) error {
-	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-		conf.host,
-		conf.port,
-		conf.user,
-		conf.password,
-		conf.dbname,
-		conf.ssl)
+func (db *DbPostgres) GetConf() *DbConf {
+	return db.conf
+}
+
+func (db *DbPostgres) SetConf(conf *DbConf) {
+	db.conf = conf
+}
+
+func (db *DbPostgres) GetConn() *sql.DB {
+	return db.conn
+}
+
+func (db *DbPostgres) SetConn(conn *sql.DB) {
+	db.conn = conn
+}
+
+func (db *DbPostgres) Open(conf *DbConf) error {
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		conf.Host,
+		conf.Port,
+		conf.UserName,
+		conf.Password,
+		conf.DbName,
+		conf.SslMode)
 
 	conn, err := sql.Open("postgres", connStr)
 	if err != nil {
@@ -39,9 +56,9 @@ func (db *DbPostgres) Open(conf DbConf) error {
 	}
 
 	// Connection Successful!
-	conf.password = "" // for security, as conf is printed in logs
-	logs.Logger.Error("POSTGRES CONN SUCCESSFUL. CONFIGURATION: ", conf)
-	db.dbConf = conf
+	conf.Password = "" // for security, as conf is printed in logs
+	logs.Logger.Info("POSTGRES CONN SUCCESSFUL. CONFIGURATION: ", conf)
+	db.conf = conf
 	db.conn = conn
 	return nil
 }
@@ -61,14 +78,14 @@ func (db *DbPostgres) Close() error {
 
 func (db *DbPostgres) Name() string {
 	if db.conf != nil {
-		return fmt.Sprintf("postgres:%s", db.conf.dbname)
+		return fmt.Sprintf("postgres:%s", db.conf.DbName)
 	} else {
 		logs.Logger.Error("POSTGRES NO DBNAME.")
 		return "postgres:??"
 	}
 }
 
-func (db *DbPostgres) Create(query string, data ...interface{}) (int64, error) {
+func (db *DbPostgres) Create(query string, data ...interface{}) (uint64, error) {
 	res, err := db.conn.Query(query, data)
 	defer CloseResult(res, err, query, data)
 	if err != nil {
@@ -82,13 +99,12 @@ func (db *DbPostgres) Create(query string, data ...interface{}) (int64, error) {
 }
 
 func (db *DbPostgres) Read(query string, data ...interface{}) (*sql.Rows, error) {
-	res, err := db.conn.Query(query, data)
+	res, err := db.conn.Query(query, data...)
 	//defer CloseResult(res, err, query, data) //caller's responsibility
 	if err != nil {
-		logs.Logger.Error(query, data)
+		logs.Logger.Error(err, query, data)
 		return nil, err
 	}
-	defer CloseResult(res)
 
 	return res, nil
 }
@@ -99,63 +115,9 @@ func (db *DbPostgres) Modify(query string, data ...interface{}) (bool, error) {
 	defer CloseResult(res, err, query, data)
 	if err != nil {
 		logs.Logger.Error(query, data)
-		return nil, err
+		return false, err
 	}
-	defer CloseResult(res)
 
 	b := ScanBool(res)
 	return b, nil
-}
-
-func main() {
-	db, err := ConnPostgres(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, DB_SSLMODE)
-	checkErr(err)
-	defer ClosePostgres(db)
-
-	fmt.Println("# Inserting values")
-
-	//var lastInsertId int
-
-	res, err := db.Query("select insertUser(username := $1, mobile := $2, email := $3)", "hero1", "+917645263720", "hero1@mail.com")
-	checkErr(err)
-	id := scanInsertId(res)
-	fmt.Println("Insert ID:", id)
-
-	res, err = db.Query("select updateUser(id := $1, username := $2)", id, "hero2")
-	checkErr(err)
-	b := scanBool(res)
-	fmt.Println("Updated:", b)
-
-	time.Sleep(1 * time.Second)
-
-	res, err = db.Query("select * from selectUser()")
-	checkErr(err)
-	var user = User{}
-	count := 0
-	for res.Next() {
-		count++
-		err = res.Scan(
-			&user.id,
-			&user.username,
-			&user.password,
-			&user.nickname,
-			&user.fullname,
-			&user.mobile,
-			&user.email,
-			&user.role,
-			&user.status,
-			&user.createdOn,
-			&user.modifiedOn,
-		)
-		checkErr(err)
-		fmt.Println(user)
-	}
-	fmt.Println("Row Count:", count)
-
-	res, err = db.Query("select deleteUser(id := $1)", id)
-	checkErr(err)
-	b = scanBool(res)
-	fmt.Println("Deleted:", b)
-
-	fmt.Println("Success.")
 }

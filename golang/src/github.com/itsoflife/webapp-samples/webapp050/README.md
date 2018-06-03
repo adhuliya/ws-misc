@@ -1,7 +1,11 @@
 Basic helloworld App
 =========================
 
-This is a simple hello world webapp with a properly configured seelog logger, and hierarchical html template system.
+This is a simple webapp that shows the full working with a postgres database. Other included features are,
+
+1. A properly configured seelog logger.
+2. A hierarchical html template system.
+3. Automation script to setup database with ease.
 
 How to run?
 -----------------
@@ -18,6 +22,17 @@ The initialization code for the logger is stored in `./vendor/app/logs/logconfig
 
 The initialization code for the template engine is stored in `./vendor/app/tmpl/template.go`. It expects a particular folder structure in the `./template` directory.
 
+FAQs
+----------------------
+### Q. How to setup the database?
+Install postgres database and make sure you have the default `postgres` account and database (successful installation ensures that). Then run the following commands,
+
+    $ ## Assuming current directory same as this README.md file.
+    $ cd configs/db/postgres
+    $ ./setup.py roles
+    $ ./setup.py setup
+
+These commands run the sql scripts in the folders inside `configs/db/postgres` automatically in the right order.
 
 Dependencies
 ======================

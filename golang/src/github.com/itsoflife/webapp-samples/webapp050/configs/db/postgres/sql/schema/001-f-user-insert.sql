@@ -1,6 +1,7 @@
 -- example usage
 
 -- select user_Insert(username := 'rimi', mobile := '+918756268826', email := 'rimi@gmail.com');
+\c hop;
 
 CREATE OR REPLACE FUNCTION user_Insert (
     username    TEXT,
@@ -34,18 +35,18 @@ BEGIN
 
     VALUES
     (
-        insertuser.username,
-        COALESCE(insertUser.password, 'p@ssw0rd'),
-        COALESCE(insertUser.nickname, 'HOPPER'),
-        COALESCE(insertUser.fullname, 'HOPPER'),
-        insertUser.mobile,
-        insertUser.email,
-        COALESCE(insertUser.role, 'user1'),
-        COALESCE(insertUser.status, 'disabled'),
-        COALESCE(insertUser.createdOn, CURRENT_TIMESTAMP),
+        user_Insert.username,
+        COALESCE(user_Insert.password, 'p@ssw0rd'),
+        COALESCE(user_Insert.nickname, 'HOPPER'),
+        COALESCE(user_Insert.fullname, 'HOPPER'),
+        user_Insert.mobile,
+        user_Insert.email,
+        COALESCE(user_Insert.role, 'user1'),
+        COALESCE(user_Insert.status, 'disabled'),
+        COALESCE(user_Insert.createdOn, CURRENT_TIMESTAMP),
         NULL
     )
-    RETURNING id INTO insertUser.insertId;
+    RETURNING id INTO user_Insert.insertId;
     --RETURN FOUND;
 END;
 $$;

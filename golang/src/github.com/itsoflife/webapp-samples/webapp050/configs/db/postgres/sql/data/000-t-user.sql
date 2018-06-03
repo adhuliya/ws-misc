@@ -1,4 +1,6 @@
 -- inserts the sample data required
+\c hop;
+
 insert into public.user (username, mobile, email, role, status, createdOn)
 values
   ('anshuman', '+919559302396', 'anshuisneo1@gmail.com', 'user1', 'active', current_timestamp),

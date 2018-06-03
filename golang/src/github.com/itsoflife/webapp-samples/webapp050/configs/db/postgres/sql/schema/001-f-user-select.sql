@@ -1,6 +1,7 @@
 -- example usage
 -- select * from user_Select();
 -- never return NULL values (hard to handle them in golang)
+\c hop;
 
 CREATE OR REPLACE FUNCTION user_Select (
     ioffset     INTEGER DEFAULT 0,
@@ -36,8 +37,8 @@ BEGIN
     FROM
     public.user tt
     ORDER BY tt.id
-    LIMIT selectUser.ilimit
-    OFFSET selectUser.ioffset;
+    LIMIT user_Select.ilimit
+    OFFSET user_Select.ioffset;
 END;
 $$;
 

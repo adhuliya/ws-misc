@@ -1,5 +1,6 @@
 -- example usage
 -- select user_Delete(id := 1);
+\c hop;
 
 CREATE OR REPLACE FUNCTION user_Delete (
     id          INTEGER
@@ -8,7 +9,7 @@ CREATE OR REPLACE FUNCTION user_Delete (
 BEGIN
     DELETE FROM public.user tt
     WHERE 
-    tt.id = deleteUser.id;
+    tt.id = user_Delete.id;
     RETURN FOUND;
 END;
 $$;

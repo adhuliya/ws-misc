@@ -79,19 +79,20 @@ func main() {
 
 	//var lastInsertId int
 
-	res, err := db.Query("select insertUser(username := $1, mobile := $2, email := $3)", "hero1", "+917645263720", "hero1@mail.com")
+	args := []interface{}{"hero1", "+917645263720", "hero1@mail.com"}
+	res, err := db.Query("SELECT * FROM user_Insert(username := $1, mobile := $2, email := $3)", args...)
 	checkErr(err)
 	id := scanInsertId(res)
 	fmt.Println("Insert ID:", id)
 
-	res, err = db.Query("select updateUser(id := $1, username := $2)", id, "hero2")
+	res, err = db.Query("select user_Update(id := $1, username := $2)", id, "hero2")
 	checkErr(err)
 	b := scanBool(res)
 	fmt.Println("Updated:", b)
 
 	time.Sleep(1 * time.Second)
 
-	res, err = db.Query("select * from selectUser()")
+	res, err = db.Query("select * from user_Select()")
 	checkErr(err)
 	var user = User{}
 	count := 0
@@ -115,7 +116,7 @@ func main() {
 	}
 	fmt.Println("Row Count:", count)
 
-	res, err = db.Query("select deleteUser(id := $1)", id)
+	res, err = db.Query("select user_Delete(id := $1)", id)
 	checkErr(err)
 	b = scanBool(res)
 	fmt.Println("Deleted:", b)

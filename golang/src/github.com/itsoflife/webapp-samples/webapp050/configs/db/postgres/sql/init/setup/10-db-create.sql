@@ -4,4 +4,4 @@
 CREATE DATABASE hop;
 
 \c hop;
-ALTER SCHEMA public OWNER TO hop
+-- ALTER SCHEMA public OWNER TO hop

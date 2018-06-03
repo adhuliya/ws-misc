@@ -1,4 +1,5 @@
 -- an example stored procedure
+\c hop;
 CREATE OR REPLACE FUNCTION hiLo(
     a NUMERIC, 
     b NUMERIC,

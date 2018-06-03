@@ -1,3 +1,4 @@
+\c hop;
 CREATE TABLE IF NOT EXISTS public.user (
     id          SERIAL  NOT NULL,
     username    TEXT UNIQUE NOT NULL,

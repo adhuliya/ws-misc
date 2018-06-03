@@ -1,7 +1,16 @@
 {{ define "appjs" -}}
 
-<script type="javascript">
-    console.log("JavaScript Rocks!");
+<script>
+console.log("itsoflife!");
+
+// Script to open and close sidebar
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+}
 </script>
 
 {{/* jquery support */}}
@@ -9,8 +18,7 @@
 
 {{/* for markdown rendering */}}
 <!--
-<script src="/static/js/markdown/stmd.js"></script>
-<script src="/static/js/markdown/render.js"></script>
--->
-
+  <script src="/static/js/markdown/stmd.js"></script>
+  <script src="/static/js/markdown/render.js"></script>
+  -->
 {{- end }}

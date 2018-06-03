@@ -4,6 +4,7 @@ import (
 	"net/http" //library for http based interaction
 
 	"app/logs"
+	"app/model"
 	tmpl "app/template"
 	"app/util"
 	"encoding/json"
@@ -55,4 +56,11 @@ func TimeApi(w http.ResponseWriter, r *http.Request) {
 
 func Timer(w http.ResponseWriter, r *http.Request) {
 	tmpl.RenderTemplate(w, "timer.tmpl", SkillSets{})
+}
+
+func Users(w http.ResponseWriter, r *http.Request) {
+	//logs.Logger.Trace("Users handler entered.")
+	u := model.User{}
+	users, _ := u.Select(0, 20)
+	tmpl.RenderTemplate(w, "users.tmpl", users)
 }

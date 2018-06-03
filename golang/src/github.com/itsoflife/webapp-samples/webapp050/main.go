@@ -3,95 +3,102 @@
 package main
 
 import (
-	"net/http" //library for http based interaction
-
-	"app/logs"
-	"app/tmpl"
-	"app/util"
-	"encoding/json"
+	"context"
+	"flag" // for command line arguments
 	"fmt"
+	"net/http" //library for http based interaction
+	"os"
+	"os/signal"
 	"time"
+
+	"app/controller"
+	"app/logs"
+	"app/model"
+	"app/route"
+	"app/template"
+	"app/util"
 )
-
-type UserData struct {
-	Name        string
-	City        string
-	Nationality string
-}
-
-type SkillSet struct {
-	Language string
-	Level    string
-}
-
-type SkillSets []*SkillSet
-
-func index(w http.ResponseWriter, r *http.Request) {
-	logs.Logger.Trace("Received request: ", r) // logging
-	tmpl.RenderTemplate(w, "index.tmpl", nil)
-}
-
-func aboutMe(w http.ResponseWriter, r *http.Request) {
-	userData := &UserData{Name: "Asit Dhal", City: "Bhubaneswar", Nationality: "Indian"}
-	tmpl.RenderTemplate(w, "aboutme.tmpl", userData)
-}
-
-func skillSet(w http.ResponseWriter, r *http.Request) {
-	skillSets := SkillSets{&SkillSet{Language: "Golang", Level: "Beginner"},
-		&SkillSet{Language: "C++", Level: "Advanced"},
-		&SkillSet{Language: "Python", Level: "Advanced"}}
-	tmpl.RenderTemplate(w, "skillset.tmpl", skillSets)
-}
-
-var timeMap map[string]string
-
-func timeApi(w http.ResponseWriter, r *http.Request) {
-	logs.Logger.Info("Time requested.")
-
-	timeMap["time"] = fmt.Sprintf("%s", time.Now())
-	jsn, err := json.Marshal(timeMap)
-	util.CheckError(err)
-
-	w.Header().Set("Content-Type", "text/json; charset=utf-8")
-
-	fmt.Fprintf(w, string(jsn))
-}
-
-func timer(w http.ResponseWriter, r *http.Request) {
-	tmpl.RenderTemplate(w, "timer.tmpl", SkillSets{})
-}
 
 func main() {
 	// defined in ./vendor/app/logs/logconfig.go
-	// GOOD FOR DEBUGGING
-	logs.InitLogger("configs/seelog.xml")
-	defer logs.Logger.Flush()
+	// GOOD FOR DEBUGGING & MAINTENANCE
+	// STEP 0
+	logs.Init("configs/seelog.xml") // as early as possible
+	logs.Logger.Info("PROCESS STARTED.")
+	logs.Logger.Flush()
 
-	tmpl.InitTemplates("template/layout/", "template/")
+	var wait time.Duration
+	flag.DurationVar(&wait, "graceful-timeout", time.Second*15, "the duration for which the server gracefully waits for existing connections to finish - e.g. 15s or 1m")
+	flag.Parse()
 
-	timeMap = make(map[string]string)
-	//handler for static files
-	fs := http.FileServer(http.Dir("static"))
+	logs.Logger.Trace("Server kill wait Duration: ", wait)
 
-	// route top level request to `index` function.
-	http.HandleFunc("/", index)
-	http.HandleFunc("/aboutme", aboutMe)
-	http.HandleFunc("/skillset", skillSet)
-	http.HandleFunc("/time", timeApi)
-	http.HandleFunc("/timer", timer)
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	// STEP 1
+	model.Init(&model.DbConf{
+		Db:       "postgres",
+		UserName: "hop",
+		Password: "anshuisneo",
+		DbName:   "hop",
+		Host:     "127.0.0.1",
+		Port:     "5432",
+		SslMode:  "disable",
+	})
 
+	// STEP 2: setup templates
+	template.Init("template/layout/", "template/")
+
+	// STEP 3: setup controllers
+	controller.Init()
+
+	// STEP 4: setup routes
+	r := route.Init()
+
+	// SETP 5: setup server
 	// configure server
-	server := http.Server{
+	srv := &http.Server{
 		Addr: "0.0.0.0:9090",
+		// Good practice to set timeouts to avoid Slowloris attacks.
+		WriteTimeout: time.Second * 15,
+		ReadTimeout:  time.Second * 15,
+		IdleTimeout:  time.Second * 60,
+		Handler:      r,
 	}
 
-	logs.Logger.Info("STARTING SERVER : ", server)
+	// Run our server in a goroutine so that it doesn't block.
+	go func() {
+		logs.Logger.Info("STARTING SERVER : ", srv)
+		// some meaningful output at command line
+		fmt.Println("SERVING AT: ", srv.Addr)
 
-	// some meaningful output at command line
-	fmt.Println("SERVING AT: ", server.Addr)
+		if err := srv.ListenAndServe(); err != nil {
+			util.FatalError(err)
+		}
+	}()
 
-	// run the server to start listening
-	err := server.ListenAndServe()
-	util.FatalError(err)
+	// STEP 6: setup graceful shutdown
+	// Prepare the server for a graceful shutdown.
+	c := make(chan os.Signal, 1)
+	// We'll accept graceful shutdowns when quit via SIGINT (Ctrl+C)
+	// SIGKILL, SIGQUIT or SIGTERM (Ctrl+/) will not be caught.
+	signal.Notify(c, os.Interrupt)
+
+	// Block until we receive our signal.
+	<-c
+
+	logs.Logger.Warn("USER INTERRUPT! SHUTTING DOWN.")
+
+	// Create a deadline to wait for.
+	ctx, cancel := context.WithTimeout(context.Background(), wait)
+	defer cancel()
+
+	// Doesn't block if no connections, but will otherwise wait
+	// until the timeout deadline.
+	srv.Shutdown(ctx)
+	// Optionally, you could run srv.Shutdown in a goroutine and block on
+	// <-ctx.Done() if your application should wait for other services
+	// to finalize based on context cancellation.
+
+	logs.Logger.Warn("SERVER STOPPED.")
+	logs.Logger.Flush()
+	os.Exit(0)
 }

@@ -3,6 +3,8 @@ package model
 import (
 	"database/sql"
 	_ "github.com/lib/pq"
+
+	"app/logs"
 )
 
 // The global datastore interface objects.
@@ -11,22 +13,41 @@ var dataStore1 DataStore
 
 // contains connection information
 type DbConf struct {
-	user     string
-	password string
-	dbname   string
-	host     string
-	port     string
-	ssl      string
+	Db       string // "postgres", "sqlite", "mysql", ...
+	UserName string
+	Password string
+	DbName   string
+	Host     string
+	Port     string
+	SslMode  string // disable,allow,prefer,require,...
 }
 
 type DataStore interface {
-	Open() error  // open the current datastore
-	Close() error // safely close the connection
-	Name()        // name of current datastore
+	Open(*DbConf) error // open the current datastore
+	Close() error       // safely close the connection
+	Name() string       // name of current datastore
+	GetConn() *sql.DB
+	SetConn(conn *sql.DB)
+	GetConf() *DbConf
+	SetConf(conf *DbConf)
 	Create(query string, data ...interface{}) (uint64, error)
 	Read(query string, data ...interface{}) (*sql.Rows, error)
 	// for both Update and Delete operations
 	Modify(query string, data ...interface{}) (bool, error)
+}
+
+func Init(conf *DbConf) {
+	if conf.Db == "postgres" {
+		db := DbPostgres{}
+		db.Open(conf)
+		//logs.Logger.Trace("DB: ", db)
+		dataStore1 = &db
+	} else {
+		logs.Logger.Error("Unkown data store name: ", conf.Db)
+		return
+	}
+	conf.Password = ""
+	logs.Logger.Info("Initialized database: ", conf)
 }
 
 // UTILITY FUNCTIONS

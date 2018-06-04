@@ -1,0 +1,20 @@
+//============== C-model register-write trace =============
+//=====================================================================
+0. PC=00000000, Reg-Log=607110e0 Fp-Reg-log=00000000  Store-log= 00000000
+1. PC=00000004, Reg-Log=f0000000 Fp-Reg-log=00000000  Store-log= 00000000
+2. PC=00000008, Reg-Log=70011010 Fp-Reg-log=00000000  Store-log= 00000000
+3. PC=0000000c, Reg-Log=70011010 Fp-Reg-log=00000000  Store-log= 00000000
+4. PC=00000010, Reg-Log=70040010 Fp-Reg-log=00000000  Store-log= 00000000
+5. PC=00000014, Reg-Log=700101a6 Fp-Reg-log=00000000  Store-log= 00000000
+6. PC=00000018, Reg-Log=70010202 Fp-Reg-log=00000000  Store-log= 00000000
+7. PC=0000001c, Reg-Log=70010302 Fp-Reg-log=00000000  Store-log= 00000000
+8. PC=00000020, Reg-Log=70010400 Fp-Reg-log=00000000  Store-log= 00000000
+9. PC=00000024, Reg-Log=70010503 Fp-Reg-log=00000000  Store-log= 00000000
+10. PC=00000028, Reg-Log=70010a05 Fp-Reg-log=00000000  Store-log= 00000000
+11. PC=0000002c, Reg-Log=f0010500 Fp-Reg-log=00000000  Store-log= 00000000
+12. PC=00000030, Reg-Log=700108a0 Fp-Reg-log=00000000  Store-log= 00000000
+13. PC=00000034, Reg-Log=f0010603 Fp-Reg-log=00000000  Store-log= 00000000
+14. PC=00000038, Reg-Log=700109f0 Fp-Reg-log=00000000  Store-log= 00000000
+15. PC=0000003c, Reg-Log=70010700 Fp-Reg-log=00000000  Store-log= 00000000
+16. PC=00001800, Reg-Log=60710180 Fp-Reg-log=00000000  Store-log= 00000000
+17. PC=00001804, Reg-Log=e0010000 Fp-Reg-log=00000000  Store-log= 00000000

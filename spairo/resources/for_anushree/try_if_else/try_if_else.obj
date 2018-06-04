@@ -1,0 +1,37 @@
+
+.//try_if_else.elf:     file format elf32-sparc
+
+
+Disassembly of section .text:
+
+00000000 <_start>:
+   0:	0d 00 00 40 	sethi  %hi(0x10000), %g6
+   4:	8c 11 a0 00 	mov  %g6, %g6	! 10000 <a>
+   8:	c4 01 80 00 	ld  [ %g6 ], %g2
+   c:	0d 00 00 40 	sethi  %hi(0x10000), %g6
+  10:	8c 11 a0 04 	or  %g6, 4, %g6	! 10004 <b>
+  14:	c6 01 80 00 	ld  [ %g6 ], %g3
+  18:	0d 00 00 40 	sethi  %hi(0x10000), %g6
+  1c:	8c 11 a0 08 	or  %g6, 8, %g6	! 10008 <c>
+  20:	c8 01 80 00 	ld  [ %g6 ], %g4
+  24:	8a 00 80 03 	add  %g2, %g3, %g5
+  28:	80 a0 80 04 	cmp  %g2, %g4
+  2c:	36 80 00 06 	bge,a   44 <test>
+  30:	84 00 80 03 	add  %g2, %g3, %g2
+  34:	84 20 80 03 	sub  %g2, %g3, %g2
+  38:	88 21 20 01 	dec  %g4
+  3c:	10 80 00 03 	b  48 <test1>
+  40:	01 00 00 00 	nop 
+
+00000044 <test>:
+  44:	88 01 20 01 	inc  %g4
+
+00000048 <test1>:
+  48:	88 01 20 0a 	add  %g4, 0xa, %g4
+  4c:	0d 00 00 40 	sethi  %hi(0x10000), %g6
+  50:	8c 11 a0 00 	mov  %g6, %g6	! 10000 <a>
+  54:	c4 21 80 00 	st  %g2, [ %g6 ]
+  58:	0d 00 00 40 	sethi  %hi(0x10000), %g6
+  5c:	8c 11 a0 08 	or  %g6, 8, %g6	! 10008 <c>
+  60:	c8 21 80 00 	st  %g4, [ %g6 ]
+  64:	91 d0 20 00 	ta  0

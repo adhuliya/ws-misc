@@ -25,9 +25,15 @@ int main() {
         cout << i << endl;
     }
 
+    cout << endl;
+
     for(auto i = vec.begin(), j = vec.end(); i < j; i++) {
         cout << *i << endl;
     }
+
+    cout << "Size(Before) : " << vec.size() << endl;
+    vec.clear();
+    cout << "Size(After)  : " << vec.size() << endl;
 
     return 0;
 }

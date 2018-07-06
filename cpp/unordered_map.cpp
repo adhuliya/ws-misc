@@ -37,6 +37,10 @@ int main() {
         std::cout << "Found the key, with value = " << map[key] << std::endl;
     }
 
+    for(auto i = map.begin(), j = map.end(); i != j; i++) {
+      std::cout << i->first << " = " << i->second << std::endl;
+    }
+
     std::cout << map.size() << std::endl;
     map.clear();
     std::cout << map.size() << std::endl;

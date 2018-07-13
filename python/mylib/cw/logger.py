@@ -25,6 +25,9 @@ Logging levels:
 """
 
 class LogLevels:
+    """
+    Writing logging levels here for convenience of reference.
+    """
     CRITICAL    = logging.CRITICAL
     ERROR       = logging.ERROR
     WARNING     = logging.WARNING
@@ -72,6 +75,18 @@ def initLogger(logFile=logFileName, logLevel=logLevel, logFormat=logFormat2, log
 
     initialized = True
 
+
+def disable():
+    if initialized:
+        logger = logging.getLogger(__name__)
+        logger.disabled = True  # and False to enable
+        
+
+def enable():
+    if initialized:
+        logger = logging.getLogger(__name__)
+        logger.disabled = False  # and True to disable
+        
 
 if __name__ == "__main__":
     initLogger()

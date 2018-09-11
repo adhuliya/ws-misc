@@ -5,6 +5,7 @@
 </style><link type="text/css" rel="stylesheet" href="/static/css/css_003.css"><style type="text/css">.gm-style .gm-style-cc span,.gm-style .gm-style-cc a,.gm-style .gm-style-mtc div{font-size:10px;box-sizing:border-box}
 </style><style type="text/css">@media print {  .gm-style .gmnoprint, .gmnoprint {    display:none  }}@media screen {  .gm-style .gmnoscreen, .gmnoscreen {    display:none  }}</style><style type="text/css">.gm-style-pbc{transition:opacity ease-in-out;background-color:rgba(0,0,0,0.45);text-align:center}.gm-style-pbt{font-size:22px;color:white;font-family:Roboto,Arial,sans-serif;position:relative;margin:0;top:50%;-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%);transform:translateY(-50%)}
 </style>
+<link rel="shortcut icon" href="/static/image/free/icons8-family-64.png" type="image/png">
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"><style type="text/css">.gm-style .gm-style-mtc label,.gm-style .gm-style-mtc div{font-weight:400}
 </style><style type="text/css">.gm-control-active img{box-sizing:content-box}.gm-control-active:hover img:nth-child(1),.gm-control-active:active img:nth-child(1),.gm-control-active:active img:nth-child(2){display:none}
 </style><link type="text/css" rel="stylesheet" href="/static/css/css_002.css"><style type="text/css">.gm-style .gm-style-cc span,.gm-style .gm-style-cc a,.gm-style .gm-style-mtc div{font-size:10px;box-sizing:border-box}
@@ -22,7 +23,7 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url('/static/image/free/index.jpg');
+    background-image: url('/static/image/{{person.profile_pic}}');
     min-height: 100%;
 }
 </style>
@@ -51,6 +52,7 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
     <a href="#portfolio" class="w3-bar-item w3-button w3-text-grey w3-hover-black" onclick="closeNav()">Portfolio</a>
     <a href="#about" class="w3-bar-item w3-button w3-text-grey w3-hover-black" onclick="closeNav()">About</a>
     <a href="#contact" class="w3-bar-item w3-button w3-text-grey w3-hover-black" onclick="closeNav()">Contact</a>
+    <a href="/logout" class="w3-bar-item w3-button w3-text-grey w3-hover-black" onclick="closeNav()">Logout</a>
   </div>
 </nav>
 
@@ -62,52 +64,36 @@ body, h1,h2,h3,h4,h5,h6 {font-family: "Montserrat", sans-serif}
 
   <!-- Header -->
   <header class="w3-container w3-center" style="padding:128px 16px" id="home">
-    <h1 class="w3-jumbo"><b>{{name}}</b></h1>
-    <p>{{profession}}</p>
-    <img src="/static/image/free/index.jpg" class="w3-image w3-hide-large w3-hide-small w3-round" style="display:block;width:60%;margin:auto;">
-    <img src="/static/image/free/index.jpg" class="w3-image w3-hide-large w3-hide-medium w3-round" width="1000" height="1333"> </header>
+    <h1 class="w3-jumbo"><b>{{person.name}}</b></h1>
+    <p>{{person.profession}}</p>
+    %if person.motd is not None:
+      <p><i>{{person.motd}}</i></p>
+    %end
 
-  <!-- Portfolio Section -->
-  <div class="w3-padding-32 w3-content" id="portfolio">
-    <h2 class="w3-text-grey">My Portfolio</h2>
-    <hr class="w3-opacity">
-
-    <!-- Grid for photos -->
-    <div class="w3-row-padding" style="margin:0 -16px">
-      <div class="w3-half">
-        <img src="/static/image/free/wedding.jpg" style="width:100%">
-        <img src="/static/image/free/rocks.jpg" style="width:100%">
-        <img src="/static/image/free/sailboat.jpg" style="width:100%">
-      </div>
-
-      <div class="w3-half">
-        <img src="/static/image/free/underwater.jpg" style="width:100%">
-        <img src="/static/image/free/chef.jpg" style="width:100%">
-        <img src="/static/image/free/wedding.jpg" style="width:100%">
-        <img src="/static/image/free/p6.jpg" style="width:100%">
-      </div>
-    <!-- End photo grid -->
-    </div>
-  <!-- End Portfolio Section -->
-  </div>
+    <img src="/static/image/{{person.profile_pic}}" class="w3-image w3-hide-large w3-hide-small w3-round" style="display:block;width:60%;margin:auto;">
+    <img src="/static/image/{{person.profile_pic}}" class="w3-image w3-hide-large w3-hide-medium w3-round" width="1000" height="1333"> </header>
 
   <!-- About Section -->
   <div class="w3-content w3-justify w3-text-grey w3-padding-32" id="about">
+    <!-- Testimonials -->
+    %if family:
+    <h3 class="w3-padding-24">My Family</h3>
+    %for f in family:
+    <a href="/person/{{f[0].person_id}}">
+    <img src="/static/image/{{f[0].avatar_pic}}" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
+    </a>
+    <p><span class="w3-large w3-text-black w3-margin-right">{{f[0].name}}.</span> {{f[1]}}.</p>
+    <p>{{f[0].profession}}</p><br>
+   
+    %end
+    
+    %if person.about_me is not None:
     <h2>About</h2>
     <hr class="w3-opacity">
-    <p>Some text about me. Some text about me. I am lorem ipsum 
-consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore 
-et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-exercitation ullamco laboris nisi ut aliquip ex ea commodo
-      consequat. Duis aute irure dolor in reprehenderit in voluptate 
-velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
-mollit anim id est laborum consectetur adipiscing
-      elit, sed do eiusmod tempor incididunt ut labore et dolore magna 
-aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco 
-laboris nisi ut aliquip ex ea commodo consequat.
-    </p>
-    <h3 class="w3-padding-16">My Skills</h3>
+    <p>{{person.about_me}}</p>
+    %end
+
+<!--    <h3 class="w3-padding-16">My Skills</h3>
     <p class="w3-wide">Photography</p>
     <div class="w3-light-grey">
       <div class="w3-container w3-center w3-padding-small w3-dark-grey" style="width:95%">95%</div>
@@ -143,23 +129,10 @@ laboris nisi ut aliquip ex ea commodo consequat.
     <button class="w3-button w3-light-grey w3-padding-large w3-section">
       <i class="fa fa-download"></i> Download Resume
     </button>
+    -->
 
-    <!-- Testimonials -->
-    <h3 class="w3-padding-24">My Reputation</h3>
-    <img src="/static/image/free/avatar_smoke.jpg" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
-    <p><span class="w3-large w3-text-black w3-margin-right">Chandler Bing.</span> Web Designer.</p>
-    <p>Jane Doe is just awesome. I am so happy to have met her!</p><br>
-   
-    <img src="/static/image/free/bandmember.jpg" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
-    <p><span class="w3-large w3-text-black w3-margin-right">Chris Fox.</span> CEO at Mighty Schools.</p>
-    <p>Jane Doe saved us from a web disaster.</p><br>
-    
-    <img src="/static/image/free/avatar_g2.jpg" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:80px">
-    <p><span class="w3-large w3-text-black w3-margin-right">Rebecca Flex.</span> CEO at Company.</p>
-    <p>No one is better than Jane Doe.</p><br>
-    
     <!-- Grid for pricing tables -->
-    <h3 class="w3-padding-16">My Price</h3>
+<!--    <h3 class="w3-padding-16">My Price</h3>
     <div class="w3-row-padding" style="margin:0 -16px">
       <div class="w3-half w3-margin-bottom">
         <ul class="w3-ul w3-center w3-card w3-hover-shadow">
@@ -194,27 +167,57 @@ laboris nisi ut aliquip ex ea commodo consequat.
           </li>
         </ul>
       </div>
-    <!-- End Grid/Pricing tables -->
     </div>
+      -->
+    <!-- End Grid/Pricing tables -->
     
   <!-- End About Section -->
   </div>
 
+  <!-- Portfolio Section -->
+  <div class="w3-padding-32 w3-content" id="portfolio">
+    <h2 class="w3-text-grey">My Portfolio</h2>
+    <hr class="w3-opacity">
+
+    <!-- Grid for photos -->
+    <div class="w3-row-padding" style="margin:0 -16px">
+      <div class="w3-half">
+        <img src="/static/image/free/wedding.jpg" style="width:100%">
+        <img src="/static/image/free/rocks.jpg" style="width:100%">
+        <img src="/static/image/free/sailboat.jpg" style="width:100%">
+      </div>
+
+      <div class="w3-half">
+        <img src="/static/image/free/underwater.jpg" style="width:100%">
+        <img src="/static/image/free/chef.jpg" style="width:100%">
+        <img src="/static/image/free/wedding.jpg" style="width:100%">
+        <img src="/static/image/free/p6.jpg" style="width:100%">
+      </div>
+    <!-- End photo grid -->
+    </div>
+  <!-- End Portfolio Section -->
+  </div>
+
   <!-- Contact Section -->
   <div class="w3-padding-32 w3-content w3-text-grey" id="contact" style="margin-bottom:64px">
+    % if person.email_id is not None:
     <h2>Contact Me</h2>
     <hr class="w3-opacity">
 
     <div class="w3-section">
-      <p><i class="fa fa-map-marker fa-fw w3-xxlarge w3-margin-right"></i> Chicago, US</p>
+      <!--<p><i class="fa fa-map-marker fa-fw w3-xxlarge w3-margin-right"></i> Chicago, US</p>
       <p><i class="fa fa-phone fa-fw w3-xxlarge w3-margin-right"></i> Phone: +00 151515</p>
-      <p><i class="fa fa-envelope fa-fw w3-xxlarge w3-margin-right"> </i> Email: mail@mail.com</p>
+      -->
+      <p><i class="fa fa-envelope fa-fw w3-xxlarge w3-margin-right"> </i> {{person.email_id}}</p>
     </div>
+    %end
     
      <!-- Google Map -->
+     <!--
     <div id="googleMap" class="w3-greyscale-max" style="width: 100%; height: 300px; margin: 36px 0px; position: relative; overflow: hidden;"><div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px; background-color: rgb(229, 227, 223);"><div class="gm-err-container"><div class="gm-err-content"><div class="gm-err-icon"><img src="/static/image/free/icon_error.png" draggable="false" style="-moz-user-select: none;"></div><div class="gm-err-title">Sorry! Something went wrong.</div><div class="gm-err-message">This page didn't load Google Maps correctly. See the JavaScript console for technical details.</div></div></div></div></div>
+    -->
    
-    <p>Lets get in touch. Send me a message:</p>
+<!--    <p>Lets get in touch. Send me a message:</p>
     <form action="/action_page.php" target="_blank">
       <p><input class="w3-input w3-padding-16 w3-border" placeholder="Name" required="" name="Name" type="text"></p>
       <p><input class="w3-input w3-padding-16 w3-border" placeholder="Email" required="" name="Email" type="text"></p>
@@ -226,6 +229,7 @@ laboris nisi ut aliquip ex ea commodo consequat.
         </button>
       </p>
     </form>
+    -->
   <!-- End Contact Section -->
   </div>  
   
@@ -237,7 +241,7 @@ laboris nisi ut aliquip ex ea commodo consequat.
     <i class="fa fa-pinterest-p w3-hover-opacity"></i>
     <i class="fa fa-twitter w3-hover-opacity"></i>
     <i class="fa fa-linkedin w3-hover-opacity"></i>
-    <p class="w3-medium">Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+    <p class="w3-medium">Powered by <i>itsoflife</i> family<a href="/" target="_blank" class="w3-hover-text-green"></a></p>
   <!-- End footer -->
   </footer>
   
@@ -246,22 +250,22 @@ laboris nisi ut aliquip ex ea commodo consequat.
 
 <!-- Add Google Maps -->
 <script>
-function myMap()
-{
-  myCenter=new google.maps.LatLng(41.878114, -87.629798);
-  var mapOptions= {
-    center:myCenter,
-    zoom:12, scrollwheel: false, draggable: false,
-    mapTypeId:google.maps.MapTypeId.ROADMAP
-  };
-  var map=new google.maps.Map(document.getElementById("googleMap"),mapOptions);
-
-  var marker = new google.maps.Marker({
-    position: myCenter,
-  });
-  marker.setMap(map);
-}
-
+//function myMap()
+//{
+//  myCenter=new google.maps.LatLng(41.878114, -87.629798);
+//  var mapOptions= {
+//    center:myCenter,
+//    zoom:12, scrollwheel: false, draggable: false,
+//    mapTypeId:google.maps.MapTypeId.ROADMAP
+//  };
+//  var map=new google.maps.Map(document.getElementById("googleMap"),mapOptions);
+//
+//  var marker = new google.maps.Marker({
+//    position: myCenter,
+//  });
+//  marker.setMap(map);
+//}
+//
 // Open and close sidebar
 function openNav() {
     document.getElementById("mySidebar").style.width = "60%";
@@ -272,7 +276,7 @@ function closeNav() {
     document.getElementById("mySidebar").style.display = "none";
 }
 </script>
-<script src="/static/image/free/js.asc"></script>
+<script src="/static/js/js.asc"></script>
 <!--
 To use this code on your website, get a free API key from Google.
 Read more at: https://www.w3schools.com/graphics/google_maps_basic.asp

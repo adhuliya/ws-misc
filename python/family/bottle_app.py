@@ -1,67 +1,166 @@
-
-# A very simple Bottle Hello World app for you to get started with...
+# A simple bottle based web app for family tree
 import sys
-# sys.path.append(".")
+import os
+import os.path as osp
+import json
 
-from bottle import default_app, route, run, static_file, error, view, abort, redirect, request
+import bottle as b
+
+import module.util as u
 from module.person import Person
 from module.people import people
-import module.util as util
+from module.page_data import PageData
+import module.logger as logger
+import logging
+import time
+   
+################################################
+# initialization code
+################################################
 
-passwds = util.create_passwd_dict(people)
+# 1: Initialize logger!
+logger.initLogger()
+log = logging.getLogger(__name__)
+log.info("Server Started")
+
+# 2. Setup bottle app
+app = b.Bottle()
+app.install(u.log_to_logger)
+
+# 3. Data setup
+user_passwds = u.create_passwd_dict(people)
+online_users = {} # Dict[email_id, (user_id, active_at)]
+
+u.SESSION_TIMEOUT_SEC = 600 # seconds
+u.AVATAR_IMG_SIZE = (256, 256)  # pixels
+u.DEFAULT_IMAGE_QUALITY  = 30  # 30% percent of original
+
+u.ROOT_DIR = osp.dirname(osp.realpath(__file__))
+log.info("u.ROOT_DIR = %s", u.ROOT_DIR)
+u.TMP_DIR = os.path.join(u.ROOT_DIR, "tmp")
+u.STATIC_DIR = os.path.join(u.ROOT_DIR, "static")
+u.PEOPLE_DIR = os.path.join(u.ROOT_DIR, "static/image/people")
+u.IMAGE_DIR = os.path.join(u.ROOT_DIR, "static/image") 
+u.WEB_PEOPLE_DIR = "db"
+u.WEB_FREEPIC_DIR = "free"
+u.WEB_FILLINS_DIR = "free/fillins"
+
+# assign default pics
+u.assign_pics_to_people(people)
+
+################################################
 
 
-@route("/")
-@view("index") # ./views/index.tpl
+@app.route("/")
+@b.view("index") # ./views/index.tpl
 def index():
-    return dict()
+  userid = u.is_logged_in(b.request, online_users)
+  if userid is not None:
+    b.redirect("/person/{}".format(userid))
+  return dict()
                               
-@route("/login", method="POST")
-@view("login") # ./views/login.tpl
+@app.post("/login")
+@b.view("login") # ./views/login.tpl
 def login():
-    email_id = request.forms.get('email_id')
-    passwd = request.forms.get('passwd')
-    if email_id in passwds:
-      val = passwds[email_id] 
-      if val[1] == passwd:
-        redirect(f"/person/{val[0]}")
-    else:
-      abort(404, "Wrong Email/Passwd!")
+  userid = u.is_logged_in(b.request, online_users)
+  if userid is not None:
+    b.redirect("/")
+
+  email_id = b.request.forms.get('email_id')
+  passwd = b.request.forms.get('passwd')
+  person_id = u.is_correct_login(email_id, passwd, user_passwds)
+  if person_id:
+    online_users[email_id] = (person_id, time.time())
+    b.response.set_cookie('email_id', str(email_id))
+    b.redirect(f"/person/{person_id}")
+  else:
+    b.abort(404, "Wrong Email/Passwd!")
+
+@app.get("/login")
+def do_login():
+  userid = u.is_logged_in(b.request, online_users)
+  if userid is None:
+    b.redirect("/person/{userid}")
+  else:
+    b.redirect("/")
                               
-@route("/signup")
-@view("signup") # ./views/signup.tpl
+@app.get("/logout")
+def logout():
+  userid = u.is_logged_in(b.request, online_users)
+  if userid is not None:
+    b.response.set_cookie('email_id', "None")
+  b.redirect("/")
+                              
+@app.route("/signup")
+@b.view("signup") # ./views/signup.tpl
 def signup():
-    return "TODO"
+  b.abort(404, "TODO: Yet to be added!")
                               
-@route("/person/<person_id:int>")
-@view("person") # ./views/person.tpl
+@app.route("/person/<person_id:int>")
+@b.view("person") # ./views/person.tpl
 def person(person_id):
-    if person_id in people:
-        p = people[person_id]
-        return p.__dict__
-    abort(404, "Person not found")
-           
-@route('/static/<filename:path>')
-def send_static(filename):
-    return static_file(filename, root='./static')                   
+  log.info("try page person_id : %s", person_id)
+  userid = u.is_logged_in(b.request, online_users)
+  if userid is None:
+    b.abort(404, "Not logged in / idle for too long!")
 
-@route('/backupdb')
-def backupd(filename):
-    util.backupdb(people)
+  if person_id in people:
+    pd = PageData()
+    pd.person = people[person_id]
+    pd.relatives = u.fetch_family(pd.person, people)
+
+    pic_dir  = u.person_dir(person_id)
+    pd.pics = u.pics_path(pic_dir, pd.person)
+    pd.family = u.fetch_family(pd.person, people)
+    # pd.profile_pic = u.profile_pic_path(pic_dir, person_id)
+    # pd.avatar_pic = u.avatar_pic_path(pic_dir, person_id)
+    # (pd.avatar_pic, pd.profile_pic) = u.random_avatar_profile_pic()
+
+    log.info("avatar = %s, profile = %s, pics = %s", pd.avatar_pic, pd.profile_pic, pd.pics)
+
+    return pd.__dict__
+
+  b.abort(404, "Person not found!")
+           
+@app.route('/query/name/<string>/<randint:int>')
+def query_name(string, randint):
+    log.info("given string: %s", string)
+
+    result = u.search_name(string, people)
+
+    log.info("matched results: %s", result)
+
+    returnDict = {"rand_int": randint, "data": result}
+
+    b.response.content_type = "application/json"
+    return json.dumps(returnDict)
+
+@app.route('/static/<filename:path>')
+def send_static(filename):
+    return b.static_file(filename, root='./static')                   
+
+@app.route('/backupdb')
+def backupdb(filename):
+    u.backupdb(people)
     return "TODO"
 
-@error(404)
-@view("error")  # ./views/error.tpl
+@app.route("/form")
+@b.view("form")  # ./views/form.tpl 
+def form():
+  return dict()
+
+@app.error(404)
+@b.view("error")  # ./views/error.tpl
 def error404(error):
-  return dict(msg="Not available :(")
+  log.error("code = %s, msg = %s", error.status, error.body)
+  return dict(msg=error.body + " :(")
 
-@error(500)
-@view("error")  # ./views/error.tpl
-def error500(error):
-  return dict(msg="oops !")
-
-application = default_app()  
+#@app.error(500)
+#@b.view("error")  # ./views/error.tpl
+#def error500(error):
+#  return dict(msg="oops !")
+#
 
 if __name__ == "__main__":
-    run(host='localhost', port=8080)
+    app.run(host='localhost', port=8080, debug=True, quiet=True)
 

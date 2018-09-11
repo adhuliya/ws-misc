@@ -3,6 +3,12 @@ Family Tree
 
 Connecting family. :)
 
+TODO
+-------
+1. add person search capability
+2. add image crop capability
+3. spell correction/suggestion.
+
 How to start?
 -----------------
 

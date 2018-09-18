@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- set shortcut icon when needed -->
+    <!-- <link rel="shortcut icon" href="/static/image/sample-icon.png" type="image/png"> -->
+
+    <!-- w3.css remote and local link -->
+    <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+    <link rel="stylesheet" href="static/css/w3.css" />
+
+    <title>Animate on scroll</title>
+
+  </head>
+
+  <body>
+
+    <div class="w3-panel w3-red">
+    <p>Scroll down to find the button animate.</p>
+    </div>
+
+    <div class="w3-panel w3-red">
+    <p>Doesn't work :(</p>
+    </div>
+
+    <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+
+    <button id="button1" type="button" style="height:30px">Hello</button>
+
+    <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+
+    <div class="w3-panel w3-gray">
+    <p>Scroll up to find the button animate again.</p>
+    </div>
+
+    <!-- jquery remote and local link -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+    <script src="static/js/jquery.min.js"></script>
+
+  <script>
+
+    function changeBtnHeight() {
+      btn = $("#button1");
+      if (btn.is(':visible')){
+        btn.animate({
+          height: "90px" //'toggle'
+        }, "fast"); // "slow"/"fast"/milliseconds
+        $(window).off("scroll", changeBtnHeight);
+      }
+    }
+
+$(document).ready(function(){
+  $(window).on("scroll", changeBtnHeight);
+});
+
+  </script>
+  </body>
+</html>
+

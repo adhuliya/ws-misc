@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/kaledioscope.dir/add.cc.o  -o kaledioscope 

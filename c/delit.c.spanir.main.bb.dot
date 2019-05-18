@@ -1,0 +1,18 @@
+digraph {
+  node [shape=box]
+  START [label="[START]\lx = 10\lt.1 = x == 11\lif (t.1) BB1 BB3\l"];
+  BB1 [label="[BB1]\lprintf('11\n')\l"];
+  BB2 [label="[BB2]\lprintf('default\n')\l"];
+  BB3 [label="[BB3]\lt.2 = x == 10\lif (t.2) BB4 BB2\l"];
+  BB4 [label="[BB4]\lprintf('Hello\n')\l"];
+  BB5 [label="[BB5]\lreturn 0\l"];
+  END [label="[END]\lnop()\l"];
+  BB1 -> BB5;
+  BB3 -> BB2 [color=red, penwidth=2];
+  START -> BB1 [color=green, penwidth=2];
+  BB4 -> BB5;
+  BB5 -> END;
+  START -> BB3 [color=red, penwidth=2];
+  BB2 -> BB4;
+  BB3 -> BB4 [color=green, penwidth=2];
+}

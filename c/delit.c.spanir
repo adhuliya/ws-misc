@@ -1,0 +1,64 @@
+
+# START: A_SPAN_translation_unit.
+
+# eval() the contents of this file.
+# Keep the following imports in effect when calling eval.
+
+# import span.ir.types as types
+# import span.ir.expr as expr
+# import span.ir.instr as instr
+# import span.ir.obj as obj
+# import span.ir.tunit as irTUnit
+# from span.ir.types import Loc
+
+# An instance of span.ir.tunit.TUnit class.
+irTUnit.TUnit(
+  name = "delit.c",
+  description = "Auto-Translated from Clang AST.",
+
+  allVars = {
+    "v:main:t.2": types.Int32,
+    "v:main:x": types.Int32,
+    "v:main:t.1": types.Int32,
+  }, # end allVars dict
+
+  allObjs = {
+
+    "f:main":
+      obj.Func(
+        name = "f:main",
+        paramNames = [],
+        variadic = False,
+        returnType = types.Int32,
+
+        # Note: -1 is always start/entry BB. (REQUIRED)
+        # Note: 0 is always end/exit BB (REQUIRED)
+        instrSeq = [
+            instr.AssignI(expr.VarE("v:main:x", Loc(5,3)), expr.LitE(10, Loc(5,11)), Loc(5,3)),
+            instr.LabelI("SwitchStart1"),
+            instr.LabelI("CaseCond1-0"),
+            instr.AssignI(expr.VarE("v:main:t.1", Loc(7,5)), expr.BinaryE(expr.VarE("v:main:x", Loc(5,3)), op.BO_EQ, expr.LitE(11, Loc(7,10)), Loc(7,5)), Loc(7,5)),
+            instr.CondI(expr.VarE("v:main:t.1", Loc(7,5)), "CaseBody1-0", "CaseCond1-2", Loc(7,5)),
+            instr.LabelI("CaseBody1-0"),
+            instr.CallI(expr.CallE(expr.FuncE("f:printf", Loc(8,7)), [expr.LitE("""11
+""", Loc(8,14))], Loc(8,7)), Loc(8,7)),
+            instr.GotoI("SwitchExit1"),
+            instr.LabelI("Default1"),
+            instr.CallI(expr.CallE(expr.FuncE("f:printf", Loc(11,7)), [expr.LitE("""default
+""", Loc(11,14))], Loc(11,7)), Loc(11,7)),
+            instr.GotoI("CaseBody1-2"),
+            instr.LabelI("CaseCond1-2"),
+            instr.AssignI(expr.VarE("v:main:t.2", Loc(12,5)), expr.BinaryE(expr.VarE("v:main:x", Loc(5,3)), op.BO_EQ, expr.LitE(10, Loc(12,10)), Loc(12,5)), Loc(12,5)),
+            instr.CondI(expr.VarE("v:main:t.2", Loc(12,5)), "CaseBody1-2", "Default1", Loc(12,5)),
+            instr.LabelI("CaseBody1-2"),
+            instr.CallI(expr.CallE(expr.FuncE("f:printf", Loc(13,7)), [expr.LitE("""Hello
+""", Loc(13,14))], Loc(13,7)), Loc(13,7)),
+            instr.LabelI("SwitchExit1"),
+            instr.ReturnI(expr.LitE(0, Loc(15,10))),
+        ], # instrSeq end.
+      ), # f:main() end. 
+
+  }, # end allObjs dict
+) # irTUnit.TUnit() ends
+
+# END  : A_SPAN_translation_unit.

@@ -1,3 +1,0 @@
-/home/codeman/.itsoflife/git/ws/ws-misc-git/cpp/test-cmake/cpp/CMakeFiles/rebuild_cache.dir
-/home/codeman/.itsoflife/git/ws/ws-misc-git/cpp/test-cmake/cpp/CMakeFiles/kaledioscope.dir
-/home/codeman/.itsoflife/git/ws/ws-misc-git/cpp/test-cmake/cpp/CMakeFiles/edit_cache.dir

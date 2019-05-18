@@ -1,0 +1,56 @@
+
+# START: A_SPAN_translation_unit.
+
+# eval() the contents of this file.
+# Keep the following imports in effect when calling eval.
+
+# import span.ir.types as types
+# import span.ir.expr as expr
+# import span.ir.instr as instr
+# import span.ir.obj as obj
+# import span.ir.tunit as irTUnit
+# from span.ir.types import Loc
+
+# An instance of span.ir.tunit.TUnit class.
+irTUnit.TUnit(
+  name = "test.c",
+  description = "Auto-Translated from Clang AST.",
+
+  allVars = {
+    "v:main:z": types.Int32,
+    "v:main:a": types.Int32,
+    "v:main:b": types.Int32,
+  }, # end allVars dict
+
+  allObjs = {
+
+    "f:main":
+      obj.Func(
+        name = "f:main",
+        paramNames = [],
+        variadic = False,
+        returnType = types.Int32,
+
+        # Note: -1 is always start/entry BB. (REQUIRED)
+        # Note: 0 is always end/exit BB (REQUIRED)
+        instrSeq = [
+            instr.AssignI(expr.VarE("v:main:a", Loc(4,3)), expr.LitE(10, Loc(5,7)), Loc(5,3)),
+            instr.AssignI(expr.VarE("v:main:b", Loc(6,3)), expr.LitE(20, Loc(6,11)), Loc(6,3)),
+            instr.AssignI(expr.VarE("v:main:z", Loc(8,3)), expr.LitE(0, Loc(8,11)), Loc(8,3)),
+            instr.CallI(expr.CallE(expr.FuncE("f:printf", Loc(9,3)), [expr.LitE("""z is %d
+""", Loc(9,10)), expr.VarE("v:main:z", Loc(8,3))], Loc(9,3)), Loc(9,3)),
+            instr.CondI(expr.LitE(0, Loc(11,7)), "IfTrue1", "IfFalse1", Loc(11,7)),
+            instr.LabelI("IfTrue1"),
+            instr.CallI(expr.CallE(expr.FuncE("f:printf", Loc(12,5)), [expr.LitE("""a is %d
+""", Loc(12,12)), expr.VarE("v:main:a", Loc(4,3))], Loc(12,5)), Loc(12,5)),
+            instr.GotoI("IfExit1"),
+            instr.LabelI("IfFalse1"),
+            instr.LabelI("IfExit1"),
+            instr.ReturnI(expr.LitE(10, Loc(15,10))),
+        ], # instrSeq end.
+      ), # f:main() end. 
+
+  }, # end allObjs dict
+) # irTUnit.TUnit() ends
+
+# END  : A_SPAN_translation_unit.

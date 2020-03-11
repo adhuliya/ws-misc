@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-# other valid value: Asia/Kolkata
+#AD other valid value: 'Asia/Kolkata'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True

@@ -23,4 +23,6 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
+    <allow-navigation href="http://www.itsoflife.com/*" />
+    <allow-navigation href="https://adhuliya.pythonanywhere.com/*" />
 </widget>

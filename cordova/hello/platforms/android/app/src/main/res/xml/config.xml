@@ -4,6 +4,9 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="InAppBrowser">
+        <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
+    </feature>
     <name>HelloWorld</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
@@ -19,6 +22,8 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <allow-navigation href="http://www.itsoflife.com/*" />
+    <allow-navigation href="https://adhuliya.pythonanywhere.com/*" />
     <allow-intent href="market:*" />
     <preference name="loglevel" value="DEBUG" />
 </widget>

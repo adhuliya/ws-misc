@@ -1,34 +1,30 @@
-	.file	"test.c"
 	.text
-	.section	.rodata
-.LC0:
-	.string	"z is %d\n"
-	.text
-	.globl	main
-	.type	main, @function
-main:
-.LFB0:
+	.file	"test.cc"
+	.globl	main                    # -- Begin function main
+	.p2align	4, 0x90
+	.type	main,@function
+main:                                   # @main
 	.cfi_startproc
+# %bb.0:                                # %entry
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
+	.cfi_offset %rbp, -16
 	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	subq	$16, %rsp
-	movl	$10, -12(%rbp)
-	movl	$20, -8(%rbp)
+	.cfi_def_cfa_register %rbp
 	movl	$0, -4(%rbp)
-	movl	-4(%rbp), %eax
-	movl	%eax, %esi
-	leaq	.LC0(%rip), %rdi
-	movl	$0, %eax
-	call	printf@PLT
-	movl	$10, %eax
-	leave
-	.cfi_def_cfa 7, 8
-	ret
+	movl	%edi, -8(%rbp)
+	movq	%rsi, -16(%rbp)
+	movl	$10, -20(%rbp)
+	movl	-20(%rbp), %eax
+	addl	-8(%rbp), %eax
+	popq	%rbp
+	.cfi_def_cfa %rsp, 8
+	retq
+.Lfunc_end0:
+	.size	main, .Lfunc_end0-main
 	.cfi_endproc
-.LFE0:
-	.size	main, .-main
-	.ident	"GCC: (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0"
-	.section	.note.GNU-stack,"",@progbits
+                                        # -- End function
+
+	.ident	"clang version 9.0.0 (tags/RELEASE_900/final)"
+	.section	".note.GNU-stack","",@progbits
+	.addrsig

@@ -1,7 +1,7 @@
 // test.cc
-#define VAL 10
+// #define VAL 10
 int main(int argc, char** argv) {
-  int a = VAL;
+  int a = VAL + DAL;
   return a+argc;
 }
 

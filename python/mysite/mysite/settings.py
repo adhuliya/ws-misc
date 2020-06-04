@@ -131,6 +131,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-#AD needed by: python manage.py collectstatic
+#AD needed by: python3 manage.py collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 

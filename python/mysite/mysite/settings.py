@@ -77,12 +77,13 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE':   'django.db.backends.postgresql',
-        'NAME':     'pollsdb',
-        'USER':     'hop',
-        'PASSWORD': 'anshuisneo',
-        'HOST':     '127.0.0.1',
-        'PORT':     '5432',
+        'ENGINE':       'django.db.backends.postgresql',
+        'NAME':         'pollsdb',
+        'USER':         'hop',
+        'PASSWORD':     'anshuisneo',
+        'HOST':         '127.0.0.1',
+        'PORT':         '5432',
+        'CONN_MAX_AGE': 2,   # seconds for which to keep the connection alive
     },
 
     # 'default': {
@@ -119,17 +120,17 @@ LANGUAGE_CODE = 'en-us'
 #AD TIME_ZONE = 'UTC'
 TIME_ZONE = 'Asia/Kolkata'
 
-USE_I18N = True
+USE_I18N    = True
 
-USE_L10N = True
+USE_L10N    = True
 
-USE_TZ = True
+USE_TZ      = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL  = '/static/'
 
 #AD needed by: python3 manage.py collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")

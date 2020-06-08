@@ -78,7 +78,7 @@ def protectFile(request, filepath):
   """
   response = HttpResponse()
   response["Content-Disposition"] = "attachment; filename={0}".format(filepath)
-  response['X-Accel-Redirect'] = "/protected/{0}".format(filepath)
+  response['X-Accel-Redirect'] = f"/protected/{filepath}"
   return response
 
 

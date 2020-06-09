@@ -12,6 +12,9 @@ Development Notes
 5. Add logging capability
 6. Add REST API and learn to test it with curl.
 7. Add template inheritance.
+8. Add Twilio SMS capability.
+9. Add push notification capability.
+10. Add email sending/receiving capability.
 
 
 ## How to deploy using `uWSGI`?

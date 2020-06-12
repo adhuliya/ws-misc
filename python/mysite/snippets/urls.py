@@ -8,6 +8,9 @@ app_name = "snippets"
 urlpatterns = [
   path('', views.index, name='index'),
   path("visit_count/", views.visitCount, name='visitCount'),
+  path('file/<path:filepath>', views.protectFile, name='protectFile'),
+  path('jsonget/', views.jsonSend, name='jsonget'),
+  path('jsonset/', views.jsonReceive, name='jsonset'),
 ]
 
 

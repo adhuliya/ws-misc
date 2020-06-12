@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>MySite Home</title>
-</head>
-<body>
+{% extends "main/base.html" %}
 
-</body>
-</html>
+{% block title %}MySite Home{% endblock %}
+
+{% block content %}
+  This is the index page.
+  <ul>
+  <li><a href="{% url 'main:index' %}">This Page (Main App)</a></li>
+  <li><a href="{% url 'snippets:index' %}">Snippets App</a></li>
+  <li><a href="{% url 'polls:index' %}">Polls App</a></li>
+  </ul>
+
+  <p>
+    <h2>References</h2>
+    <h3>Templates</h3>
+    <ul>
+      <li><a href="/static/main/templates/cv/index.html">CV Template</a></li>
+    </ul>
+  </p>
+{% endblock %}

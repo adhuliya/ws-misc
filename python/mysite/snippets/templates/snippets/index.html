@@ -1,12 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Snippets Home</title>
-</head>
-<body>
+{% extends "main/base.html" %}
 
-Home page of Snippets.
+{% block title %}MySite Snippets{% endblock %}
 
-</body>
-</html>
+{% block content %}
+  <h1>Useful Snippets</h1>
+  <ul>
+    <li><a href="{% url 'snippets:index' %}">Snippets App</a></li>
+    <li><a href="{% url 'snippets:visitCount' %}">Count Your Visits</a></li>
+    <li><a href="{% url 'snippets:jsonget' %}">Get A Sample Json Object</a></li>
+    <li><a href="{% url 'snippets:jsonset' %}">Post A Sample Json Object</a></li>
+    <li><a href="{% url 'snippets:protectFile' "delit.txt" %}">Access a protected file.</a></li>
+  </ul>
+{% endblock %}

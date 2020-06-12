@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
-<title>W3.CSS Template</title>
+<html lang="en">
+<title>{% block title %}MySite{% endblock %}</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="/static/w3.css">
-<link rel='stylesheet' href='/static/font-roboto.css'>
-<link rel="stylesheet" href="/static/font-awesome.min.css">
+<link rel="stylesheet" href="/static/main/w3.css">
+<link rel='stylesheet' href='/static/main/fonts/font-roboto.css'>
+<link rel="stylesheet" href="/static/main/fonts/font-awesome.min.css">
 <style>
   html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
 </style>
@@ -22,15 +22,16 @@
 
       <div class="w3-white w3-text-grey w3-card-4">
         <div class="w3-display-container">
-          <img src="/w3images/avatar_hat.jpg" style="width:100%" alt="Avatar">
+          <img src="{% block sideimage %}/static/main/avatar_hat.jpg{% endblock %}" style="width:100%" alt="Avatar">
           <div class="w3-display-bottomleft w3-container w3-text-black">
-            <h2>Jane Doe</h2>
+            <h2>{% block sidename %}Jane Doe{% endblock %}</h2>
           </div>
         </div>
+      {% block sidecontent %}
         <div class="w3-container">
-          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Designer</p>
-          <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>London, UK</p>
-          <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>ex@mail.com</p>
+          <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i><a href="{% url "main:index" %}">Home</a></p>
+          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i><a href="{% url "snippets:index" %}">Snippets</a></p>
+          <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i><a href="{% url "polls:index" %}">Polls</a></p>
           <p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"></i>1224435534</p>
           <hr>
 
@@ -71,6 +72,7 @@
           <br>
         </div>
       </div><br>
+    {% endblock %}
 
       <!-- End Left Column -->
     </div>
@@ -79,6 +81,7 @@
     <div class="w3-twothird">
 
       <div class="w3-container w3-card w3-white w3-margin-bottom">
+        {% block content %}
         <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Work Experience</h2>
         <div class="w3-container">
           <h5 class="w3-opacity"><b>Front End Developer / w3schools.com</b></h5>
@@ -118,6 +121,7 @@
           <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>2010 - 2013</h6>
           <p>Bachelor Degree</p><br>
         </div>
+        {% endblock content %}
       </div>
 
       <!-- End Right Column -->

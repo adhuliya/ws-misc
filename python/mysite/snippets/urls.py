@@ -11,6 +11,7 @@ urlpatterns = [
   path('file/<path:filepath>', views.protectFile, name='protectFile'),
   path('jsonget/', views.jsonSend, name='jsonget'),
   path('jsonset/', views.jsonReceive, name='jsonset'),
+  path('display_request/', views.displayRequest, name='displayRequest'),
 ]
 
 

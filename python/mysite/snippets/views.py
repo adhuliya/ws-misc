@@ -61,3 +61,7 @@ def jsonReceive(request):
   return HttpResponse("No json data.")
 
 
+def displayRequest(request):
+  """Displays the information received in the request."""
+  context = {"request": request}
+  return render(request, "snippets/display_request.html", context)

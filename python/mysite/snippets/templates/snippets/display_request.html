@@ -1,0 +1,43 @@
+{% extends "main/base.html" %}
+
+{% block title %}Your Request{% endblock %}
+
+{% block content %}
+  <h2>Request Data</h2>
+
+  <h2>Data from request.headers</h2>
+  <div class="w3-responsive">
+  <table class="w3-table w3-striped w3-border w3-hoverable iol-wrap">
+    <tr>
+      <th style="min-width:15em;">Key</th>
+      <th>Value</th>
+    </tr>
+    {% for key, value in request.headers.items %}
+      <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  </div>
+
+  <hr>
+
+  <h2>Data from request.META</h2>
+  <div class="w3-responsive">
+  <table class="w3-table w3-striped w3-border">
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+    </tr>
+    {% for key, value in request.META.items %}
+      <tr>
+        <td>{{ key }}</td>
+        <td>{{ value }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+  </div>
+
+{% endblock %}
+

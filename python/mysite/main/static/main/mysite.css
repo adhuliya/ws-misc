@@ -1,0 +1,9 @@
+/* mysite style customizations */
+
+.iol-wrap {
+  word-wrap: break-word;
+}
+
+a {
+    text-decoration: none;
+}

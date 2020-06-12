@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonResponse
 from django.utils import timezone
+from django.urls import reverse
 import json
 
 # Create your views here.
@@ -65,3 +66,28 @@ def displayRequest(request):
   """Displays the information received in the request."""
   context = {"request": request}
   return render(request, "snippets/display_request.html", context)
+
+
+def loggingDemo(request):
+  """A simple view to demonstrate the logging system."""
+  import logging
+  # get the mysite.custom logger defined in mysite.settings module
+  logger = logging.getLogger("mysite.custom")
+  message = "LoggingDemoSuccessful"
+  logger.info(message)
+  return render(request, "snippets/logging_demo.html", {"message":message})
+
+
+def raiseError(request, statusCode=404):
+  """The given error code"""
+  from django.core.exceptions import PermissionDenied
+  if statusCode == 403:
+    raise PermissionDenied
+  if statusCode == 404:
+    raise Http404
+  if statusCode == 500:
+    raise Exception()
+  else:
+    return HttpResponseRedirect(reverse('main:index'))
+
+

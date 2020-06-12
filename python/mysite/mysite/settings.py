@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -23,116 +22,171 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'skfx2fg&n60y3fe_qh!o+w8ga8vbw*_te349t*h2g09l%qchg9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+#ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['*'] # match any host
 
 # Application definition
 
 INSTALLED_APPS = [
-    'main.apps.MainConfig',
-    'snippets.apps.SnippetsConfig',
-    'polls.apps.PollsConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+  'main.apps.MainConfig',
+  'snippets.apps.SnippetsConfig',
+  'polls.apps.PollsConfig',
+  'django.contrib.admin',
+  'django.contrib.auth',
+  'django.contrib.contenttypes',
+  'django.contrib.sessions',
+  'django.contrib.messages',
+  'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+  'django.middleware.security.SecurityMiddleware',
+  'django.contrib.sessions.middleware.SessionMiddleware',
+  'django.middleware.common.CommonMiddleware',
+  'django.middleware.csrf.CsrfViewMiddleware',
+  'django.contrib.auth.middleware.AuthenticationMiddleware',
+  'django.contrib.messages.middleware.MessageMiddleware',
+  'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
+  {
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [os.path.join(BASE_DIR, 'templates')],
+    'APP_DIRS': True,
+    'OPTIONS': {
+      'context_processors': [
+        'django.template.context_processors.debug',
+        'django.template.context_processors.request',
+        'django.contrib.auth.context_processors.auth',
+        'django.contrib.messages.context_processors.messages',
+      ],
     },
+  },
 ]
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE':       'django.db.backends.postgresql',
-        'NAME':         'pollsdb',
-        'USER':         'hop',
-        'PASSWORD':     'anshuisneo',
-        'HOST':         '127.0.0.1',
-        'PORT':         '5432',
-        'CONN_MAX_AGE': 2,   # seconds for which to keep the connection alive
-    },
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'pollsdb',
+    'USER': 'hop',
+    'PASSWORD': 'anshuisneo',
+    'HOST': '127.0.0.1',
+    'PORT': '5432',
+    'CONN_MAX_AGE': 2,  # seconds for which to keep the connection alive
+  },
 
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
+  # 'default': {
+  #     'ENGINE': 'django.db.backends.sqlite3',
+  #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+  # }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+  {
+    'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+  },
+  {
+    'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+  },
+  {
+    'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+  },
+  {
+    'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+  },
 ]
 
+LOGGING = {
+  'version': 1,
+  'disable_existing_loggers': False,
+  'formatters': {
+    'verbose': {
+      #'format': '{levelname} {asctime} {name} {pathname} {funcname} {lineno}\n{process:d} {thread:d}\n{message}',
+      'format': ('  {levelname} {asctime} {name} ****************'
+                 '\n  {pathname}'
+                 '\n  {funcName}:{lineno:d} {process:d}:{thread:d}(pid:threadid)'
+                 '\n{message}'),
+      'style': '{',
+    },
+
+    'simple': {
+      'format': '{levelname} {message}',
+      'style': '{',
+    },
+  },
+
+  'filters': {
+    'require_debug_true': {
+      '()': 'django.utils.log.RequireDebugTrue',
+    },
+  },
+
+  'handlers': {
+    'console': {
+      'level': 'INFO',
+      'filters': ['require_debug_true'],
+      'class': 'logging.StreamHandler',
+      'formatter': 'simple'
+    },
+
+    'file': {
+      'level': 'DEBUG',
+      'class': 'logging.FileHandler',
+      'filename': os.path.join(BASE_DIR,
+                               'production/runtime/logs/mysite.log'),
+      'formatter': 'verbose'
+    },
+
+  },
+
+  'loggers': {
+    'django': {
+      'handlers': ['console'],
+      'propagate': True,
+    },
+
+    'mysite.custom': {
+      'handlers': ['file', 'console'],
+      'level': 'INFO',
+      # 'filters': ['special']
+    }
+  }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-#AD TIME_ZONE = 'UTC'
+# AD TIME_ZONE = 'UTC'
 TIME_ZONE = 'Asia/Kolkata'
 
-USE_I18N    = True
+USE_I18N = True
 
-USE_L10N    = True
+USE_L10N = True
 
-USE_TZ      = True
-
+USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL  = '/static/'
+STATIC_URL = '/static/'
 
-#AD needed by: python3 manage.py collectstatic
+# AD needed by: python3 manage.py collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
 

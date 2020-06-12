@@ -9,7 +9,7 @@ Development Notes
 2. Add login capability as an app.
 3. Add app to display all user agent data. -- DONE
 4. Add pretty/informative error pages.
-5. Add logging capability
+5. Add logging capability -- DONE
 6. Add REST API and learn to test it with curl.
 7. Add template inheritance. -- DONE basic.
 8. Add Twilio SMS capability.

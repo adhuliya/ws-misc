@@ -11,5 +11,16 @@
     <li><a href="{% url 'snippets:jsonset' %}">Post A Sample Json Object</a></li>
     <li><a href="{% url 'snippets:protectFile' "delit.txt" %}">Access a protected file.</a></li>
     <li><a href="{% url 'snippets:displayRequest' %}">Display the request data.</a></li>
+    <li><a href="{% url 'snippets:loggingDemo' %}">Logging Demo.</a></li>
+  </ul>
+
+  <h2>Check Error Pages</h2>
+  <ul>
+    <li><a href="{% url 'snippets:raiseError' 400 %}">Raise error 400.</a></li>
+    <li><a href="{% url 'snippets:raiseError' 403 %}">Raise error 403.</a></li>
+    <li><a href="{% url 'snippets:raiseError' 404 %}">Raise error 404.</a></li>
+    <li><a href="{% url 'snippets:raiseError' 500 %}">Raise error 500.</a></li>
   </ul>
 {% endblock %}
+
+

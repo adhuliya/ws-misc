@@ -12,6 +12,8 @@ urlpatterns = [
   path('jsonget/', views.jsonSend, name='jsonget'),
   path('jsonset/', views.jsonReceive, name='jsonset'),
   path('display_request/', views.displayRequest, name='displayRequest'),
+  path('logging_demo/', views.loggingDemo, name='loggingDemo'),
+  path('<int:statusCode>/', views.raiseError, name='raiseError'),
 ]
 
 

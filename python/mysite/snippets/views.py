@@ -3,6 +3,9 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect, JsonRespons
 from django.utils import timezone
 from django.urls import reverse
 import json
+import logging
+
+logger = logging.getLogger("mysite.custom")
 
 # Create your views here.
 
@@ -32,7 +35,7 @@ def protectFile(request, filepath):
   and uses nginx to server the files very efficiently.
   Ref: https://wellfire.co/learn/nginx-django-x-accel-redirects/
   """
-  print("ProtectFile:", filepath) #delit
+  logger.info("ProtectFile: %s", filepath)
   response = HttpResponse()
   response["Content-Disposition"] = "attachment; filename={0}".format(filepath)
   response['X-Accel-Redirect'] = f"/protected/{filepath}"
@@ -50,7 +53,8 @@ def jsonSend(request):
 
 
 def jsonReceive(request):
-  """Sample view to receive json data."""
+  """Sample view to receive json data and send the same back
+  to client."""
   if request.is_ajax():
     if request.method == 'POST':
       jsonData = json.loads(request.body)
@@ -58,8 +62,9 @@ def jsonReceive(request):
         data = jsonData['data']
       except KeyError:
         Http404("Malformed data!")
-      return HttpResponse("Got json data")
-  return HttpResponse("No json data.")
+      else:
+        return JsonResponse(data)
+  return HttpResponse("No json data received.")
 
 
 def displayRequest(request):

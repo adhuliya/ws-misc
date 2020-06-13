@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 # The bad_request() view is overridden by handler400:
-handler400 = 'main.views.errorHandler'
+handler400 = 'main.views.handler000'
 
 # The permission_denied() view is overridden by handler403:
 handler403 = 'main.views.handler403'

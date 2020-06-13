@@ -10,10 +10,10 @@ def index(request):
   return render(request, 'main/index.html', context)
 
 
-def errorHandler(request, exception=None, template_name='main/error_page.html'):
+def handler403(request, exception=None, template_name='main/error_page.html'):
   """Display the error page."""
   logger.info("ErrorOccured: %s", exception)
-  context = {}
+  context = {"statusCode": 403}
   return render(request, 'main/error_page.html', context)
 
 
@@ -24,17 +24,17 @@ def handler404(request, exception=None, template_name='main/error_page.html'):
   return render(request, 'main/error_page.html', context)
 
 
-def handler403(request, exception=None, template_name='main/error_page.html'):
-  """Display the error page."""
-  logger.info("ErrorOccured: %s", exception)
-  context = {"statusCode": 403}
-  return render(request, 'main/error_page.html', context)
-
-
 def handler500(request, exception=None, template_name='main/error_page.html'):
   """Display the error page."""
   logger.info("ErrorOccured: %s", exception)
   context = {"statusCode": 500}
+  return render(request, 'main/error_page.html', context)
+
+
+def handler000(request, exception=None, template_name='main/error_page.html'):
+  """Handle any error..."""
+  logger.info("ErrorOccured: %s", exception)
+  context = {"statusCode": "Error"}
   return render(request, 'main/error_page.html', context)
 
 

@@ -20,14 +20,14 @@ def visitCount(request):
   Ref: https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Sessions
   """
   # Number of visits to this view, as counted in the session variable.
-  visitCount = request.session.get("visitCount", 0)
-  visitCount += 1
-  request.session["visitCount"] = visitCount
+  count = request.session.get("visitCount", 0)
+  count += 1
+  request.session["visitCount"] = count
 
   # # Set session as modified to force data updates/cookie to be saved.
   # request.session.modified = True
 
-  return render(request, "snippets/visit_count.html", {"visitCount": visitCount})
+  return render(request, "snippets/visit_count.html", {"visitCount": count})
 
 
 def protectFile(request, filepath):
@@ -84,15 +84,16 @@ def loggingDemo(request):
 
 
 def raiseError(request, statusCode=404):
-  """The given error code"""
+  """Raise the error corresponding to the given status code."""
   from django.core.exceptions import PermissionDenied
   if statusCode == 403:
-    raise PermissionDenied
+    raise PermissionDenied    # raises 403
   if statusCode == 404:
-    raise Http404
+    raise Http404             # raises 404
   if statusCode == 500:
-    raise Exception()
+    raise Exception()         # raises 500
   else:
+    # For all others redirect to the index page
     return HttpResponseRedirect(reverse('main:index'))
 
 

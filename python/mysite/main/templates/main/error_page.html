@@ -3,15 +3,19 @@
 {% block title %}MySite Error{% endblock %}
 
 {% block page %}
-  <div class="w3-content w3-margin-top w3-row-padding" style="max-width:1400px;">
+  <div style="max-width:1400px;">
+  <div class="w3-content w3-margin-top w3-row-padding">
   <div class="w3-white w3-text-grey w3-card-4">
   <div class="w3-display-container w3-center">
     <br /> <br /> <br /> <br /> <br /> <br />
     <h1 style="font-size: 11em;">
       {{ statusCode|default:"404" }}!
     </h1>
-    <a href="/">Take Me Home</a>
+    <em>{{ message|default:"Error Occured" }}</em>
+    <br/>
+    <span class="w3-button w3-teal"><a href="/">Take Me Home</a></span>
     <br /> <br /> <br /> <br /> <br /> <br />
+  </div>
   </div>
   </div>
   </div>

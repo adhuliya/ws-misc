@@ -81,7 +81,8 @@ DATABASES = {
     'NAME': 'pollsdb',
     'USER': 'hop',
     'PASSWORD': 'anshuisneo',
-    'HOST': '127.0.0.1',
+    #'HOST': '127.0.0.1',
+    'HOST': '192.168.0.5',
     'PORT': '5432',
     'CONN_MAX_AGE': 2,  # seconds for which to keep the connection alive
   },

@@ -28,13 +28,9 @@ handler404 = 'main.views.handler404'
 # The server_error() view is overridden by handler500:
 handler500 = 'main.views.handler500'
 
-
 urlpatterns = [
-    path('', include('main.urls')),  # the 'main' app
-    path('snippets/', include('snippets.urls')),
-    path('polls/', include('polls.urls')),
-    path('admin/', admin.site.urls),
+  path('', include('main.urls')),  # the 'main' app
+  path('snippets/', include('snippets.urls')),
+  path('polls/', include('polls.urls')),
+  path('admin/', admin.site.urls),
 ]
-
-
-

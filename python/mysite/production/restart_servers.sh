@@ -13,10 +13,11 @@ if [[ -e runtime/uwsgi.pid ]]; then
 else
   echo "runtime/uwsgi.pid file not found. Going for a brutal `killall uwsgi`!";
   killall uwsgi;
-  killall uwsgi;
+  killall uwsgi;  # it needs two kills in quick successions !!
 fi
-sleep 2;
-/usr/local/bin/uwsgi --emperor /etc/uwsgi/vassals --uid www-data --gid www-data --daemonize /var/log/uwsgi-emperor.log;
+sleep 2; # wait to make sure they die
+/usr/local/bin/uwsgi --emperor /etc/uwsgi/vassals \
+  --uid www-data --gid www-data --daemonize /var/log/uwsgi-emperor.log;
 
 # STEP 2: restart nginx server
 

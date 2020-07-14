@@ -11,39 +11,37 @@
 NGINX_CONF=mysite_nginx.conf;
 UWSGI_CONF=mysite_uwsgi.ini;
 
-PWD="`pwd`";
-
 NGINX_CONF_DIR="/etc/nginx/sites-enabled";
 UWSGI_CONF_DIR="/etc/uwsgi/vassals";
 
+PWD="`pwd`";
+
+function prepareDestination () {
+  # Takes one argument: The absolute destination file path.
+  # This function removes the old symlink if it exists,
+  # or exits with an error if a file with same name exits
+  # and is not symlink as exptected.
+  local DEST_FILE=$1;
+  if [[ -h $DEST_FILE ]]; then
+    echo "Removing the old $DEST_FILE";
+    rm $DEST_FILE;  # remove the old symlink
+  else
+    if [[ -e $DEST_FILE ]]; then
+      echo "ERROR: Exists and not a symlink: $DEST_FILE";
+      exit 1; # exits this script
+    fi
+  fi
+}
+
 # Setup nginx configuration
 NGINX_DEST_FILE=$NGINX_CONF_DIR/$NGINX_CONF;
-if [[ -h $NGINX_DEST_FILE ]]; then
-  echo "Removing the old $NGINX_DEST_FILE";
-  rm $NGINX_DEST_FILE;  # remove the old symlink
-else
-  if [[ -e $NGINX_DEST_FILE ]]; then
-    echo "ERROR: Exists and not a symlink: $NGINX_DEST_FILE";
-    exit 1;
-  fi
-fi
-
+prepareDestination "$NGINX_DEST_FILE";
 ln -s "$PWD/$NGINX_CONF" "$NGINX_DEST_FILE";
 
 # Setup uwsgi configuration
 mkdir -p "$UWSGI_CONF_DIR";
-
 UWSGI_DEST_FILE=$UWSGI_CONF_DIR/$UWSGI_CONF;
-if [[ -h $UWSGI_DEST_FILE ]]; then
-  echo "Removing the old $UWSGI_DEST_FILE";
-  rm $UWSGI_DEST_FILE;  # remove the old symlink
-else
-  if [[ -e $UWSGI_DEST_FILE ]]; then
-    echo "ERROR: Exists and not a symlink: $UWSGI_DEST_FILE";
-    exit 2;
-  fi
-fi
-
+prepareDestination "$UWSGI_DEST_FILE";
 ln -s "$PWD/$UWSGI_CONF" "$UWSGI_DEST_FILE";
 
 # To start the servers see: restart_servers.sh

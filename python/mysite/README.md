@@ -1,6 +1,9 @@
 Development Notes
 =======================
 
+This is a mother project which integrates many sub-projects
+that demonstrate and use important features that are useful
+in website development.
 
 
 ## TODO
@@ -15,7 +18,8 @@ Development Notes
 8. Add Twilio SMS capability.
 9. Add push notification capability.
 10. Add email sending/receiving capability.
-
+11. Add docker image for the django server system.
+12. What is the advantage of Postgres in a docker?
 
 ## How to deploy using `uWSGI`?
 

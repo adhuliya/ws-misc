@@ -61,7 +61,7 @@ def jsonReceive(request):
       try:
         data = jsonData['data']
       except KeyError:
-        Http404("Malformed data!")
+        Http404("Malformed data! (expected json)")
       else:
         return JsonResponse(data)
   return HttpResponse("No json data received.")

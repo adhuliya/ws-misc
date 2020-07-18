@@ -82,9 +82,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'docker',
-    'USER': 'docker',
-    'PASSWORD': 'docker',
+    'NAME': 'itsoflife',
+    'USER': 'itsoflife',
+    'PASSWORD': 'anshuisneo',
     'HOST': 'postgres', # docker network create itsoflife; --network="itsoflife"
     'PORT': '5432',
     'CONN_MAX_AGE': 2,  # seconds for which to keep the connection alive

@@ -22,6 +22,7 @@ bash restart_servers.sh;
 cd /app/app || exit;
 python3 manage.py makemigrations;
 python3 manage.py migrate;
+
 # Set the admin just once:
 # python manage.py createsuperuser --email contact@itsoflife.com --username admin
 

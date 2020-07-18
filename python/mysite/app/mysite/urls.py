@@ -31,7 +31,7 @@ urlpatterns = [
   path('polls/', include('polls.urls')),
   path('admin/', admin.site.urls),
 
-  path('drf/', include('restapidemo.urls.router.urls')),
+  # path('drf/', include('restapidemo.urls.router.urls')),
   path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 

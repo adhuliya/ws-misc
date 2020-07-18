@@ -17,6 +17,11 @@ docker run \
   -e POSTGRES_PASSWORD=anshuisneo \
   --name $NAME \
   $NAME:${TAG};
+
+sleep 2;
+
+cat ./init_setup.sql | docker exec -i postgres psql -U postgres;
+
 # Unused options:
   # --network="host" \
   #--publish 5432:5432 \

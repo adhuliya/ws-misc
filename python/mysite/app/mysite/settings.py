@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+DEFAULT_CON_ID = "NoContainerId"
+CONTAINER_ID = os.getenv("CONTAINER_ID", DEFAULT_CON_ID)[-len(DEFAULT_CON_ID):]
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -31,6 +34,7 @@ ALLOWED_HOSTS = ['*'] # match any host
 # Application definition
 
 INSTALLED_APPS = [
+  'rest_framework',
   'main.apps.MainConfig',
   'snippets.apps.SnippetsConfig',
   'polls.apps.PollsConfig',
@@ -78,11 +82,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'pollsdb',
-    'USER': 'hop',
-    'PASSWORD': 'anshuisneo',
-    #'HOST': '127.0.0.1',
-    'HOST': '192.168.0.5',
+    'NAME': 'docker',
+    'USER': 'docker',
+    'PASSWORD': 'docker',
+    'HOST': 'postgres', # docker network create itsoflife; --network="itsoflife"
     'PORT': '5432',
     'CONN_MAX_AGE': 2,  # seconds for which to keep the connection alive
   },
@@ -117,10 +120,10 @@ LOGGING = {
   'formatters': {
     'verbose': {
       #'format': '{levelname} {asctime} {name} {pathname} {funcname} {lineno}\n{process:d} {thread:d}\n{message}',
-      'format': ('  {levelname} {asctime} {name} ****************'
-                 '\n  {pathname}'
-                 '\n  {funcName}:{lineno:d} {process:d}:{thread:d}(pid:threadid)'
-                 '\n{message}'),
+      'format': ('  DJANGO.START: {CONTAINER_ID} {{levelname}} {{asctime}} {{name}}' 
+                 '\n  {{process:d}}:{{thread:d}}(pid:threadid)'
+                 '\n  {{funcName}}:{{lineno:d}} {{pathname}}'
+                 '\n{{message}}\n  DJANGO.END').format(CONTAINER_ID=CONTAINER_ID),
       'style': '{',
     },
 
@@ -138,10 +141,10 @@ LOGGING = {
 
   'handlers': {
     'console': {
-      'level': 'INFO',
-      'filters': ['require_debug_true'],
+      'level': 'DEBUG', #'INFO' in production
+      # 'filters': ['require_debug_true'],
       'class': 'logging.StreamHandler',
-      'formatter': 'simple'
+      'formatter': 'verbose'
     },
 
     'file': {
@@ -161,7 +164,8 @@ LOGGING = {
     },
 
     'mysite.custom': {
-      'handlers': ['file', 'console'],
+      #'handlers': ['file', 'console'],
+      'handlers': ['console'],
       'level': 'INFO',
       # 'filters': ['special']
     }
@@ -190,4 +194,8 @@ STATIC_URL = '/static/'
 # AD needed by: python3 manage.py collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
 

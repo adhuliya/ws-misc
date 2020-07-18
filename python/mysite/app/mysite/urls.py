@@ -18,13 +18,10 @@ from django.urls import path, include
 
 # The bad_request() view is overridden by handler400:
 handler400 = 'main.views.handler000'
-
 # The permission_denied() view is overridden by handler403:
 handler403 = 'main.views.handler403'
-
 # The page_not_found() view is overridden by handler404:
 handler404 = 'main.views.handler404'
-
 # The server_error() view is overridden by handler500:
 handler500 = 'main.views.handler500'
 
@@ -33,4 +30,9 @@ urlpatterns = [
   path('snippets/', include('snippets.urls')),
   path('polls/', include('polls.urls')),
   path('admin/', admin.site.urls),
+
+  path('drf/', include('restapidemo.urls.router.urls')),
+  path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
+
+

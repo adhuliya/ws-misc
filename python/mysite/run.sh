@@ -15,9 +15,12 @@ docker run \
   --detach \
   --publish 8080:80 \
   --publish 5055:5050 \
+  --network="itsoflife" \
   --mount type=bind,source=$ITSOFLIFE/knots-git,target=/app/knots-git,readonly \
   --mount type=bind,source=$ITSOFLIFE/mydata,target=/app/mydata \
   --name $NAME \
   $NAME:${TAG};
 
+# Unused options:
+  # --network="host" \
 

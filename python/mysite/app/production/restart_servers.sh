@@ -18,8 +18,10 @@
 # sleep 2; # wait to make sure they die
 
 echo "Starting uwsgi...";
+# /usr/local/bin/uwsgi --emperor /etc/uwsgi/vassals \
+#   --uid www-data --gid www-data --daemonize /var/log/uwsgi-emperor.log;
 /usr/local/bin/uwsgi --emperor /etc/uwsgi/vassals \
-  --uid www-data --gid www-data --daemonize /var/log/uwsgi-emperor.log;
+  --uid www-data --gid www-data --daemonize /dev/stdout; # log to the stdout/stderr.
 
 # STEP 2: restart nginx server
 

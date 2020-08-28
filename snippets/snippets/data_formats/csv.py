@@ -8,10 +8,15 @@ It depends on the util.py module.
 import csv
 from typing import Iterable, Optional as Opt
 
-
 from snippets import util
 
 TMP_FILE_NAME = "tmp.csv"
+
+def read(csvFile):
+  """Reads content from any object that supports file API."""
+  reader = csv.reader(csvFile, delimiter=',', quotechar='"')
+  yield from reader
+
 
 def write(csvFile, content: Opt[Iterable[Iterable]]) -> None:
   """Writes content to any object that supports file API."""
@@ -29,9 +34,20 @@ def _createFile(fileName: str, content: Opt[Iterable[Iterable]]) -> None:
     write(csvFile, content)
 
 
+def _readFile(fileName: str, content: Opt[Iterable[Iterable]]) -> None:
+  with open(fileName, 'w', newline='') as csvFile:
+    write(csvFile, content)
+
+
 def _appendFile(fileName: str, content: Opt[Iterable[Iterable]]) -> None:
   with open(fileName, 'a', newline='') as csvFile:
     write(csvFile, content)
+
+
+def _readFile(fileName: str):
+  with open(fileName, 'r', newline='') as csvFile:
+    for line in read(csvFile):
+      print(line)
 
 
 def _modifyAge(fileName: str) -> None:
@@ -75,7 +91,7 @@ def main():
   _modifyAge(TMP_FILE_NAME)
 
   print(f"\nContent of tmp file (modified): {TMP_FILE_NAME}")
-  print(util.readFromFile(TMP_FILE_NAME))
+  _readFile(TMP_FILE_NAME)
 
 if __name__ == "__main__":
   main()

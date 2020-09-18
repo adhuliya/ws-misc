@@ -1,6 +1,6 @@
 # Useful Snippets
 
-Useful snippets for reference and reusability.
+Useful snippets for reference and re-usability.
 
 
 This is a collection of programs that demonstrate the

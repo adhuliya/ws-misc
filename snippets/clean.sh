@@ -5,6 +5,6 @@
 # also see `.gitignore`
 rm -Rf tmp.*;
 
-cd data_formats;
+cd snippets/data_formats || exit;
 ../clean.sh;
-cd -; # return back to current dir
+cd - || exit; # return back to current dir

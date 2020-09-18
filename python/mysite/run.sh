@@ -16,6 +16,8 @@ else
 fi
 
 echo "Starting container with name $_NAME" >> $MYDATA/local/logs/mysystem.log;
+# make sure network is created for --network="itsoflife":
+#   docker network create itsoflife;
 /usr/bin/docker run \
   --detach \
   --publish 8080:80 \
@@ -25,7 +27,4 @@ echo "Starting container with name $_NAME" >> $MYDATA/local/logs/mysystem.log;
   --mount type=bind,source=$_ITSOFLIFE/mydata,target=/app/mydata \
   --name $_NAME \
   $_NAME:${_TAG};
-
-# Unused options:
-  # --network="host" \
 

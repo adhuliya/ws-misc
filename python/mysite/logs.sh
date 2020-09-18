@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# view docker logs
+# view docker logs (its stdout)
 
 NAME="mysite";
 

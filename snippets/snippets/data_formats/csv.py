@@ -67,7 +67,7 @@ def _modifyAge(fileName: str) -> None:
         writer.writerow(row)
 
   util.removeFileIfExists(fileName)
-  util.rename(tmpFileName, fileName)
+  util.renameFile(tmpFileName, fileName)
 
 
 def _genDummyContent():

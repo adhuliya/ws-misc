@@ -11,12 +11,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import os.path as osp
 
 DEFAULT_CON_ID = "NoContainerId"
 CONTAINER_ID = os.getenv("CONTAINER_ID", DEFAULT_CON_ID)[-len(DEFAULT_CON_ID):]
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Build paths inside the project like this: osp.join(BASE_DIR, ...)
+BASE_DIR = osp.dirname(osp.dirname(osp.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
   {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [os.path.join(BASE_DIR, 'templates')],
+    'DIRS': [osp.join(BASE_DIR, 'templates')],
     'APP_DIRS': True,
     'OPTIONS': {
       'context_processors': [
@@ -92,7 +93,7 @@ DATABASES = {
 
   # 'default': {
   #     'ENGINE': 'django.db.backends.sqlite3',
-  #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+  #     'NAME': osp.join(BASE_DIR, 'db.sqlite3'),
   # }
 }
 
@@ -114,6 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
   },
 ]
 
+# REF: https://docs.python.org/3/library/logging.config.html#logging-config-dictschema
 LOGGING = {
   'version': 1,
   'disable_existing_loggers': False,
@@ -150,7 +152,7 @@ LOGGING = {
     'file': {
       'level': 'DEBUG',
       'class': 'logging.FileHandler',
-      'filename': os.path.join(BASE_DIR,
+      'filename': osp.join(BASE_DIR,
                                'production/runtime/logs/mysite.log'),
       'formatter': 'verbose'
     },
@@ -177,7 +179,7 @@ LOGGING = {
 
 LANGUAGE_CODE = 'en-us'
 
-# AD TIME_ZONE = 'UTC'
+#AD TIME_ZONE = 'UTC'
 TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
@@ -192,7 +194,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # AD needed by: python3 manage.py collectstatic
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = osp.join(BASE_DIR, "static/")
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

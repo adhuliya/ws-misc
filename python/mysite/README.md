@@ -3,7 +3,7 @@ Development Notes
 
 This is a mother project which integrates many sub-projects
 that demonstrate and use important features that are useful
-in website development.
+in web development.
 
 
 ## TODO
@@ -32,3 +32,5 @@ This creates/enables the following interaction sequence,
 ## How to add custom error pages?
 
 <https://docs.djangoproject.com/en/3.0/topics/http/views/#customizing-error-views>
+
+

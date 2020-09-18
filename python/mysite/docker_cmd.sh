@@ -5,6 +5,8 @@
 
 # set environment variables
 # shellcheck disable=SC2155
+# This container id is read by django or other applications
+# to print logging messages with container id.
 export CONTAINER_ID=$(basename "$(cat /proc/1/cpuset)")
 
 

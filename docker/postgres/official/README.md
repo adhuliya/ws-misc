@@ -1,5 +1,6 @@
 Resource:
-<https://github.com/docker-library/postgres/tree/4c2e78c234a8e4293a5d6bb6a4d20421236d98d8/13>
+<https://hub.docker.com/_/postgres>
+<https://github.com/docker-library/postgres/tree/bfc5d81c8f5647c690f452dc558e64fddb1802f6/12>
 
 Not using it since the following error popped up on building:
 

@@ -29,8 +29,6 @@ RelFilePathT = str  # a relative file path (could be absolute too)
 AbsFilePathT = str  # an absolute file path
 TEXT_CHARS = bytearray({7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7f})
 
-Verbosity = 0  # One of 0,1,2,3 (set via command line)
-
 ################################################
 # BLOCK START: FileSystem_Related
 ################################################
@@ -192,7 +190,7 @@ def getFileModTimeInNanoSecs(filePath: str) -> int:
 
 def programExists(progName: str) -> bool:
   """Returns True if the given command exists."""
-  cmd = f"which {progName}"
+  cmd = f"which {progName} > /dev/null"
   completed = subp.run(cmd, shell=True)
   if completed.returncode != 0:
     return False
@@ -316,6 +314,39 @@ def getSize(obj, seen: Opt[Set[int]] = None) -> int:
   return size
 
 
+def getSize2(obj, seen: Opt[Set[int]] = None) -> int:
+  """Non-Recursively finds size of objects. Needs: import sys """
+  seen = set() if seen is None else seen
+  size = 0
+
+  objects = [obj]
+  while len(objects):
+    obj = objects.pop()
+    if id(obj) in seen: continue  # to handle self-referential objects
+    seen.add(id(obj))
+
+    size += sys.getsizeof(obj, 0)  # pypy3 always returns default (necessary)
+
+    if isinstance(obj, dict):
+      for k, v in obj.items():
+        objects.append(k)
+        objects.append(v)
+    elif hasattr(obj, '__dict__'):  # not true if '__slots__' are used
+      for k, v in obj.__dict__.items():
+        objects.append(k)
+        objects.append(v)
+    elif hasattr(obj, '__slots__'):  # in case slots are in use
+      slotList = [getattr(C, "__slots__", []) for C in obj.__class__.__mro__]
+      slotList = [[slot] if isinstance(slot, str) else slot for slot in slotList]
+      for slot in slotList:
+        for a in slot:
+          objects.append(getattr(obj, a, None))
+    elif hasattr(obj, '__iter__') and not isinstance(obj, (str, bytes, bytearray)):
+      for i in obj:
+        objects.append(i)
+  return size
+
+
 class Timer:
   """
   A timer class used to measure time of an activity in a large project.
@@ -352,14 +383,18 @@ class Timer:
     self.startCounts += 1
 
   def stop(self) -> 'Timer':
+    if self.counter == 0:  # already 0
+      return self          # simply return self
+
     self.counter -= 1
     if self.counter == 0:
       self.cumulativeTime += time.time() - self._start
       self.stopCounts += 1
     return self
 
-  def stopAndLog(self) -> None:
-    if LS: LOG.debug(self.stop())
+  def stopAndLog(self, printAlso=False, log=True) -> None:
+    if log: LOG.debug(self.stop())
+    if printAlso: print(self.stop())
 
   def getDurationInMillisec(self) -> float:
     return self.cumulativeTime * 1000
